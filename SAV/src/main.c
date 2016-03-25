@@ -31,24 +31,8 @@ int main(void) {
 	// Setup hardware
 	prvSetupHardware();
 
-	// Setup WiFi connection
-	prvSetupWifi();
-
-	// Set initial mode to allModes
-	my_mode = allModes;
-
-	// Read Measured Power
-//	swTimerStart( read_power, 0 );
-
-	// Read Photo Resistor
-	swTimerStart( read_photo, 0 );
-
-
-	// Create queue for packets
-	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
-
 	// Create initial task to connect to Base Station
-	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
+	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
 
 	// Start the scheduler which begins to run the tasks
 	vTaskStartScheduler();
@@ -59,6 +43,36 @@ int main(void) {
 	to be created.  See the memory management section on the FreeRTOS web site
 	for more details. */
 	for( ;; );
+}
+
+
+/*********************************************************************************************
+ * Setup hardware/software
+ *********************************************************************************************/
+void prvSetupTask( void *pvParameters ) {
+
+	// Setup WiFi connection
+	prvSetupWifi();
+
+	swDelay(2000);
+
+	// Set initial mode to allModes
+	my_mode = allModes;
+
+	// Read Measured Power
+//	swTimerStart( read_power, 0 );
+
+	// Read Photo Resistor
+//	swTimerStart( read_photo, 0 );
+
+	// Create queue for packets
+	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
+
+	// Create initial task to connect to Base Station
+	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
+
+	// Delete this task
+	vTaskDelete( xSetupHandle );
 }
 
 
@@ -97,6 +111,8 @@ static void prvSetupWifi( void ) {
 //	sendPacket( "ATE1", 4);
 
 	sendPacket( "AT", 2);
+
+//	while( !swDelay(500) );
 
 	uint32_t t = 10000000;
 	while( t-- );

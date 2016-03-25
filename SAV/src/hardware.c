@@ -77,7 +77,7 @@ void wifiConfig() {
 	NVIC_InitTypeDef NVIC_InitStruct;
 
 	// Enable clock
-	RCC_APB2PeriphClockCmd(WIFI_USART_CLK, ENABLE);
+	RCC_APB1PeriphClockCmd(WIFI_USART_CLK, ENABLE);
 
 	// Initialize USART
 	USART_InitStruct.USART_BaudRate = WIFI_USART_BAUD;

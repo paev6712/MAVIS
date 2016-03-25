@@ -19,13 +19,13 @@
  * Define constants to repeat timer
  *********************************************************************************************/
 #define REPEAT 									pdTRUE
-#define NOREPEAT								pdFALSE
+#define NO_REPEAT								pdFALSE
 
 
 /*********************************************************************************************
  * Initialize SW Timer
  *********************************************************************************************/
-TimerHandle_t swTimerInit( uint16_t timerPeriod, UBaseType_t repeat, TimerCallbackFunction_t pxCallbackFunction );
+TimerHandle_t swTimerInit( uint16_t timer_period, UBaseType_t repeat, TimerCallbackFunction_t pxCallbackFunction );
 
 
 /*********************************************************************************************
@@ -44,5 +44,19 @@ uint8_t swTimerStop( TimerHandle_t handle );
  * Check if SW Timer is active
  *********************************************************************************************/
 uint8_t swIsTimerActive( TimerHandle_t handle );
+
+
+/*********************************************************************************************
+ * Local timer callback function
+ *********************************************************************************************/
+void prvDelayCallback( TimerHandle_t pxTimer );
+uint8_t delay_done;
+
+
+/*********************************************************************************************
+ * Delay for given amount of time (in ms)
+ *********************************************************************************************/
+uint8_t swDelay( uint16_t time_delay );
+
 
 #endif /* SWTIMER_H_ */

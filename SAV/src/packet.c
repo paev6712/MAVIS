@@ -418,7 +418,7 @@ void unpack( char* container, char* field, uint8_t start ) {
 /*********************************************************************************************
  * USART IRQ Handler for WiFi module
  *********************************************************************************************/
-void USART1_IRQHandler( void ) {
+void USART3_IRQHandler( void ) {
 
 	// Make sure USART recieve interrupt flag was set
 	if( USART_GetITStatus( WIFI_USART, USART_IT_RXNE ) ) {

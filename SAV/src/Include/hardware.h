@@ -126,31 +126,31 @@ void ultrasonicTimerConfig();
 /*********************************************************************************************
  * WiFi Module
  *********************************************************************************************/
-//#define WIFI_TX_PIN							GPIO_Pin_10
-//#define WIFI_TX_PINSOURCE					GPIO_PinSource10
-//#define WIFI_RX_PIN							GPIO_Pin_11
-//#define WIFI_RX_PINSOURCE					GPIO_PinSource11
-//#define WIFI_PORT							GPIOB
-//#define WIFI_CLK							RCC_AHB1Periph_GPIOB
-//#define WIFI_AF								GPIO_AF_USART3
-//
-//#define WIFI_USART							USART3
-//#define WIFI_USART_BAUD						9600
-//#define WIFI_USART_CLK						RCC_APB1Periph_USART3
-//#define WIFI_USART_IRQ						USART3_IRQn
+#define WIFI_TX_PIN							GPIO_Pin_10
+#define WIFI_TX_PINSOURCE					GPIO_PinSource10
+#define WIFI_RX_PIN							GPIO_Pin_11
+#define WIFI_RX_PINSOURCE					GPIO_PinSource11
+#define WIFI_PORT							GPIOB
+#define WIFI_CLK							RCC_AHB1Periph_GPIOB
+#define WIFI_AF								GPIO_AF_USART3
 
-#define WIFI_TX_PIN							GPIO_Pin_9
-#define WIFI_TX_PINSOURCE					GPIO_PinSource9
-#define WIFI_RX_PIN							GPIO_Pin_10
-#define WIFI_RX_PINSOURCE					GPIO_PinSource10
-#define WIFI_PORT							GPIOA
-#define WIFI_CLK							RCC_AHB1Periph_GPIOA
-#define WIFI_AF								GPIO_AF_USART1
-
-#define WIFI_USART							USART1
+#define WIFI_USART							USART3
 #define WIFI_USART_BAUD						9600
-#define WIFI_USART_CLK						RCC_APB2Periph_USART1
-#define WIFI_USART_IRQ						USART1_IRQn
+#define WIFI_USART_CLK						RCC_APB1Periph_USART3
+#define WIFI_USART_IRQ						USART3_IRQn
+
+//#define WIFI_TX_PIN							GPIO_Pin_9
+//#define WIFI_TX_PINSOURCE					GPIO_PinSource9
+//#define WIFI_RX_PIN							GPIO_Pin_10
+//#define WIFI_RX_PINSOURCE					GPIO_PinSource10
+//#define WIFI_PORT							GPIOA
+//#define WIFI_CLK							RCC_AHB1Periph_GPIOA
+//#define WIFI_AF								GPIO_AF_USART1
+//
+//#define WIFI_USART							USART1
+//#define WIFI_USART_BAUD						9600
+//#define WIFI_USART_CLK						RCC_APB2Periph_USART1
+//#define WIFI_USART_IRQ						USART1_IRQn
 
 
 /*********************************************************************************************
