@@ -103,10 +103,6 @@ uint8_t swDelay( uint16_t delay_time ) {
 		return FAILURE;
 	}
 
-	swTimerStart(delay,0);
-
-	uint8_t active = swIsTimerActive(delay);
-
 	// Wait until timer completes
 	while( !delay_done );
 
