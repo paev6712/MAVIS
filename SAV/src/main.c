@@ -28,9 +28,6 @@
 
 int main(void) {
 
-	// Setup hardware
-	prvSetupHardware();
-
 	// Create initial task to connect to Base Station
 	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
 
@@ -50,6 +47,9 @@ int main(void) {
  * Setup hardware/software
  *********************************************************************************************/
 void prvSetupTask( void *pvParameters ) {
+
+	// Setup hardware
+	prvSetupHardware();
 
 	// Setup WiFi connection
 	prvSetupWifi();
@@ -205,7 +205,7 @@ void prvConnectTask( void *pvParameters ) {
  *********************************************************************************************/
 void prvModeOfOperationTask( void *pvParameters ) {
 
-	// Send Ack
+	// Send SetMode packet
 	Header* header = pvPortMalloc( sizeof(Header) );
 	header->dest = baseStation;
 	header->addr = MY_ADDR;
@@ -275,25 +275,6 @@ void prvTrafficLightTask( void *pvParameters ) {
 			process_packet = FALSE;
 		}
 	}
-}
-
-
-
-/*********************************************************************************************
- * Send Ping packet
- *********************************************************************************************/
-void prvSWTimerPingCallback( TimerHandle_t pxTimer ) {
-
-	// Setup header to Base Station
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ping;
-
-	sendPing( header );
-
-	vPortFree(header);
 }
 
 

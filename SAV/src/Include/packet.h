@@ -252,12 +252,6 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet );
 
 
 /*********************************************************************************************
- * Handle TrafficLightFuture
- *********************************************************************************************/
-uint8_t handleTrafficLightFuture( Header* header, char* packet );
-
-
-/*********************************************************************************************
  * Handle ChangeMode
  *********************************************************************************************/
 uint8_t handleChangeMode( Header* header, char* packet );

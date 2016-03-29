@@ -84,10 +84,4 @@ static void prvSetupWifi( void );
 void prvSWTimerCallback( TimerHandle_t pxTimer );
 
 
-/*********************************************************************************************
- * Send Ping packet
- *********************************************************************************************/
-void prvSWTimerPingCallback( TimerHandle_t pxTimer );
-
-
 #endif /* MAIN_H_ */
