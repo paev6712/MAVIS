@@ -2,6 +2,13 @@
 Thumbs.db
 ehthumbs.db
 
+# C Files
+*.o
+*.launch
+*.elf
+*.list
+*.map
+
 # Folder config file
 Desktop.ini
 
