@@ -39,6 +39,26 @@ void prvConnectTask( void *pvParameters );
 TaskHandle_t xConnectHandle = NULL;
 #define	connectPriority						( tskIDLE_PRIORITY + 1 )
 
+/*********************************************************************************************
+ * Task Priorities
+ *********************************************************************************************/
+#define	connectPriority						( tskIDLE_PRIORITY + 1 )
+#define	ultrasonicPriority					( tskIDLE_PRIORITY + 1 )
+
+/*********************************************************************************************
+ * Task Frequencies
+ *********************************************************************************************/
+#define ultrasonicFreq						( 500 / portTICK_PERIOD_MS)
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+int distCM_front;
+int distCM_left;
+int distCM_right;
+volatile int timerValue; //timer value for ultrasonic counters
+volatile int done = 0; //boolean for indicating when a timer value is ready to be read
 
 /*********************************************************************************************
  * Initial bootup task to setup default mode of operation
@@ -72,6 +92,18 @@ static void prvSetupHardware( void );
  * Setup Wifi connection
  *********************************************************************************************/
 static void prvSetupWifi( void );
+
+
+/*********************************************************************************************
+ * Ultrasonic data collection and processing task
+ *********************************************************************************************/
+void prvUltrasonic( void *pvParameters );
+
+/*********************************************************************************************
+ * Ultrasonic helper functions to change pin modes (input/output)
+ *********************************************************************************************/
+void setInput(uint16_t pin);
+void setOutput(uint16_t pin);
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

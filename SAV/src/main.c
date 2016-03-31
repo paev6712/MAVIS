@@ -315,6 +315,189 @@ void prvSWTimerCallback( TimerHandle_t pxTimer ){
 	vPortFree(header);
 }
 
+/* The sequence for getting an ultrasonic value is as follows
+ * 1. Set the pin to an output
+ * 2. Send a 10us pulse on the pin
+ * 3. Set the pin to an input
+ * 4. Enable interrupts to look for rising edge of the length indicating pulse
+ * 5. Wait till we're finished reading the pulse
+ * 6. Disable interrupts
+ * 7. Grab the timer value
+ * 8. Set the pin back to an output(this makes sure the line is tied low)
+ * This is performed sequencially for each of the three sensors*/
+void prvUltrasonic( void *pvParameters ) {
+	int i;
+	for(;;){
+	//use pin 8 when testing on the dev board
+	//use pin 5 when testing on the final board
+	//you must also change these in the interrupt handler below and in hardware.h
+////		for right sensor
+//		setOutput(GPIO_Pin_5);
+//		GPIOA->ON = GPIO_Pin_5;
+//		for(i = 0; i < 60; i++){};//delays 10us
+//		GPIOA->OFF = GPIO_Pin_5;
+//		setInput(GPIO_Pin_5);
+//		__enable_irq();
+//		while(!done){};
+//		done = 0;
+//		__disable_irq();
+//		distCM_right = timerValue;//convert from timer value to cm
+//		setOutput(GPIO_Pin_5);
+
+		setOutput(GPIO_Pin_8);
+		GPIOA->ON = GPIO_Pin_8;
+		for(i = 0; i < 60; i++){};//delays 10us
+		GPIOA->OFF = GPIO_Pin_8;
+		setInput(GPIO_Pin_8);
+		__enable_irq();
+		while(!done){};
+		done2 = 0;
+		__disable_irq();
+		distCM_right = timerValue;//convert from timer value to cm
+		setOutput(GPIO_Pin_8);
+
+//		for front sensor
+		setOutput(GPIO_Pin_6);
+		GPIOA->ON = GPIO_Pin_6;
+		for(i = 0; i < 60; i++){};//delays 10us
+		GPIOA->OFF = GPIO_Pin_6;
+		setInput(GPIO_Pin_6);
+		__enable_irq();
+		while(!done){};
+		done = 0;
+		__disable_irq();
+		distCM_front = timerValue;//convert from timer value to cm
+		setOutput(GPIO_Pin_6);
+
+		for(i = 0; i < 10000; i++){};
+
+		//for left sensor
+		setOutput(GPIO_Pin_7);
+		GPIOA->ON = GPIO_Pin_7;
+		for(i = 0; i < 60; i++){};//delays 10us
+		GPIOA->OFF = GPIO_Pin_7;
+		setInput(GPIO_Pin_7);
+		__enable_irq();
+		while(!done){};
+		done2 = 0;
+		__disable_irq();
+		distCM_left = timerValue;//convert from timer value to cm
+		setOutput(GPIO_Pin_7);
+
+		if(distCM_right < 20)
+		{
+			LED_MODE_PORT->ON = LED_MODE_1_PIN;
+		}
+
+		else
+		{
+			LED_MODE_PORT->OFF = LED_MODE_1_PIN;
+		}
+
+		if(distCM_left < 20)
+		{
+			LED_MODE_PORT->ON = LED_MODE_3_PIN;
+		}
+
+		else
+		{
+			LED_MODE_PORT->OFF = LED_MODE_3_PIN;
+		}
+
+		vTaskDelay(ultrasonicFreq);
+	}
+}
+
+//sets a pin on port A to input mode
+void setInput(uint16_t pin){
+	GPIO_InitTypeDef  GPIO_InitStructure;
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+		// Configure GPIO
+		GPIO_InitStructure.GPIO_Pin = pin;
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+		GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+//sets a pin on port A to output mode
+void setOutput(uint16_t pin){
+	GPIO_InitTypeDef  GPIO_InitStructure;
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+
+		// Configure GPIO
+		GPIO_InitStructure.GPIO_Pin = pin;
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+		GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+void EXTI9_5_IRQHandler(void) {
+	//for the right sensor
+    // Make sure that interrupt flag is set
+//    if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
+//    	//read the GPIO pin to see if we're on a rising edge or a falling edge
+//    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == (uint8_t)Bit_SET)
+//    	{
+//    		TIM_SetCounter(TIM2, 0);
+//    	}
+//    	else
+//    	{
+//    		timerValue = TIM_GetCounter(TIM2);
+//    		done = 1;
+//    	}
+//    	//clear the flag
+//    	EXTI_ClearITPendingBit(EXTI_Line5);
+//    }
+
+    if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
+    	//read the GPIO pin to see if we're on a rising edge or a falling edge
+    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_8) == (uint8_t)Bit_SET)
+    	{
+    		TIM_SetCounter(TIM2, 0);
+    	}
+    	else
+    	{
+    		timerValue = TIM_GetCounter(TIM2);
+    		done = 1;
+    	}
+    	//clear the flag
+    	EXTI_ClearITPendingBit(EXTI_Line8);
+    }
+
+    	//for the front sensor
+    if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
+    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == (uint8_t)Bit_SET)
+    	{
+    		TIM_SetCounter(TIM2, 0);
+    	}
+    	else
+    	{
+    		timerValue = TIM_GetCounter(TIM2);
+    		done = 1;
+    	}
+    	EXTI_ClearITPendingBit(EXTI_Line6);
+    }
+    	//for the left sensor
+    if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
+    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == (uint8_t)Bit_SET)
+    	{
+    		TIM_SetCounter(TIM2, 0);
+    	}
+    	else
+    	{
+    		timerValue = TIM_GetCounter(TIM2);
+    		done = 1;
+    	}
+    	EXTI_ClearITPendingBit(EXTI_Line7);
+    }
+        /* Clear interrupt flag */
+}
+
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  * Functions to handle errors if they occur
