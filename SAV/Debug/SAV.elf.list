@@ -21,21 +21,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000030  00000000  00000000  00018044  2**0
                   CONTENTS, READONLY
-  9 .debug_info   0000bb1e  00000000  00000000  00018074  2**0
+  9 .debug_info   0000bb2a  00000000  00000000  00018074  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002156  00000000  00000000  00023b92  2**0
+ 10 .debug_abbrev 00002156  00000000  00000000  00023b9e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 00000308  00000000  00000000  00025ce8  2**3
+ 11 .debug_aranges 00000308  00000000  00000000  00025cf8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   0000422f  00000000  00000000  00025ff0  2**0
+ 12 .debug_line   0000422f  00000000  00000000  00026000  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    0000499f  00000000  00000000  0002a21f  2**0
+ 13 .debug_str    000049ae  00000000  00000000  0002a22f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .comment      00000082  00000000  00000000  0002ebbe  2**0
+ 14 .comment      00000082  00000000  00000000  0002ebdd  2**0
                   CONTENTS, READONLY
- 15 .debug_frame  00002f04  00000000  00000000  0002ec40  2**2
+ 15 .debug_frame  00002f04  00000000  00000000  0002ec60  2**2
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000020  00000000  00000000  00031b48  2**3
+ 16 .debug_ranges 00000020  00000000  00000000  00031b68  2**3
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -85,7 +85,7 @@ void prvblinkTrafficLightCallback( TimerHandle_t pxTimer ) {
  80001d2:	881b      	ldrh	r3, [r3, #0]
  80001d4:	2b00      	cmp	r3, #0
  80001d6:	d011      	beq.n	80001fc <prvblinkTrafficLightCallback+0x34>
-		// If there is at least 0.1 seconds until the change, toggle the LED
+		// If there is at least 0.4 seconds until the change, toggle the LED
 		LED_LIGHT_PORT->ODR ^= led_light_pin[traffic_future_state];
  80001d8:	4b12      	ldr	r3, [pc, #72]	; (8000224 <prvblinkTrafficLightCallback+0x5c>)
  80001da:	4a12      	ldr	r2, [pc, #72]	; (8000224 <prvblinkTrafficLightCallback+0x5c>)
@@ -2019,7 +2019,7 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
 
 	// Extract the pay load
 	TrafficLightFuture* future = pvPortMalloc( sizeof(TrafficLightFuture) );
- 8000c56:	2003      	movs	r0, #3
+ 8000c56:	2004      	movs	r0, #4
  8000c58:	f007 fd42 	bl	80086e0 <pvPortMalloc>
  8000c5c:	60f8      	str	r0, [r7, #12]
 	char* future_char = (char*) future;
@@ -2070,9 +2070,9 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
  8000ca2:	701a      	strb	r2, [r3, #0]
 
 		// Time is converted into ms
-		traffic_time = ((uint16_t)future->changeTime * 32);
+		traffic_time = ((uint16_t)future->changeTimeNS * 32);
  8000ca4:	68fb      	ldr	r3, [r7, #12]
- 8000ca6:	789b      	ldrb	r3, [r3, #2]
+ 8000ca6:	785b      	ldrb	r3, [r3, #1]
  8000ca8:	015b      	lsls	r3, r3, #5
  8000caa:	b29a      	uxth	r2, r3
  8000cac:	4b0c      	ldr	r3, [pc, #48]	; (8000ce0 <handleTrafficLightFuture+0x94>)

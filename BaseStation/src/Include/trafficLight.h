@@ -24,17 +24,40 @@ typedef enum {
 
 
 /*********************************************************************************************
- * Timer callback to blink Traffic Light LED
+ * Define the states of the state machine to control the lights
  *********************************************************************************************/
-void prvblinkTrafficLightCallback( TimerHandle_t pxTimer );
+typedef enum {
+	state_1					=		(uint8_t) 0x00,
+	state_2					=		(uint8_t) 0x01,
+	state_3					= 		(uint8_t) 0x02,
+	state_4					=		(uint8_t) 0x03
+} lightSystemState;
+
+
+typedef struct {
+	lightState northSouth;
+	uint8_t time_NS;
+	lightState eastWest;
+	uint8_t time_EW;
+} systemState;
 
 
 /*********************************************************************************************
- * Global varibales
+ * Timer callback to send appropriate TrafficLight packet(s)
  *********************************************************************************************/
-TimerHandle_t blinkTrafficLight;
-lightState traffic_future_state;
-uint16_t traffic_time;
+void prvSendTrafficLightCallback( TimerHandle_t pxTimer );
+
+TimerHandle_t sendTrafficLight;
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Keep track of current system state
+ *********************************************************************************************/
+lightSystemState light_system_state;
 
 
 /*********************************************************************************************
@@ -45,8 +68,27 @@ uint16_t led_light_ew_pin[3];
 
 
 /*********************************************************************************************
- * Map current state to next state
+ * Map current light state to next light state
  *********************************************************************************************/
 lightState next_light_state[3];
+
+
+/*********************************************************************************************
+ * Keep track of the time between states
+ *********************************************************************************************/
+uint8_t timer_NS;
+uint8_t timer_EW;
+
+
+/*********************************************************************************************
+ * Map current system state to the appropriate light state and timers
+ *********************************************************************************************/
+systemState current_system_state[4];
+
+
+/*********************************************************************************************
+ * Map current system state to the next system state
+ *********************************************************************************************/
+lightSystemState next_system_state[4];
 
 #endif /* TRAFFICLIGHT_H_ */

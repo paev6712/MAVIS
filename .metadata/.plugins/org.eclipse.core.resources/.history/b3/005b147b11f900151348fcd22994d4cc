@@ -1,0 +1,65 @@
+/*
+ * trafficLight.c
+ *
+ *  Created on: Mar 2, 2016
+ *      Author: Parker
+ */
+
+#include "trafficLight.h"
+#include "packet.h"
+
+/*********************************************************************************************
+ * Timer callback to blink Traffic Light LED
+ *********************************************************************************************/
+void prvSendTrafficLightCallback( TimerHandle_t pxTimer ) {
+
+	// Light states
+	lightCurrentState current_lights = current_light_state[light_system_state];
+
+	// Create Header
+	Header* traffic_header = pvPortMalloc( sizeof(Header) );
+	traffic_header->addr = MY_ADDR;
+	traffic_header->mode = allModes;
+
+	// Iterate through all SAVs
+	uint8_t sav;
+	for(sav=0; sav<NUMBER_SAV; sav++){
+		// Check if active
+		if( wifi_channel_active[sav] == TRUE ) {
+			// Define destination
+			traffic_header->dest = sav;
+
+			// Send current state packet
+			traffic_header->type = trafficLightCurrent;
+			sendTrafficLightCurrent( traffic_header, current_lights.northSouth, current_lights.eastWest );
+
+			// Send future state packet
+			traffic_header->type = trafficLightFuture;
+			sendTrafficLightFuture( traffic_header, next_light_state[current_lights.northSouth], 0,
+													next_light_state[current_lights.eastWest], 0 );
+		}
+	}
+
+	switch(light_system_state) {
+		case state_1:
+
+			break;
+		case state_2:
+			break;
+		case state_3:
+			break;
+		case state_4:
+			break;
+		default:
+			break;
+	}
+
+	// Free variables
+	vPortFree( traffic_header );
+}
+
+
+/*********************************************************************************************
+ * Map current state to next state
+ *********************************************************************************************/
+lightState next_light_state[3] = {green, red, yellow};

@@ -41,15 +41,6 @@ TaskHandle_t xConnectHandle = NULL;
 
 
 /*********************************************************************************************
- * Initial bootup task to setup default mode of operation
- *********************************************************************************************/
-void prvModeOfOperationTask( void *pvParameters );
-
-TaskHandle_t xModeOfOperationHandle = NULL;
-#define	modeOfOperationPriority				( tskIDLE_PRIORITY + 1 )
-
-
-/*********************************************************************************************
  * Task to handle TrafficLight packets
  *********************************************************************************************/
 void prvTrafficLightTask( void *pvParameters );

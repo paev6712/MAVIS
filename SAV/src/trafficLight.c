@@ -13,7 +13,7 @@
 void prvblinkTrafficLightCallback( TimerHandle_t pxTimer ) {
 
 	if( traffic_time > 0 ) {
-		// If there is at least 0.1 seconds until the change, toggle the LED
+		// If there is at least 0.4 seconds until the change, toggle the LED
 		LED_LIGHT_PORT->ODR ^= led_light_pin[traffic_future_state];
 
 		// Decrease elapsed time

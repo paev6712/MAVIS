@@ -57,6 +57,23 @@ void prvSetupTask( void *pvParameters ) {
 	// Set mode to allModes
 	my_mode = allModes;
 
+	// Iterate through each SAV to initialize parameters
+	uint8_t sav;
+	for(sav=0; sav<NUMBER_SAV; sav++) {
+
+		// Set the SAVs default mode
+		mode_savs[sav] = mode1;
+
+		// Mark the WiFi channels as uninitialized
+		wifi_channel[sav] = -1;
+
+		// Initialize all SAVs as inactive
+		wifi_channel_active[sav] = FALSE;
+	}
+
+	// Indicate that the next channel to be assigned is channel 0
+	wifi_next_channel = 0;
+
 	// Create queue for packets
 	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
 
@@ -143,7 +160,7 @@ void prvConnectTask( void *pvParameters ) {
 				process_packet = FALSE;
 
 				// Move on to next task
-				xTaskCreate( prvModeOfOperationTask, "", 300 * sizeof(uint8_t), NULL, modeOfOperationPriority, xModeOfOperationHandle );
+				xTaskCreate( prvTrafficLightTask, "", 300 * sizeof(uint8_t), NULL, trafficLightPriority, xTrafficLightHandle );
 
 				// Delete this task
 				vTaskDelete( xConnectHandle );
@@ -154,73 +171,25 @@ void prvConnectTask( void *pvParameters ) {
 
 
 /*********************************************************************************************
- * Initial bootup task to setup default mode of operation
- * 		* Indicate SAV needs to set default mode of operation
- * 		* Wait for changeMode packet
- *********************************************************************************************/
-void prvModeOfOperationTask( void *pvParameters ) {
-
-	// Let task run infinitely
-	for(;;) {
-
-		if( process_packet ) {
-
-			// Create local string to represent the packet
-			char* packet = pvPortMalloc( MAX_LENGTH*sizeof(uint8_t) );
-
-			// Pop packet from queue
-			xQueueReceive( xPacketQueue, packet, 0 );
-
-			// Process packet
-			PacketResult packet_result = handlePacket( packet );
-
-			// Free variables
-			vPortFree( packet );
-
-			if( (packet_result.result == SUCCESS) && (packet_result.type == changeMode) ) {
-
-				// Reset process_packet
-				process_packet = FALSE;
-
-				// If successful, move on to next task
-				xTaskCreate( prvTrafficLightTask, "", ( unsigned short ) 300, NULL, trafficLightPriority, xTrafficLightHandle );
-
-				// Delete this task
-				vTaskDelete( xModeOfOperationHandle );
-			} else {
-				// Throw error
-				LED_ERROR_PORT->ON &= LED_ERROR_PIN;
-			}
-		}
-	}
-}
-
-
-/*********************************************************************************************
- * Task to handle (TrafficLight) packets
- * 		*
+ * Task to setup traffic light timer to send packets
  *********************************************************************************************/
 void prvTrafficLightTask( void *pvParameters ) {
 	// Let task run infinitely
 	for(;;) {
 
-		if( process_packet ) {
+		// Setup timer to start the state machine
 
-			// Create local string to represent the packet
-			char* packet = pvPortMalloc( MAX_LENGTH*sizeof(uint8_t) );
+		// Send packet every 5 seconds
+		sendTrafficLight = swTimerInit( 5000, REPEAT, prvSendTrafficLightCallback );
 
-			// Pop packet from queue
-			xQueueReceive( xPacketQueue, packet, 0 );
+		// Initialize the first state
+		light_system_state = state_1;
 
-			// Process packet
-			handlePacket( packet );
+		// Initialize the transition times
+		timer_NS = 25;
+		timer_EW = 30;
 
-			// Free variables
-			vPortFree( packet );
-
-			// Reset process_packet
-			process_packet = FALSE;
-		}
+		swTimerStart(sendTrafficLight, 0);
 	}
 }
 

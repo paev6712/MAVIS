@@ -35,9 +35,9 @@ Mode my_mode;
 
 
 /*********************************************************************************************
- * Map modes to specific pins
+ * Map SAVs to their current Mode of Operation
  *********************************************************************************************/
-uint16_t led_mode_pin[4];
+Mode mode_savs[2];
 
 
 #endif /* MODE_H_ */

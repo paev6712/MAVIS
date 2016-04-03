@@ -1292,7 +1292,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x20000066        0x2 src\photo.o
  .bss.photo_average.7840
                 0x20000068        0x2 src\photo.o
- .bss.counter.8169
+ .bss.counter.8170
                 0x2000006a        0x1 src\packet.o
  *fill*         0x2000006b        0x1 
  .bss.xSetupHandle
@@ -1475,7 +1475,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x00000666       0x22 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
 OUTPUT(SAV.elf elf32-littlearm)
 
-.debug_info     0x00000000     0xbb1e
+.debug_info     0x00000000     0xbb2a
  .debug_info    0x00000000      0x3ca src\trafficLight.o
  .debug_info    0x000003ca      0x5a3 src\system_stm32f4xx.o
  .debug_info    0x0000096d      0x265 src\swTimer.o
@@ -1483,23 +1483,23 @@ OUTPUT(SAV.elf elf32-littlearm)
  .debug_info    0x00000cd2       0x71 src\startup_stm32f40xx.o
  .debug_info    0x00000d43      0x641 src\power.o
  .debug_info    0x00001384      0x53c src\photo.o
- .debug_info    0x000018c0      0xc18 src\packet.o
- .debug_info    0x000024d8      0x77b src\main.o
- .debug_info    0x00002c53      0xe5a src\hardware.o
- .debug_info    0x00003aad      0x9c6 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
- .debug_info    0x00004473     0x1c65 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
- .debug_info    0x000060d8      0x270 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
- .debug_info    0x00006348      0xc77 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
- .debug_info    0x00006fbf      0x609 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
- .debug_info    0x000075c8      0x34b Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
- .debug_info    0x00007913      0xc3c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
- .debug_info    0x0000854f      0x541 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
- .debug_info    0x00008a90      0x7e5 Libraries\FreeRTOS\timers.o
- .debug_info    0x00009275     0x14b4 Libraries\FreeRTOS\tasks.o
- .debug_info    0x0000a729      0xb3a Libraries\FreeRTOS\queue.o
- .debug_info    0x0000b263      0x29d Libraries\FreeRTOS\list.o
- .debug_info    0x0000b500      0x310 Libraries\FreeRTOS\Portable\port.o
- .debug_info    0x0000b810      0x30e Libraries\FreeRTOS\Portable\heap_4.o
+ .debug_info    0x000018c0      0xc24 src\packet.o
+ .debug_info    0x000024e4      0x77b src\main.o
+ .debug_info    0x00002c5f      0xe5a src\hardware.o
+ .debug_info    0x00003ab9      0x9c6 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
+ .debug_info    0x0000447f     0x1c65 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
+ .debug_info    0x000060e4      0x270 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
+ .debug_info    0x00006354      0xc77 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
+ .debug_info    0x00006fcb      0x609 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
+ .debug_info    0x000075d4      0x34b Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
+ .debug_info    0x0000791f      0xc3c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
+ .debug_info    0x0000855b      0x541 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
+ .debug_info    0x00008a9c      0x7e5 Libraries\FreeRTOS\timers.o
+ .debug_info    0x00009281     0x14b4 Libraries\FreeRTOS\tasks.o
+ .debug_info    0x0000a735      0xb3a Libraries\FreeRTOS\queue.o
+ .debug_info    0x0000b26f      0x29d Libraries\FreeRTOS\list.o
+ .debug_info    0x0000b50c      0x310 Libraries\FreeRTOS\Portable\port.o
+ .debug_info    0x0000b81c      0x30e Libraries\FreeRTOS\Portable\heap_4.o
 
 .debug_abbrev   0x00000000     0x2156
  .debug_abbrev  0x00000000      0x102 src\trafficLight.o
@@ -1603,7 +1603,7 @@ OUTPUT(SAV.elf elf32-littlearm)
  .debug_line    0x00003e07      0x1ed Libraries\FreeRTOS\Portable\port.o
  .debug_line    0x00003ff4      0x23b Libraries\FreeRTOS\Portable\heap_4.o
 
-.debug_str      0x00000000     0x499f
+.debug_str      0x00000000     0x49ae
  .debug_str     0x00000000      0x30a src\trafficLight.o
                                 0x36a (size before relaxing)
  .debug_str     0x0000030a      0x205 src\system_stm32f4xx.o
@@ -1616,39 +1616,39 @@ OUTPUT(SAV.elf elf32-littlearm)
                                 0x4b2 (size before relaxing)
  .debug_str     0x000007da       0x47 src\photo.o
                                 0x3dc (size before relaxing)
- .debug_str     0x00000821      0x227 src\packet.o
-                                0x6fa (size before relaxing)
- .debug_str     0x00000a48      0x16f src\main.o
+ .debug_str     0x00000821      0x236 src\packet.o
+                                0x709 (size before relaxing)
+ .debug_str     0x00000a57      0x16f src\main.o
                                 0x5c3 (size before relaxing)
- .debug_str     0x00000bb7      0xae1 src\hardware.o
+ .debug_str     0x00000bc6      0xae1 src\hardware.o
                                 0xed1 (size before relaxing)
- .debug_str     0x00001698      0x3ff Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
+ .debug_str     0x000016a7      0x3ff Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
                                 0x6dd (size before relaxing)
- .debug_str     0x00001a97      0xa79 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
+ .debug_str     0x00001aa6      0xa79 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
                                 0xe1e (size before relaxing)
- .debug_str     0x00002510      0x156 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
+ .debug_str     0x0000251f      0x156 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
                                 0x342 (size before relaxing)
- .debug_str     0x00002666      0x533 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
+ .debug_str     0x00002675      0x533 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
                                 0x8c7 (size before relaxing)
- .debug_str     0x00002b99      0x180 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
+ .debug_str     0x00002ba8      0x180 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
                                 0x4f1 (size before relaxing)
- .debug_str     0x00002d19       0xf0 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
+ .debug_str     0x00002d28       0xf0 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
                                 0x3a7 (size before relaxing)
- .debug_str     0x00002e09      0x52a Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
+ .debug_str     0x00002e18      0x52a Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
                                 0x852 (size before relaxing)
- .debug_str     0x00003333      0x13d Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
+ .debug_str     0x00003342      0x13d Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
                                 0x41c (size before relaxing)
- .debug_str     0x00003470      0x40a Libraries\FreeRTOS\timers.o
+ .debug_str     0x0000347f      0x40a Libraries\FreeRTOS\timers.o
                                 0x678 (size before relaxing)
- .debug_str     0x0000387a      0xa3b Libraries\FreeRTOS\tasks.o
+ .debug_str     0x00003889      0xa3b Libraries\FreeRTOS\tasks.o
                                 0xd2b (size before relaxing)
- .debug_str     0x000042b5      0x344 Libraries\FreeRTOS\queue.o
+ .debug_str     0x000042c4      0x344 Libraries\FreeRTOS\queue.o
                                 0x6a1 (size before relaxing)
- .debug_str     0x000045f9       0xb1 Libraries\FreeRTOS\list.o
+ .debug_str     0x00004608       0xb1 Libraries\FreeRTOS\list.o
                                 0x2d9 (size before relaxing)
- .debug_str     0x000046aa      0x11a Libraries\FreeRTOS\Portable\port.o
+ .debug_str     0x000046b9      0x11a Libraries\FreeRTOS\Portable\port.o
                                 0x351 (size before relaxing)
- .debug_str     0x000047c4      0x1db Libraries\FreeRTOS\Portable\heap_4.o
+ .debug_str     0x000047d3      0x1db Libraries\FreeRTOS\Portable\heap_4.o
                                 0x399 (size before relaxing)
 
 .comment        0x00000000       0x82

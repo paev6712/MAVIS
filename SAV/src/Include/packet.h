@@ -126,11 +126,12 @@ typedef struct {
  *********************************************************************************************/
 typedef struct {
 	lightState northSouth;
+	uint8_t changeTimeNS;
 	lightState eastWest;
-	uint8_t changeTime;
+	uint8_t changeTimeEW;
 } TrafficLightFuture;
 
-#define FUTURE_LENGTH				3
+#define FUTURE_LENGTH				4
 
 
 /*********************************************************************************************
