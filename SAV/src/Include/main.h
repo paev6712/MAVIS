@@ -54,12 +54,15 @@ TaskHandle_t xConnectHandle = NULL;
  * Global Variables
  *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-int distCM_front;
-int distCM_left;
-int distCM_right;
-volatile int timerValue; //timer value for ultrasonic counters
-volatile int done = 0; //boolean for indicating when a timer value is ready to be read
-
+volatile int distCM_front;
+volatile int distCM_left;
+volatile int distCM_right;
+volatile int timerValue1; //timer value for ultrasonic counters
+volatile int timerValue2;
+volatile int timerValue3;
+volatile int done1 = 0; //boolean for indicating when a timer value is ready to be read
+volatile int done2 = 0;
+volatile int done3 = 0;
 /*********************************************************************************************
  * Initial bootup task to setup default mode of operation
  *********************************************************************************************/
@@ -98,7 +101,8 @@ static void prvSetupWifi( void );
  * Ultrasonic data collection and processing task
  *********************************************************************************************/
 void prvUltrasonic( void *pvParameters );
-
+void prvUltrasonic2( void *pvParameters );
+void prvUltrasonic3( void *pvParameters );
 /*********************************************************************************************
  * Ultrasonic helper functions to change pin modes (input/output)
  *********************************************************************************************/
