@@ -51,6 +51,9 @@ void prvSetupTask( void *pvParameters ) {
 	// Setup hardware
 	prvSetupHardware();
 
+	// Test LEDs and indicate program is starting
+	prvBlinkLeds();
+
 	// Setup WiFi connection
 	prvSetupWifi();
 
@@ -62,10 +65,12 @@ void prvSetupTask( void *pvParameters ) {
 	for(sav=0; sav<NUMBER_SAV; sav++) {
 
 		// Set the SAVs default mode
-		mode_savs[sav] = mode1;
+//		mode_savs[sav] = mode1;
+		// TODO: change back to default
+		mode_savs[sav] = mode2;
 
 		// Mark the WiFi channels as uninitialized
-		wifi_channel[sav] = -1;
+		wifi_channel[sav] = 0xFF;
 
 		// Initialize all SAVs as inactive
 		wifi_channel_active[sav] = FALSE;
@@ -78,7 +83,8 @@ void prvSetupTask( void *pvParameters ) {
 	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
 
 	// Create initial task to connect to Base Station
-	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
+//	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
+	xTaskCreate( prvTrafficLightTask, "", 500 * sizeof(uint8_t), NULL, trafficLightPriority, xTrafficLightHandle );
 
 	// Delete this task
 	vTaskDelete( xSetupHandle );
@@ -101,6 +107,54 @@ static void prvSetupHardware( void ) {
 
 
 /*********************************************************************************************
+ * Blink LEDs on board
+ *********************************************************************************************/
+static void prvBlinkLeds( void ) {
+	// Turn on and off each LED in order
+
+	// EW Lights
+	LED_LIGHT_EW_PORT->ON = LED_LIGHT_EW_GREEN_PIN;
+	swDelay(100);
+	LED_LIGHT_EW_PORT->OFF = LED_LIGHT_EW_GREEN_PIN;
+
+	LED_LIGHT_EW_PORT->ON = LED_LIGHT_EW_YELLOW_PIN;
+	swDelay(100);
+	LED_LIGHT_EW_PORT->OFF = LED_LIGHT_EW_YELLOW_PIN;
+
+	LED_LIGHT_EW_PORT->ON = LED_LIGHT_EW_RED_PIN;
+	swDelay(100);
+	LED_LIGHT_EW_PORT->OFF = LED_LIGHT_EW_RED_PIN;
+
+	// Error
+	LED_ERROR_PORT->ON = LED_ERROR_PIN;
+	swDelay(100);
+	LED_ERROR_PORT->OFF = LED_ERROR_PIN;
+
+	// Wifi
+	LED_WIFI_PORT->ON = LED_WIFI_RX_PIN;
+	swDelay(100);
+	LED_WIFI_PORT->OFF = LED_WIFI_RX_PIN;
+
+	LED_WIFI_PORT->ON = LED_WIFI_TX_PIN;
+	swDelay(100);
+	LED_WIFI_PORT->OFF = LED_WIFI_TX_PIN;
+
+	// NS Lights
+	LED_LIGHT_NS_PORT->ON = LED_LIGHT_NS_GREEN_PIN;
+	swDelay(100);
+	LED_LIGHT_NS_PORT->OFF = LED_LIGHT_NS_GREEN_PIN;
+
+	LED_LIGHT_NS_PORT->ON = LED_LIGHT_NS_YELLOW_PIN;
+	swDelay(100);
+	LED_LIGHT_NS_PORT->OFF = LED_LIGHT_NS_YELLOW_PIN;
+
+	LED_LIGHT_NS_PORT->ON = LED_LIGHT_NS_RED_PIN;
+	swDelay(100);
+	LED_LIGHT_NS_PORT->OFF = LED_LIGHT_NS_RED_PIN;
+}
+
+
+/*********************************************************************************************
  * Setup Wifi connection
  *********************************************************************************************/
 static void prvSetupWifi( void ) {
@@ -111,17 +165,20 @@ static void prvSetupWifi( void ) {
 //	sendPacket( "AT+CWJAP=\"OhmWreckers\",\"123\"", 28);
 //	swDelay(1500);
 
+	// Delay to give wifi chance to initialize
+	swDelay(5000);
+
 	// Send AT
-	sendPacket( "AT", 2);
+	sendPacket( "AT", 2, FALSE);
 	swDelay(500);
 
 	// Set mux to be 1
-	sendPacket( "AT+CIPMUX=1", 11);
-	swDelay(500);
+	sendPacket( "AT+CIPMUX=1", 11, FALSE);
+	swDelay(1000);
 
 	// Start server
-	sendPacket( "AT+CIPSERVER=1,1001", 19);
-	swDelay(500);
+	sendPacket( "AT+CIPSERVER=1,1001", 19, FALSE);
+	swDelay(2000);
 
 	// Turn on WiFi LEDs to indicate the network is setup
 	LED_WIFI_PORT->ON = LED_WIFI_PINS;
@@ -174,22 +231,40 @@ void prvConnectTask( void *pvParameters ) {
  * Task to setup traffic light timer to send packets
  *********************************************************************************************/
 void prvTrafficLightTask( void *pvParameters ) {
+
+	// Setup timer to start the state machine
+	// Send packet every 5 seconds
+	sendTrafficLight = swTimerInit( 5000, REPEAT, prvSendTrafficLightCallback );
+
+	// Initialize the first state
+	light_system_state = state_1;
+
+	// Initialize the transition times
+	timer_NS = 25;
+	timer_EW = 30;
+
+	swTimerStart(sendTrafficLight, 0);
+
 	// Let task run infinitely
 	for(;;) {
 
-		// Setup timer to start the state machine
+		// Process any incoming packets
+		if( process_packet ) {
+			// Create local string to represent the packet
+			char* packet = pvPortMalloc( MAX_LENGTH*sizeof(uint8_t) );
 
-		// Send packet every 5 seconds
-		sendTrafficLight = swTimerInit( 5000, REPEAT, prvSendTrafficLightCallback );
+			// Pop packet from queue
+			xQueueReceive( xPacketQueue, packet, 0 );
 
-		// Initialize the first state
-		light_system_state = state_1;
+			// Process packet
+			PacketResult packet_result = handlePacket( packet );
 
-		// Initialize the transition times
-		timer_NS = 25;
-		timer_EW = 30;
+			// Free variables
+			vPortFree( packet );
 
-		swTimerStart(sendTrafficLight, 0);
+			// Reset process_packet
+			process_packet = FALSE;
+		}
 	}
 }
 

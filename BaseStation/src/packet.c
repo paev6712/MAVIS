@@ -15,7 +15,7 @@
 /*********************************************************************************************
  * Base function to send all packets (or strings to setup WiFi module)
  *********************************************************************************************/
-uint8_t sendPacket( char* packet, uint8_t length ) {
+uint8_t sendPacket( char* packet, uint8_t length, uint8_t tilde ) {
 	int i;
 	for( i=0; i < length; i++ ) {
 		// Wait for data register to be empty before adding the next char
@@ -24,6 +24,12 @@ uint8_t sendPacket( char* packet, uint8_t length ) {
 		// Put into TX register
 		USART_SendData( WIFI_USART, *packet );
 		packet++;
+	}
+
+	// Check if it is a custom packet
+	if( tilde == TRUE ) {
+		while( !(WIFI_USART->SR & 0x00000040) );
+		USART_SendData( WIFI_USART, '~' );
 	}
 
 	// WiFi module expects \r\n at the end of every string
@@ -61,14 +67,14 @@ uint8_t sendAck( Header* header, uint8_t success ) {
 	// Send packet
 	switch(wifi_channel[header->dest]) {
 		case 0:
-			sendPacket( "AT_CIPSEND=0,6", 14 );
+			sendPacket( "AT+CIPSEND=0,7", 14, FALSE);
 			break;
 		case 1:
-			sendPacket( "AT_CIPSEND=1,6", 14 );
+			sendPacket( "AT+CIPSEND=1,7", 14, FALSE );
 			break;
 	}
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ack_packet, header->length );
+	swDelay(100);
+	uint8_t result = sendPacket( ack_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ack);
@@ -96,14 +102,14 @@ uint8_t sendPing( Header* header ) {
 	// Send packet
 	switch(wifi_channel[header->dest]) {
 		case 0:
-			sendPacket( "AT_CIPSEND=0,5", 14 );
+			sendPacket( "AT+CIPSEND=0,6", 14, FALSE );
 			break;
 		case 1:
-			sendPacket( "AT_CIPSEND=1,5", 14 );
+			sendPacket( "AT+CIPSEND=1,6", 14, FALSE );
 			break;
 	}
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ping_packet, header->length );
+	swDelay(100);
+	uint8_t result = sendPacket( ping_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ping_packet);
@@ -136,14 +142,14 @@ uint8_t sendChangeMode( Header* header, Mode newMode ) {
 	// Send packet
 	switch(wifi_channel[header->dest]) {
 		case 0:
-			sendPacket( "AT_CIPSEND=0,6", 14 );
+			sendPacket( "AT+CIPSEND=0,7", 14, FALSE );
 			break;
 		case 1:
-			sendPacket( "AT_CIPSEND=1,6", 14 );
+			sendPacket( "AT+CIPSEND=1,7", 14, FALSE );
 			break;
 	}
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( change_mode_packet, header->length );
+	swDelay(100);
+	uint8_t result = sendPacket( change_mode_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(change_mode);
@@ -178,14 +184,15 @@ uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightSta
 	// Send packet
 	switch(wifi_channel[header->dest]) {
 		case 0:
-			sendPacket( "AT_CIPSEND=0,7", 14 );
+			sendPacket( "AT+CIPSEND=0,8", 14, FALSE);
 			break;
 		case 1:
-			sendPacket( "AT_CIPSEND=1,7", 14 );
+			sendPacket( "AT+CIPSEND=1,8", 14, FALSE );
 			break;
 	}
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( traffic_light_current_packet, header->length );
+	uint32_t delay = 100000;
+	while( delay-- != 0 );
+	uint8_t result = sendPacket( traffic_light_current_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(traffic_light_current);
@@ -223,14 +230,15 @@ uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t c
 	// Send packet
 	switch(wifi_channel[header->dest]) {
 		case 0:
-			sendPacket( "AT_CIPSEND=0,9", 14 );
+			sendPacket( "AT+CIPSEND=0,10", 15, FALSE );
 			break;
 		case 1:
-			sendPacket( "AT_CIPSEND=1,9", 14 );
+			sendPacket( "AT+CIPSEND=1,10", 15, FALSE );
 			break;
 	}
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( traffic_light_future_packet, header->length );
+	uint32_t delay = 100000;
+	while( delay-- != 0 );
+	uint8_t result = sendPacket( traffic_light_future_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(traffic_light_future);
@@ -336,7 +344,7 @@ uint8_t handlePing( Header* header, char* packet ) {
 	header->type = ack;
 
 	// Check if this is the first communication with this SAV
-	if( wifi_channel[header->dest] == -1 ) {
+	if( wifi_channel[header->dest] == 0xFF ) {
 		// Associate this SAV with next wifi channel
 		wifi_channel[header->dest] = wifi_next_channel;
 
@@ -462,3 +470,11 @@ void copyString( volatile char* original, char* new, uint8_t length ) {
 		new[i] = original[i];
 	}
 }
+
+
+/*********************************************************************************************
+ * Define Globals
+ *********************************************************************************************/
+Mode mode_savs[NUMBER_SAV];
+uint8_t wifi_channel[NUMBER_SAV];
+uint8_t wifi_channel_active[NUMBER_SAV];
