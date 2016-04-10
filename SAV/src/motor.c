@@ -58,16 +58,48 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
 	// Select the corresponding OCInit function
 	switch( motor ) {
 		case motor1:
-			TIM_OC2Init(TIM3, &TIM_OC_InitStructure);
-			TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
+			TIM_OC2Init(PWM_TIM, &TIM_OC_InitStructure);
+			TIM_OC2PreloadConfig(PWM_TIM, TIM_OCPreload_Enable);
 			break;
 		case motor2:
-			TIM_OC3Init(TIM3, &TIM_OC_InitStructure);
-			TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
+			TIM_OC3Init(PWM_TIM, &TIM_OC_InitStructure);
+			TIM_OC3PreloadConfig(PWM_TIM, TIM_OCPreload_Enable);
 			break;
 		case servo:
-			TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-			TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
+			TIM_OC4Init(PWM_TIM, &TIM_OC_InitStructure);
+			TIM_OC4PreloadConfig(PWM_TIM, TIM_OCPreload_Enable);
+			break;
+		default:
 			break;
 	}
+}
+
+
+/*********************************************************************************************
+ * Timer callback to read photo resistors
+ *********************************************************************************************/
+void prvSetMotorCallback( TimerHandle_t pxTimer ) {
+
+	static uint8_t state = 0;
+
+	switch( state ) {
+		case 0:
+			pwmSet(50, servo);
+//			pwmSet(0, servo);
+			state = 1;
+			break;
+		case 1:
+			pwmSet(75, servo);
+//			pwmSet(0, servo);
+			state = 2;
+			break;
+		case 2:
+			pwmSet(25, servo);
+//			pwmSet(0, servo);
+			state = 0;
+			break;
+		default:
+			break;
+	}
+
 }

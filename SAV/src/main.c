@@ -54,6 +54,12 @@ void prvSetupTask( void *pvParameters ) {
 	// Test LEDs and indicate program is starting
 	prvBlinkLeds();
 
+	// Set motors
+	pwmSet(50, servo);
+	swDelay(500);
+	pwmSet(0,servo);
+	swTimerStart( set_motor, 0 );
+
 	// Setup WiFi connection
 	prvSetupWifi();
 
@@ -299,6 +305,9 @@ void prvTrafficLightTask( void *pvParameters ) {
 
 	// Read Photo Resistor
 	swTimerStart( read_photo, 0 );
+
+	// Set motors
+//	swTimerStart( set_motor, 0 );
 
 	// Let task run infinitely
 	for(;;) {

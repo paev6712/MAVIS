@@ -66,7 +66,7 @@ uint8_t sendAck( Header* header, uint8_t success ) {
 
 	// Send packet
 	sendPacket( "AT+CIPSEND=7", 12, FALSE );
-	while(received_string[0] != 'O');
+	swDelay(100);
 	uint8_t result = sendPacket( ack_packet, header->length, TRUE );
 
 	// Free variables
@@ -94,7 +94,7 @@ uint8_t sendPing( Header* header ) {
 
 	// Send packet
 	sendPacket( "AT+CIPSEND=6", 12, FALSE );
-	while(received_string[0] != 'O');
+	swDelay(100);
 	uint8_t result = sendPacket( ping_packet, header->length, TRUE );
 
 	// Free variables
@@ -121,7 +121,7 @@ uint8_t sendSetMode( Header* header ) {
 
 	// Send packet
 	sendPacket( "AT+CIPSEND=6", 12, FALSE );
-	while(received_string[0] != 'O');
+	swDelay(100);
 	uint8_t result = sendPacket( set_mode_packet, header->length, TRUE );
 
 	// Free variables

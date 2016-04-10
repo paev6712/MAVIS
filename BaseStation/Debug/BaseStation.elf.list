@@ -1566,7 +1566,7 @@ uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightSta
 			break;
  80009b2:	bf00      	nop
 	}
-	uint32_t delay = 100000;
+	uint32_t delay = 100000000;
  80009b4:	4b10      	ldr	r3, [pc, #64]	; (80009f8 <sendTrafficLightCurrent+0xbc>)
  80009b6:	61fb      	str	r3, [r7, #28]
 	while( delay-- != 0 );
@@ -1604,7 +1604,7 @@ uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightSta
  80009ec:	2001c1f4 	.word	0x2001c1f4
  80009f0:	08005f08 	.word	0x08005f08
  80009f4:	08005f18 	.word	0x08005f18
- 80009f8:	000186a0 	.word	0x000186a0
+ 80009f8:	05f5e100 	.word	0x05f5e100
 
 080009fc <sendTrafficLightFuture>:
 
@@ -1702,7 +1702,7 @@ uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t c
 			break;
  8000a7e:	bf00      	nop
 	}
-	uint32_t delay = 100000;
+	uint32_t delay = 100000000;
  8000a80:	4b10      	ldr	r3, [pc, #64]	; (8000ac4 <sendTrafficLightFuture+0xc8>)
  8000a82:	61fb      	str	r3, [r7, #28]
 	while( delay-- != 0 );
@@ -1740,7 +1740,7 @@ uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t c
  8000ab8:	2001c1f4 	.word	0x2001c1f4
  8000abc:	08005f28 	.word	0x08005f28
  8000ac0:	08005f38 	.word	0x08005f38
- 8000ac4:	000186a0 	.word	0x000186a0
+ 8000ac4:	05f5e100 	.word	0x05f5e100
 
 08000ac8 <handlePacket>:
  * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -2484,10 +2484,10 @@ void prvSetupTask( void *pvParameters ) {
 		// Set the SAVs default mode
 //		mode_savs[sav] = mode1;
 		// TODO: change back to default
-		mode_savs[sav] = mode2;
+		mode_savs[sav] = mode3;
  8000e78:	7bfb      	ldrb	r3, [r7, #15]
  8000e7a:	4a1b      	ldr	r2, [pc, #108]	; (8000ee8 <prvSetupTask+0x90>)
- 8000e7c:	2102      	movs	r1, #2
+ 8000e7c:	2103      	movs	r1, #3
  8000e7e:	54d1      	strb	r1, [r2, r3]
 
 		// Mark the WiFi channels as uninitialized

@@ -10,6 +10,7 @@
 #include "mode.h"
 #include "power.h"
 #include "photo.h"
+#include "motor.h"
 
 /*********************************************************************************************
  * Hardware functions
@@ -173,7 +174,7 @@ void ultrasonicTimerConfig();
 #define PWM_TIM								TIM3
 #define PWM_TIM_CLK							RCC_APB1Periph_TIM3
 #define PWM_TIM_PRESCALER					9
-#define PWM_TIM_PERIOD						8063
+#define PWM_TIM_PERIOD						25210
 
 
 /*********************************************************************************************

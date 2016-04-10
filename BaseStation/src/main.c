@@ -67,7 +67,7 @@ void prvSetupTask( void *pvParameters ) {
 		// Set the SAVs default mode
 //		mode_savs[sav] = mode1;
 		// TODO: change back to default
-		mode_savs[sav] = mode2;
+		mode_savs[sav] = mode3;
 
 		// Mark the WiFi channels as uninitialized
 		wifi_channel[sav] = 0xFF;

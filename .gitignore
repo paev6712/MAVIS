@@ -20,6 +20,11 @@ $RECYCLE.BIN/
 # Ignore metafiles
 .metadata\*
 
+# ignore .o
+*.o
+*.elf
+*.map
+
 # =========================
 # Operating System Files
 # =========================
