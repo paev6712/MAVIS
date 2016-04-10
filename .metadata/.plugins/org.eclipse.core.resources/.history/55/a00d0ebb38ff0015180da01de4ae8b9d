@@ -294,12 +294,6 @@ void prvTrafficLightTask( void *pvParameters ) {
 															next_light_state[current_lights.eastWest], timer_EW );
 				}
 			}
-
-			// Reset flag
-			update_traffic = FALSE;
-
-			// Free variables
-			vPortFree( traffic_header );
 		}
 	}
 }

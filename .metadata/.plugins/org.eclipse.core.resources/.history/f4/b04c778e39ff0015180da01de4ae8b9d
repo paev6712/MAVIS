@@ -297,9 +297,6 @@ void prvTrafficLightTask( void *pvParameters ) {
 
 			// Reset flag
 			update_traffic = FALSE;
-
-			// Free variables
-			vPortFree( traffic_header );
 		}
 	}
 }

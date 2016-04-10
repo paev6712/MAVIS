@@ -3969,8 +3969,8 @@ void pwmInit() {
  80016ae:	f000 f813 	bl	80016d8 <pwmTimerConfig>
 
 	// Initialize set motor timer
-	set_motor = swTimerInit( 5000, REPEAT, prvSetMotorCallback );
- 80016b2:	f241 3088 	movw	r0, #5000	; 0x1388
+	set_motor = swTimerInit( 1000, REPEAT, prvSetMotorCallback );
+ 80016b2:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  80016b6:	2101      	movs	r1, #1
  80016b8:	4a05      	ldr	r2, [pc, #20]	; (80016d0 <pwmInit+0x74>)
  80016ba:	f7fe fee3 	bl	8000484 <swTimerInit>

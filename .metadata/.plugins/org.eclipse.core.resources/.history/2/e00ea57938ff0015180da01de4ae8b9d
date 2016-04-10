@@ -265,42 +265,6 @@ void prvTrafficLightTask( void *pvParameters ) {
 			// Reset process_packet
 			process_packet = FALSE;
 		}
-
-		// Send updated traffic packets
-		if( update_traffic ) {
-			// Light states
-			systemState current_lights = current_system_state[light_system_state];
-
-			// Create Header
-			Header* traffic_header = pvPortMalloc( sizeof(Header) );
-			traffic_header->addr = MY_ADDR;
-			traffic_header->mode = allModes;
-
-			// Iterate through all SAVs
-			uint8_t sav;
-			for(sav=0; sav<NUMBER_SAV; sav++){
-				// Check if active
-				if( wifi_channel_active[sav] == TRUE ) {
-					// Define destination
-					traffic_header->dest = sav;
-
-					// Send current state packet
-					traffic_header->type = trafficLightCurrent;
-					sendTrafficLightCurrent( traffic_header, current_lights.northSouth, current_lights.eastWest );
-
-					// Send future state packet
-					traffic_header->type = trafficLightFuture;
-					sendTrafficLightFuture( traffic_header, next_light_state[current_lights.northSouth], timer_NS,
-															next_light_state[current_lights.eastWest], timer_EW );
-				}
-			}
-
-			// Reset flag
-			update_traffic = FALSE;
-
-			// Free variables
-			vPortFree( traffic_header );
-		}
 	}
 }
 
