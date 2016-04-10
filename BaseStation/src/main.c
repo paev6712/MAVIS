@@ -84,7 +84,7 @@ void prvSetupTask( void *pvParameters ) {
 
 	// Create initial task to connect to Base Station
 //	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
-	xTaskCreate( prvTrafficLightTask, "", 500 * sizeof(uint8_t), NULL, trafficLightPriority, xTrafficLightHandle );
+	xTaskCreate( prvTrafficLightTask, "", 600 * sizeof(uint8_t), NULL, trafficLightPriority, xTrafficLightHandle );
 
 	// Delete this task
 	vTaskDelete( xSetupHandle );
@@ -257,7 +257,7 @@ void prvTrafficLightTask( void *pvParameters ) {
 			xQueueReceive( xPacketQueue, packet, 0 );
 
 			// Process packet
-			PacketResult packet_result = handlePacket( packet );
+			handlePacket( packet );
 
 			// Free variables
 			vPortFree( packet );
@@ -285,8 +285,8 @@ void prvTrafficLightTask( void *pvParameters ) {
 					traffic_header->dest = sav;
 
 					// Send current state packet
-					traffic_header->type = trafficLightCurrent;
-					sendTrafficLightCurrent( traffic_header, current_lights.northSouth, current_lights.eastWest );
+//					traffic_header->type = trafficLightCurrent;
+//					sendTrafficLightCurrent( traffic_header, current_lights.northSouth, current_lights.eastWest );
 
 					// Send future state packet
 					traffic_header->type = trafficLightFuture;

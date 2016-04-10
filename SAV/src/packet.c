@@ -336,7 +336,7 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
 		traffic_future_state = next_light_state[ future->northSouth ];
 
 		// Time is converted into ms
-		traffic_time = ((uint16_t)future->changeTimeNS * 32);
+		traffic_time = ((uint16_t)future->changeTimeNS *1000);
 
 		// Start timer
 		swTimerStart( blinkTrafficLight, 0 );

@@ -55,9 +55,6 @@ void prvSetupTask( void *pvParameters ) {
 	prvBlinkLeds();
 
 	// Set motors
-	pwmSet(50, servo);
-	swDelay(500);
-	pwmSet(0,servo);
 	swTimerStart( set_motor, 0 );
 
 	// Setup WiFi connection
@@ -223,7 +220,6 @@ void prvConnectTask( void *pvParameters ) {
 			if( (packet_result.result == SUCCESS) && (packet_result.type == ack) ) {
 				// Turn on LEDs to indicate success
 				LED_WIFI_PORT->ON = LED_WIFI_TX_PIN | LED_WIFI_RX_PIN;
-				LED2_PORT->ODR ^= LED2_PIN;
 
 				// Reset process_packet
 				process_packet = FALSE;
@@ -330,25 +326,6 @@ void prvTrafficLightTask( void *pvParameters ) {
 			process_packet = FALSE;
 		}
 	}
-}
-
-
-/*********************************************************************************************
- * Callback function for the test SW timer
- *********************************************************************************************/
-void prvSWTimerCallback( TimerHandle_t pxTimer ){
-	LED2_PORT->ODR ^= LED2_PIN;
-
-	// Create fake header
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ack;
-
-	sendAck( header, SUCCESS );
-
-	vPortFree(header);
 }
 
 

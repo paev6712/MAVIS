@@ -50,7 +50,7 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
 
 	// Convert duty cycle to TIM pulse
 	uint32_t duty = (PWM_TIM_PERIOD + 1) * dutyCycle;
-	duty = (uint32_t) ((duty/100) - 1);
+	duty = (uint32_t) ((duty/100));
 
 	// Set duty cycle
 	TIM_OC_InitStructure.TIM_Pulse = duty;
@@ -80,26 +80,31 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
  *********************************************************************************************/
 void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
-	static uint8_t state = 0;
+//	static uint8_t state = 0;
 
-	switch( state ) {
-		case 0:
-			pwmSet(50, servo);
-//			pwmSet(0, servo);
-			state = 1;
-			break;
-		case 1:
-			pwmSet(75, servo);
-//			pwmSet(0, servo);
-			state = 2;
-			break;
-		case 2:
-			pwmSet(25, servo);
-//			pwmSet(0, servo);
-			state = 0;
-			break;
-		default:
-			break;
-	}
+	pwmSet(0, servo);
+	setMotor(forward, 50);
+
+//	switch( state ) {
+//		case 0:
+//			pwmSet(50, servo);
+//			pwmSet(50, motor1);
+//			state = 1;
+//			break;
+//		case 1:
+//			pwmSet(65, servo);
+////			setMotor(reverse, 50);
+//			state = 2;
+//			break;
+//		case 2:
+//			pwmSet(35, servo);
+//			state = 3;
+//			break;
+//		case 3:
+////			setMotor(forward, 50);
+//			state = 0;
+//		default:
+//			break;
+//	}
 
 }

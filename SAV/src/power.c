@@ -27,7 +27,7 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
 	power_total += current_power;
 
 	// Send back packet every 10 readings
-	if( power_time%2 == 0 ) {
+	if( power_time%10 == 0 ) {
 
 		// Create header
 		Header* header = pvPortMalloc( sizeof(Header) );

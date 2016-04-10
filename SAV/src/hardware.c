@@ -29,18 +29,14 @@ void ledInit() {
 	GPIO_InitStructure.GPIO_Pin = LED_ERROR_PIN;
 	GPIO_Init(LED_ERROR_PORT, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = LED2_PIN;
-	GPIO_Init(LED2_PORT, &GPIO_InitStructure);
-
 	// Make sure all LEDs are off
 	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
 	LED_WIFI_PORT->OFF = LED_WIFI_PINS;
 	LED_MODE_PORT->OFF = LED_MODE_PINS;
 	LED_ERROR_PORT->OFF = LED_ERROR_PIN;
-	LED2_PORT->OFF = LED2_PIN;
 
 	// Initialize Traffic Light timer
-	blinkTrafficLight = swTimerInit( 400, REPEAT, prvblinkTrafficLightCallback );
+	blinkTrafficLight = swTimerInit( 100, REPEAT, prvblinkTrafficLightCallback );
 }
 
 
@@ -111,7 +107,8 @@ void pwmInit() {
 	RCC_AHB1PeriphClockCmd(PWM_MOTOR_CLK | PWM_SERVO_CLK, ENABLE);
 
 	// Set alternate function
-	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_1_PINSOURCE | PWM_MOTOR_2_PINSOURCE, PWM_MOTOR_AF);
+	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_1_PINSOURCE, PWM_MOTOR_AF);
+	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_2_PINSOURCE, PWM_MOTOR_AF);
 	GPIO_PinAFConfig(PWM_SERVO_PORT, PWM_SERVO_PINSOURCE, PWM_SERVO_AF);
 
 	// Configure GPIO
@@ -304,14 +301,6 @@ void ultrasonicTimerConfig() {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  * Define Pin Mappings
  * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/*********************************************************************************************
- * ADC map
- *********************************************************************************************/
-uint16_t adcPin[6] = {ADC_0_PIN, ADC_1_PIN, ADC_2_PIN, ADC_3_PIN, ADC_4_PIN, ADC_5_PIN};
-GPIO_TypeDef* adcPort[6] = {ADC_0_PORT, ADC_1_PORT, ADC_2_PORT, ADC_3_PORT, ADC_4_PORT, ADC_5_PORT};
-uint32_t adcClk[6] = {ADC_0_CLK, ADC_1_CLK, ADC_2_CLK, ADC_3_CLK, ADC_4_CLK, ADC_5_CLK};
-
 
 /*********************************************************************************************
  * LED pin map

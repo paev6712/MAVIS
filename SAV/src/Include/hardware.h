@@ -32,64 +32,64 @@ void ultrasonicTimerConfig();
  * Hardware Definitions
  *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-/*********************************************************************************************
- * General
- *********************************************************************************************/
+///*********************************************************************************************
+// * General
+// *********************************************************************************************/
 #define INTERRUPT_ENABLED					1
 #define INTERRUPT_DISABLED					0
 
-#define LED2_PIN							GPIO_Pin_5
-#define LED2_PORT							GPIOA
-#define LED2_CLK							RCC_AHB1Periph_GPIOA
-
-#define SIGNAL1_PIN							GPIO_Pin_6
-#define SIGNAL1_PORT						GPIOA
-#define SIGNAL1_CLK							RCC_AHB1Periph_GPIOA
-
-#define BUTTON_PIN                   		GPIO_Pin_13
-#define BUTTON_PORT            				GPIOC
-#define BUTTON_CLK              			RCC_AHB1Periph_GPIOA
-#define BUTTON_EXTI_PORT_SOURCE      		GPIO_PortSourceGPIOA
-#define BUTTON_EXTI_PIN_SOURCE       		GPIO_PinSource0
-#define BUTTON_EXTI_LINE             		EXTI_Line0
-#define BUTTON_EXTI_IRQn             		EXTI0_IRQn
-
-#define TIMER5_PIN                   		GPIO_Pin_7
-#define TIMER5_PORT            				GPIOA
-#define TIMER5_CLK              			RCC_AHB1Periph_GPIOA
-#define TIMER5_EXTI_PORT_SOURCE      		GPIO_PortSourceGPIOA
-#define TIMER5_EXTI_PIN_SOURCE       		GPIO_PinSource0
-#define TIMER5_EXTI_LINE             		EXTI_Line0
-#define TIMER5_EXTI_IRQn             		EXTI0_IRQn
+//#define LED2_PIN							GPIO_Pin_5
+//#define LED2_PORT							GPIOA
+//#define LED2_CLK							RCC_AHB1Periph_GPIOA
+//
+//#define SIGNAL1_PIN							GPIO_Pin_6
+//#define SIGNAL1_PORT						GPIOA
+//#define SIGNAL1_CLK							RCC_AHB1Periph_GPIOA
+//
+//#define BUTTON_PIN                   		GPIO_Pin_13
+//#define BUTTON_PORT            				GPIOC
+//#define BUTTON_CLK              			RCC_AHB1Periph_GPIOA
+//#define BUTTON_EXTI_PORT_SOURCE      		GPIO_PortSourceGPIOA
+//#define BUTTON_EXTI_PIN_SOURCE       		GPIO_PinSource0
+//#define BUTTON_EXTI_LINE             		EXTI_Line0
+//#define BUTTON_EXTI_IRQn             		EXTI0_IRQn
+//
+//#define TIMER5_PIN                   		GPIO_Pin_7
+//#define TIMER5_PORT            				GPIOA
+//#define TIMER5_CLK              			RCC_AHB1Periph_GPIOA
+//#define TIMER5_EXTI_PORT_SOURCE      		GPIO_PortSourceGPIOA
+//#define TIMER5_EXTI_PIN_SOURCE       		GPIO_PinSource0
+//#define TIMER5_EXTI_LINE             		EXTI_Line0
+//#define TIMER5_EXTI_IRQn             		EXTI0_IRQn
 
 #define ON									BSRRL
 #define OFF									BSRRH
 
-#define ADC_0_PIN							GPIO_Pin_0
-#define ADC_0_PORT							GPIOA
-#define ADC_0_CLK							RCC_AHB1Periph_GPIOA
-
-#define ADC_1_PIN							GPIO_Pin_1
-#define ADC_1_PORT							GPIOA
-#define ADC_1_CLK							RCC_AHB1Periph_GPIOA
-
-#define ADC_2_PIN							GPIO_Pin_4
-#define ADC_2_PORT							GPIOA
-#define ADC_2_CLK							RCC_AHB1Periph_GPIOA
-
-#define ADC_3_PIN							GPIO_Pin_0
-#define ADC_3_PORT							GPIOB
-#define ADC_3_CLK							RCC_AHB1Periph_GPIOB
-
-#define ADC_4_PIN							GPIO_Pin_1
-#define ADC_4_PORT							GPIOC
-#define ADC_4_CLK							RCC_AHB1Periph_GPIOC
-
-#define ADC_5_PIN							GPIO_Pin_0
-#define ADC_5_PORT							GPIOC
-#define ADC_5_CLK							RCC_AHB1Periph_GPIOC
-
-#define ADC_Periph_CLK						RCC_APB2Periph_ADC1
+//#define ADC_0_PIN							GPIO_Pin_0
+//#define ADC_0_PORT							GPIOA
+//#define ADC_0_CLK							RCC_AHB1Periph_GPIOA
+//
+//#define ADC_1_PIN							GPIO_Pin_1
+//#define ADC_1_PORT							GPIOA
+//#define ADC_1_CLK							RCC_AHB1Periph_GPIOA
+//
+//#define ADC_2_PIN							GPIO_Pin_4
+//#define ADC_2_PORT							GPIOA
+//#define ADC_2_CLK							RCC_AHB1Periph_GPIOA
+//
+//#define ADC_3_PIN							GPIO_Pin_0
+//#define ADC_3_PORT							GPIOB
+//#define ADC_3_CLK							RCC_AHB1Periph_GPIOB
+//
+//#define ADC_4_PIN							GPIO_Pin_1
+//#define ADC_4_PORT							GPIOC
+//#define ADC_4_CLK							RCC_AHB1Periph_GPIOC
+//
+//#define ADC_5_PIN							GPIO_Pin_0
+//#define ADC_5_PORT							GPIOC
+//#define ADC_5_CLK							RCC_AHB1Periph_GPIOC
+//
+//#define ADC_Periph_CLK						RCC_APB2Periph_ADC1
 
 
 
