@@ -21,21 +21,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000030  00000000  00000000  00018048  2**0
                   CONTENTS, READONLY
-  9 .debug_info   0000c585  00000000  00000000  00018078  2**0
+  9 .debug_info   0000c596  00000000  00000000  00018078  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002278  00000000  00000000  000245fd  2**0
+ 10 .debug_abbrev 00002278  00000000  00000000  0002460e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 00000328  00000000  00000000  00026878  2**3
+ 11 .debug_aranges 00000328  00000000  00000000  00026888  2**3
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   000044e7  00000000  00000000  00026ba0  2**0
+ 12 .debug_line   000044e7  00000000  00000000  00026bb0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    00004a9f  00000000  00000000  0002b087  2**0
+ 13 .debug_str    00004ab0  00000000  00000000  0002b097  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .comment      00000082  00000000  00000000  0002fb26  2**0
+ 14 .comment      00000082  00000000  00000000  0002fb47  2**0
                   CONTENTS, READONLY
- 15 .debug_frame  00002f6c  00000000  00000000  0002fba8  2**2
+ 15 .debug_frame  00002f6c  00000000  00000000  0002fbcc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000020  00000000  00000000  00032b18  2**3
+ 16 .debug_ranges 00000020  00000000  00000000  00032b38  2**3
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -928,10 +928,10 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
  800061e:	6078      	str	r0, [r7, #4]
 
 	// Increment time based on the value the timer delays
-	power_time += 1;
+	power_time += 5;
  8000620:	4b28      	ldr	r3, [pc, #160]	; (80006c4 <prvReadPowerCallback+0xac>)
  8000622:	881b      	ldrh	r3, [r3, #0]
- 8000624:	3301      	adds	r3, #1
+ 8000624:	3305      	adds	r3, #5
  8000626:	b29a      	uxth	r2, r3
  8000628:	4b26      	ldr	r3, [pc, #152]	; (80006c4 <prvReadPowerCallback+0xac>)
  800062a:	801a      	strh	r2, [r3, #0]
@@ -969,15 +969,15 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
  8000660:	4b1a      	ldr	r3, [pc, #104]	; (80006cc <prvReadPowerCallback+0xb4>)
  8000662:	601a      	str	r2, [r3, #0]
 
-	// Send back packet every 10 readings
-	if( power_time%10 == 0 ) {
+	// Send back packet every 30 seconds
+	if( power_time % 6 == 0 ) {
  8000664:	4b17      	ldr	r3, [pc, #92]	; (80006c4 <prvReadPowerCallback+0xac>)
  8000666:	881a      	ldrh	r2, [r3, #0]
  8000668:	4b19      	ldr	r3, [pc, #100]	; (80006d0 <prvReadPowerCallback+0xb8>)
  800066a:	fba3 1302 	umull	r1, r3, r3, r2
- 800066e:	08d9      	lsrs	r1, r3, #3
+ 800066e:	0899      	lsrs	r1, r3, #2
  8000670:	460b      	mov	r3, r1
- 8000672:	009b      	lsls	r3, r3, #2
+ 8000672:	005b      	lsls	r3, r3, #1
  8000674:	440b      	add	r3, r1
  8000676:	005b      	lsls	r3, r3, #1
  8000678:	1ad3      	subs	r3, r2, r3
@@ -1033,7 +1033,7 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
  80006c4:	2001c1f0 	.word	0x2001c1f0
  80006c8:	40012000 	.word	0x40012000
  80006cc:	2001c1e0 	.word	0x2001c1e0
- 80006d0:	cccccccd 	.word	0xcccccccd
+ 80006d0:	aaaaaaab 	.word	0xaaaaaaab
 
 080006d4 <prvReadPhotoCallback>:
 
@@ -4088,8 +4088,8 @@ void measuredPowerInit() {
 	// adcConfig();
 
 	// Initialize read measured power timer
-	read_power = swTimerInit( 1000, REPEAT, prvReadPowerCallback );
- 8001750:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
+	read_power = swTimerInit( 5000, REPEAT, prvReadPowerCallback );
+ 8001750:	f241 3088 	movw	r0, #5000	; 0x1388
  8001754:	2101      	movs	r1, #1
  8001756:	4a05      	ldr	r2, [pc, #20]	; (800176c <measuredPowerInit+0x40>)
  8001758:	f7fe fea4 	bl	80004a4 <swTimerInit>

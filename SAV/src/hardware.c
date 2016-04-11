@@ -225,7 +225,7 @@ void measuredPowerInit() {
 	// adcConfig();
 
 	// Initialize read measured power timer
-	read_power = swTimerInit( 1000, REPEAT, prvReadPowerCallback );
+	read_power = swTimerInit( 5000, REPEAT, prvReadPowerCallback );
 }
 
 

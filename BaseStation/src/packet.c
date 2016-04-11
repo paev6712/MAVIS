@@ -282,7 +282,7 @@ PacketResult handlePacket( char* packet ) {
 				packet_result.result = handleSetMode( header, packet );
 				break;
 			case powerConsumption:
-				// TODO: Add handler
+				packet_result.result = handlePowerConsumption( header, packet );
 				break;
 			default:
 				// If there is no handle function, send back negative Ack
@@ -377,6 +377,30 @@ uint8_t handleSetMode( Header* header, char* packet ) {
 	uint8_t result = sendChangeMode( header, mode_savs[header->dest] );
 
 	return result;
+}
+
+
+/*********************************************************************************************
+ * Handle Power Consumption
+ *********************************************************************************************/
+uint8_t handlePowerConsumption( Header* header, char* packet ) {
+
+	// Extract the pay load
+	PowerConsumption* power_consumption = pvPortMalloc( sizeof(PowerConsumption) );
+	char* power_consumption_char = (char*) power_consumption;
+	unpack( packet, power_consumption_char, HEADER_LENGTH );
+
+	// Convert string back to Ack struct
+	power_consumption = (PowerConsumption*) power_consumption_char;
+
+	// Indicate success or failure from packet
+	average_power[average_power_index] = power_consumption->average_power;
+	average_power_index++;
+
+	// Free variables
+	vPortFree( power_consumption );
+
+	return SUCCESS;
 }
 
 
@@ -476,3 +500,6 @@ void copyString( volatile char* original, char* new, uint8_t length ) {
 Mode mode_savs[NUMBER_SAV];
 uint8_t wifi_channel[NUMBER_SAV];
 uint8_t wifi_channel_active[NUMBER_SAV];
+
+uint16_t average_power[120];
+uint8_t average_power_index = 0;

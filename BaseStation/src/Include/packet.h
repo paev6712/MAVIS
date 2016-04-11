@@ -254,6 +254,15 @@ uint8_t handlePing( Header* header, char* packet );
 uint8_t handleSetMode( Header* header, char* packet );
 
 
+/*********************************************************************************************
+ * Handle Power Consumption
+ *********************************************************************************************/
+uint8_t handlePowerConsumption( Header* header, char* packet );
+
+uint16_t average_power[120];
+uint8_t average_power_index;
+
+
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  * Helper Functions
  *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
