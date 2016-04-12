@@ -39,7 +39,30 @@ void prvConnectTask( void *pvParameters );
 TaskHandle_t xConnectHandle = NULL;
 #define	connectPriority						( tskIDLE_PRIORITY + 1 )
 
+/*********************************************************************************************
+ * Task Priorities
+ *********************************************************************************************/
+#define	connectPriority						( tskIDLE_PRIORITY + 1 )
+#define	ultrasonicPriority					( tskIDLE_PRIORITY + 1 )
 
+/*********************************************************************************************
+ * Task Frequencies
+ *********************************************************************************************/
+#define ultrasonicFreq						( 500 / portTICK_PERIOD_MS)
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+volatile int distCM_front;
+volatile int distCM_left;
+volatile int distCM_right;
+volatile int timerValue1; //timer value for ultrasonic counters
+volatile int timerValue2;
+volatile int timerValue3;
+volatile int done1 = 0; //boolean for indicating when a timer value is ready to be read
+volatile int done2 = 0;
+volatile int done3 = 0;
 /*********************************************************************************************
  * Initial bootup task to setup default mode of operation
  *********************************************************************************************/
@@ -72,6 +95,19 @@ static void prvSetupHardware( void );
  * Setup Wifi connection
  *********************************************************************************************/
 static void prvSetupWifi( void );
+
+
+/*********************************************************************************************
+ * Ultrasonic data collection and processing task
+ *********************************************************************************************/
+void prvUltrasonic( void *pvParameters );
+void prvUltrasonic2( void *pvParameters );
+void prvUltrasonic3( void *pvParameters );
+/*********************************************************************************************
+ * Ultrasonic helper functions to change pin modes (input/output)
+ *********************************************************************************************/
+void setInput(uint16_t pin);
+void setOutput(uint16_t pin);
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
