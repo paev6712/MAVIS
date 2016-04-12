@@ -214,28 +214,36 @@ void ultrasonicTimerConfig();
 /*********************************************************************************************
  * Ultrasonic
  *********************************************************************************************/
-#define ULTRA_1_PIN							GPIO_Pin_5
+#define ULTRA_1_PIN							GPIO_Pin_5 //8 for dev, 5 for final
 #define ULTRA_2_PIN							GPIO_Pin_6
 #define ULTRA_3_PIN							GPIO_Pin_7
-#define ULTRA_PINS							GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7
+#define ULTRA_PINS							ULTRA_1_PIN | ULTRA_2_PIN | ULTRA_3_PIN
 #define ULTRA_PORT							GPIOA
 #define ULTRA_CLK							RCC_AHB1Periph_GPIOA
 
-#define ULTRA_EXTI_PINSOURCE_1				EXTI_PinSource5
+#define ULTRA_EXTI_PINSOURCE_1				EXTI_PinSource5 //8 for dev, 5 for final
 #define ULTRA_EXTI_PINSOURCE_2				EXTI_PinSource6
 #define ULTRA_EXTI_PINSOURCE_3				EXTI_PinSource7
 #define ULTRA_EXTI_PINSOURCES				ULTRA_EXTI_PINSOURCE_1 | ULTRA_EXTI_PINSOURCE_2 | ULTRA_EXTI_PINSOURCE_3
-#define ULTRA_EXTI_LINE_1					EXTI_Line5
+#define ULTRA_EXTI_LINE_1					EXTI_Line5 //8 for dev, 5 for final
 #define ULTRA_EXTI_LINE_2					EXTI_Line6
 #define ULTRA_EXTI_LINE_3					EXTI_Line7
 #define ULTRA_EXTI_LINES					ULTRA_EXTI_LINE_1 | ULTRA_EXTI_LINE_2 | ULTRA_EXTI_LINE_3
 #define ULTRA_EXTI_PORT						EXTI_PortSourceGPIOA
 #define ULTRA_EXTI_IRQ						EXTI9_5_IRQn
 
-#define ULTRA_TIM							TIM2
-#define ULTRA_TIM_CLK						RCC_APB1Periph_TIM2
-#define ULTRA_TIM_PRESCALER					400
-#define ULTRA_TIM_PERIOD					500
+#define ULTRA_TIM_1							TIM2
+#define ULTRA_TIM_CLK_1						RCC_APB1Periph_TIM2
+#define ULTRA_TIM_PRESCALER_1				400
+#define ULTRA_TIM_PERIOD_1					500
 
+#define ULTRA_TIM_2							TIM4
+#define ULTRA_TIM_CLK_2						RCC_APB1Periph_TIM4
+#define ULTRA_TIM_PRESCALER_2				4000
+#define ULTRA_TIM_PERIOD_2					5000
 
+#define ULTRA_TIM_3							TIM5
+#define ULTRA_TIM_CLK_3						RCC_APB1Periph_TIM5
+#define ULTRA_TIM_PRESCALER_3				4000
+#define ULTRA_TIM_PERIOD_3					5000
 #endif /* HARDWARE_H_ */
