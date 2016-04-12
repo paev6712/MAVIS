@@ -2,6 +2,13 @@
 Thumbs.db
 ehthumbs.db
 
+# C Files
+*.o
+*.launch
+*.elf
+*.list
+*.map
+
 # Folder config file
 Desktop.ini
 
@@ -53,8 +60,16 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+<<<<<<< HEAD
 *.pdom
 .metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
 .metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
 .metadata/.plugins/org.eclipse.cdt.core/BaseStation.1459266247425.pdom
 *.pdom
+=======
+.metadata/.lock
+*.log
+.metadata/.plugins/org.eclipse.cdt.core/BaseStation.1459266247425.pdom
+*.index
+.metadata/.plugins/org.eclipse.cdt.core/SAV.1458917802287.pdom
+>>>>>>> refs/heads/master
