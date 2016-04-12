@@ -280,21 +280,53 @@ void extiConfig() {
 
 
 void ultrasonicTimerConfig() {
-	TIM_TimeBaseInitTypeDef timerInitStructure;
+	TIM_TimeBaseInitTypeDef timerInitStructure_1;
 
 	// Enable clock
-	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK, ENABLE);
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_1, ENABLE);
 
 	// Configure timer
-	timerInitStructure.TIM_Prescaler = ULTRA_TIM_PRESCALER;
-	timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	timerInitStructure.TIM_Period = ULTRA_TIM_PERIOD;
-	timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(ULTRA_TIM, &timerInitStructure);
+	timerInitStructure_1.TIM_Prescaler = ULTRA_TIM_PRESCALER_1;
+	timerInitStructure_1.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_1.TIM_Period = ULTRA_TIM_PERIOD_1;
+	timerInitStructure_1.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_1.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_1, &timerInitStructure_1);
 
 	// Enable timer
-	TIM_Cmd(ULTRA_TIM, ENABLE);
+	TIM_Cmd(ULTRA_TIM_1, ENABLE);
+
+	TIM_TimeBaseInitTypeDef timerInitStructure_2;
+
+	// Enable clock
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_2, ENABLE);
+
+	// Configure timer
+	timerInitStructure_2.TIM_Prescaler = ULTRA_TIM_PRESCALER_2;
+	timerInitStructure_2.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_2.TIM_Period = ULTRA_TIM_PERIOD_2;
+	timerInitStructure_2.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_2.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_2, &timerInitStructure_2);
+
+	// Enable timer
+	TIM_Cmd(ULTRA_TIM_2, ENABLE);
+
+	TIM_TimeBaseInitTypeDef timerInitStructure_3;
+
+	// Enable clock
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_3, ENABLE);
+
+	// Configure timer
+	timerInitStructure_3.TIM_Prescaler = ULTRA_TIM_PRESCALER_3;
+	timerInitStructure_3.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_3.TIM_Period = ULTRA_TIM_PERIOD_3;
+	timerInitStructure_3.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_3.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_3, &timerInitStructure_3);
+
+	// Enable timer
+	TIM_Cmd(ULTRA_TIM_3, ENABLE);
 }
 
 
