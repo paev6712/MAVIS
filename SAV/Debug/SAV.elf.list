@@ -21,21 +21,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000030  00000000  00000000  00018048  2**0
                   CONTENTS, READONLY
-  9 .debug_info   0000c596  00000000  00000000  00018078  2**0
+  9 .debug_info   0000c585  00000000  00000000  00018078  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002278  00000000  00000000  0002460e  2**0
+ 10 .debug_abbrev 00002278  00000000  00000000  000245fd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 00000328  00000000  00000000  00026888  2**3
+ 11 .debug_aranges 00000328  00000000  00000000  00026878  2**3
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   000044e7  00000000  00000000  00026bb0  2**0
+ 12 .debug_line   000044e7  00000000  00000000  00026ba0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    00004ab0  00000000  00000000  0002b097  2**0
+ 13 .debug_str    00004a9f  00000000  00000000  0002b087  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .comment      00000082  00000000  00000000  0002fb47  2**0
+ 14 .comment      00000082  00000000  00000000  0002fb26  2**0
                   CONTENTS, READONLY
- 15 .debug_frame  00002f6c  00000000  00000000  0002fbcc  2**2
+ 15 .debug_frame  00002f6c  00000000  00000000  0002fba8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000020  00000000  00000000  00032b38  2**3
+ 16 .debug_ranges 00000020  00000000  00000000  00032b18  2**3
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2754,15 +2754,15 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 //	static uint8_t state = 0;
 
+	setMotor(reverse, 100);
+ 8001050:	2001      	movs	r0, #1
+ 8001052:	2164      	movs	r1, #100	; 0x64
+ 8001054:	f7ff ff6a 	bl	8000f2c <setMotor>
 	pwmSet(0, servo);
- 8001050:	2000      	movs	r0, #0
- 8001052:	2102      	movs	r1, #2
- 8001054:	f7ff ffac 	bl	8000fb0 <pwmSet>
-	setMotor(forward, 50);
- 8001058:	2002      	movs	r0, #2
- 800105a:	2132      	movs	r1, #50	; 0x32
- 800105c:	f7ff ff66 	bl	8000f2c <setMotor>
-//			state = 0;
+ 8001058:	2000      	movs	r0, #0
+ 800105a:	2102      	movs	r1, #2
+ 800105c:	f7ff ffa8 	bl	8000fb0 <pwmSet>
+//			break;
 //		default:
 //			break;
 //	}

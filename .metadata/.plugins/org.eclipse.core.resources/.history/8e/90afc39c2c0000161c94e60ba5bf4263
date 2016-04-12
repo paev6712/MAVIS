@@ -15,7 +15,7 @@
 /*********************************************************************************************
  * Base function to send all packets (or strings to setup WiFi module)
  *********************************************************************************************/
-uint8_t sendPacket( char* packet, uint8_t length ) {
+uint8_t sendPacket( char* packet, uint8_t length, uint8_t tilde ) {
 	int i;
 	for( i=0; i < length; i++ ) {
 		// Wait for data register to be empty before adding the next char
@@ -24,6 +24,12 @@ uint8_t sendPacket( char* packet, uint8_t length ) {
 		// Put into TX register
 		USART_SendData( WIFI_USART, *packet );
 		packet++;
+	}
+
+	// Check if it is a custom packet
+	if( tilde == TRUE ) {
+		while( !(WIFI_USART->SR & 0x00000040) );
+		USART_SendData( WIFI_USART, '~' );
 	}
 
 	// WiFi module expects \r\n at the end of every string
@@ -59,9 +65,16 @@ uint8_t sendAck( Header* header, uint8_t success ) {
 	pack( ack_packet, ack_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=6", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ack_packet, header->length );
+	switch(wifi_channel[header->dest]) {
+		case 0:
+			sendPacket( "AT+CIPSEND=0,7", 14, FALSE);
+			break;
+		case 1:
+			sendPacket( "AT+CIPSEND=1,7", 14, FALSE );
+			break;
+	}
+	swDelay(100);
+	uint8_t result = sendPacket( ack_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ack);
@@ -87,9 +100,16 @@ uint8_t sendPing( Header* header ) {
 	pack( ping_packet, header_char, 0 );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=5", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ping_packet, header->length );
+	switch(wifi_channel[header->dest]) {
+		case 0:
+			sendPacket( "AT+CIPSEND=0,6", 14, FALSE );
+			break;
+		case 1:
+			sendPacket( "AT+CIPSEND=1,6", 14, FALSE );
+			break;
+	}
+	swDelay(100);
+	uint8_t result = sendPacket( ping_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ping_packet);
@@ -99,62 +119,128 @@ uint8_t sendPing( Header* header ) {
 
 
 /*********************************************************************************************
- * Send SetMode
+ * Send ChangeMode
  *********************************************************************************************/
-uint8_t sendSetMode( Header* header ) {
+uint8_t sendChangeMode( Header* header, Mode newMode ) {
+
+	// Fill ChangeMode struct
+	ChangeMode* change_mode = pvPortMalloc( sizeof(ChangeMode) );
+	change_mode->newMode = newMode;
 
 	// Update the length of the packet in the header
-	header->length = (HEADER_LENGTH + SET_MODE_LENGTH);
+	header->length = (HEADER_LENGTH + CHANGE_MODE_LENGTH);
 
 	// Convert structs into strings
 	char* header_char = (char*) header;
+	char* change_mode_char = (char*) change_mode;
 
 	// Package header and payload together
-	char* set_mode_packet = pvPortMalloc( sizeof((uint8_t)(header->length)) );
-	pack( set_mode_packet, header_char, 0 );
+	char* change_mode_packet = pvPortMalloc( sizeof((uint8_t)(header->length)) );
+	pack( change_mode_packet, header_char, 0 );
+	pack( change_mode_packet, change_mode_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=5", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( set_mode_packet, header->length );
+	switch(wifi_channel[header->dest]) {
+		case 0:
+			sendPacket( "AT+CIPSEND=0,7", 14, FALSE );
+			break;
+		case 1:
+			sendPacket( "AT+CIPSEND=1,7", 14, FALSE );
+			break;
+	}
+	swDelay(100);
+	uint8_t result = sendPacket( change_mode_packet, header->length, TRUE );
 
 	// Free variables
-	vPortFree(set_mode_packet);
+	vPortFree(change_mode);
+	vPortFree(change_mode_packet);
 
 	return result;
 }
 
 
 /*********************************************************************************************
- * Send PowerConsumption
+ * Send TrafficLightCurrent
  *********************************************************************************************/
-uint8_t sendPowerConsumption( Header* header, uint16_t average_power, uint16_t time ) {
+uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightState eastWest ) {
 
-	// Fill Ack struct
-	PowerConsumption* power_consumption = pvPortMalloc( sizeof(PowerConsumption) );
-	power_consumption->average_power = average_power;
-	power_consumption->time = time;
+	// Fill TrafficLightCurrent struct
+	TrafficLightCurrent* traffic_light_current = pvPortMalloc( sizeof(TrafficLightCurrent) );
+	traffic_light_current->northSouth = northSouth;
+	traffic_light_current->eastWest = eastWest;
 
 	// Update the length of the packet in the header
-	header->length = (HEADER_LENGTH + POWER_CONSUMPTION_LENGTH);
+	header->length = (HEADER_LENGTH + CURRENT_LENGTH);
 
 	// Convert structs into strings
 	char* header_char = (char*) header;
-	char* power_consumption_char = (char*) power_consumption;
+	char* traffic_light_current_char = (char*) traffic_light_current;
 
 	// Package header and payload together
-	char* power_consumption_packet = pvPortMalloc( sizeof((uint8_t)(header->length)) );
-	pack( power_consumption_packet, header_char, 0 );
-	pack( power_consumption_packet, power_consumption_char, HEADER_LENGTH );
+	char* traffic_light_current_packet = pvPortMalloc( sizeof((uint8_t)(header->length)) );
+	pack( traffic_light_current_packet, header_char, 0 );
+	pack( traffic_light_current_packet, traffic_light_current_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=9", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( power_consumption_packet, header->length );
+	switch(wifi_channel[header->dest]) {
+		case 0:
+			sendPacket( "AT+CIPSEND=0,8", 14, FALSE);
+			break;
+		case 1:
+			sendPacket( "AT+CIPSEND=1,8", 14, FALSE );
+			break;
+	}
+	swDelay(100);
+	uint8_t result = sendPacket( traffic_light_current_packet, header->length, TRUE );
 
 	// Free variables
-	vPortFree(power_consumption);
-	vPortFree(power_consumption_packet);
+	vPortFree(traffic_light_current);
+	vPortFree(traffic_light_current_packet);
+
+	return result;
+}
+
+
+/*********************************************************************************************
+ * Send TrafficLightFuture
+ *********************************************************************************************/
+uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t changeTimeNS, lightState eastWest, uint8_t changeTimeEW ) {
+
+	// Fill TrafficLightFuture struct
+	TrafficLightFuture* traffic_light_future = pvPortMalloc( sizeof(TrafficLightFuture) );
+	traffic_light_future->northSouth = northSouth;
+	traffic_light_future->changeTimeNS = changeTimeNS;
+	traffic_light_future->eastWest = eastWest;
+	traffic_light_future->changeTimeEW = changeTimeEW;
+
+
+	// Update the length of the packet in the header
+	header->length = (HEADER_LENGTH + FUTURE_LENGTH);
+
+	// Convert structs into strings
+	char* header_char = (char*) header;
+	char* traffic_light_future_char = (char*) traffic_light_future;
+
+	// Package header and payload together
+	char* traffic_light_future_packet = pvPortMalloc( sizeof((uint8_t)(header->length)) );
+	pack( traffic_light_future_packet, header_char, 0 );
+	pack( traffic_light_future_packet, traffic_light_future_char, HEADER_LENGTH );
+
+	// Send packet
+	switch(wifi_channel[header->dest]) {
+		case 0:
+			sendPacket( "AT+CIPSEND=0,10", 15, FALSE );
+			break;
+		case 1:
+			sendPacket( "AT+CIPSEND=1,10", 15, FALSE );
+			break;
+	}
+	swDelay(100);
+	uint8_t result = sendPacket( traffic_light_future_packet, header->length, TRUE );
+
+	// Free variables
+	vPortFree(traffic_light_future);
+	vPortFree(traffic_light_future_packet);
 
 	return result;
 }
@@ -192,18 +278,11 @@ PacketResult handlePacket( char* packet ) {
 			case ping:
 				packet_result.result = handlePing( header, packet );
 				break;
-			case trafficLightCurrent:
-				if( my_mode != mode1 ) {
-					packet_result.result = handleTrafficLightCurrent( header, packet );
-				}
+			case setMode:
+				packet_result.result = handleSetMode( header, packet );
 				break;
-			case trafficLightFuture:
-				if( my_mode != mode1 ) {
-				packet_result.result = handleTrafficLightFuture( header, packet );
-				}
-				break;
-			case changeMode:
-				packet_result.result = handleChangeMode( header, packet );
+			case powerConsumption:
+				packet_result.result = handlePowerConsumption( header, packet );
 				break;
 			default:
 				// If there is no handle function, send back negative Ack
@@ -211,7 +290,7 @@ PacketResult handlePacket( char* packet ) {
 				header->addr = MY_ADDR;
 				header->mode = allModes;
 				header->type = ack;
-				// sendAck( header, FAILURE );
+				sendAck( header, FAILURE );
 				packet_result.result = FAILURE;
 				break;
 		}
@@ -254,13 +333,7 @@ uint8_t handleAck( Header* header, char* packet ) {
  *********************************************************************************************/
 uint8_t handlePing( Header* header, char* packet ) {
 
-	// Extract the pay load
-	Ping* ping = pvPortMalloc( sizeof(Ping) );
-	char* ping_char = (char*) ping;
-	unpack( packet, ping_char, HEADER_LENGTH );
-
-	// Convert string back to Ping struct
-	ping = (Ping*) ping_char;
+	// Since Ping doesn't contain a payload, no information needs to be extracted
 
 	// Restructure header to send back ack
 	header->dest = header->addr;
@@ -268,110 +341,64 @@ uint8_t handlePing( Header* header, char* packet ) {
 	header->mode = allModes;
 	header->type = ack;
 
+	// Check if this is the first communication with this SAV
+	if( wifi_channel[header->dest] == 0xFF ) {
+		// Associate this SAV with next wifi channel
+		wifi_channel[header->dest] = wifi_next_channel;
+
+		// Increment next channel
+		wifi_next_channel++;
+
+		// Indicate SAV is now active
+		wifi_channel_active[header->dest] = TRUE;
+	}
+
 	// Send Ack
 	uint8_t result = sendAck( header, SUCCESS );
-
-	// Free variables
-	vPortFree( ping );
 
 	return result;
 }
 
 
 /*********************************************************************************************
- * Handle TrafficLightCurrent
+ * Handle Set Mode
  *********************************************************************************************/
-uint8_t handleTrafficLightCurrent( Header* header, char* packet ) {
+uint8_t handleSetMode( Header* header, char* packet ) {
 
-	// Extract the pay load
-	TrafficLightCurrent* current = pvPortMalloc( sizeof(TrafficLightCurrent) );
-	char* current_char = (char*) current;
-	unpack( packet, current_char, HEADER_LENGTH );
+	// Since SetMode doesn't contain a payload, no information needs to be extracted
 
-	// Convert string back to TrafficLightCurrent struct
-	current = (TrafficLightCurrent*) current_char;
+	// Restructure header to send back changeMode packet
+	header->dest = header->addr;
+	header->addr = MY_ADDR;
+	header->mode = allModes;
+	header->type = changeMode;
 
-	// Turn on corresponding LED
-	// TODO: need to know what direction SAV is headed (northSouth / eastWest)
-	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-	LED_LIGHT_PORT->ON = led_light_pin[ current->northSouth ];
+	// Send ChangeMode
+	uint8_t result = sendChangeMode( header, mode_savs[header->dest] );
 
-	// Set global so the SAV knows what the current state is
-	traffic_current_state = current->northSouth;
-
-	// Free variables
-	vPortFree( current );
-
-	return SUCCESS;
+	return result;
 }
 
 
 /*********************************************************************************************
- * Handle TrafficLightFuture
+ * Handle Power Consumption
  *********************************************************************************************/
-uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
+uint8_t handlePowerConsumption( Header* header, char* packet ) {
 
 	// Extract the pay load
-	TrafficLightFuture* future = pvPortMalloc( sizeof(TrafficLightFuture) );
-	char* future_char = (char*) future;
-	unpack( packet, future_char, HEADER_LENGTH );
+	PowerConsumption* power_consumption = pvPortMalloc( sizeof(PowerConsumption) );
+	char* power_consumption_char = (char*) power_consumption;
+	unpack( packet, power_consumption_char, HEADER_LENGTH );
 
-	// Convert string back to TrafficLightCurrent struct
-	future = (TrafficLightFuture*) future_char;
+	// Convert string back to Ack struct
+	power_consumption = (PowerConsumption*) power_consumption_char;
 
-	// Check if a timer has already been started
-	if( !swIsTimerActive(blinkTrafficLight) ) {
-		// Blink corresponding LED
-		// TODO: need to know what direction SAV is headed (northSouth / eastWest)
-		LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-		LED_LIGHT_PORT->ON = led_light_pin[ future->northSouth ];
-
-		// Set global variables
-		traffic_future_state = next_light_state[ future->northSouth ];
-
-		// Time is converted into ms
-		traffic_time = ((uint16_t)future->changeTimeNS * 32);
-
-		// Start timer
-		swTimerStart( blinkTrafficLight, 0 );
-	}
-
-	// If it has do nothing
-	// TODO: check if correct values
+	// Indicate success or failure from packet
+	average_power[average_power_index] = power_consumption->average_power;
+	average_power_index++;
 
 	// Free variables
-	vPortFree( future );
-
-	return SUCCESS;
-}
-
-
-/*********************************************************************************************
- * Handle ChangeMode
- *********************************************************************************************/
-uint8_t handleChangeMode( Header* header, char* packet ) {
-
-	// Extract the pay load
-	ChangeMode* change_mode = pvPortMalloc( sizeof(ChangeMode) );
-	char* change_mode_char = (char*) change_mode;
-	unpack( packet, change_mode_char, HEADER_LENGTH );
-
-	// Convert string back to ChangeMode struct
-	change_mode = (ChangeMode*) change_mode_char;
-
-	// Set SAV's Mode of Operation
-	my_mode = change_mode->newMode;
-
-	// Set corresponding LED
-	LED_MODE_PORT->OFF = led_mode_pin[ allModes ];
-	LED_MODE_PORT->ON = led_mode_pin[ my_mode ];
-
-	// Set initial TrafficLight state as green
-	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-	LED_LIGHT_PORT->ON = led_light_pin[green];
-
-	// Free variables
-	vPortFree( change_mode );
+	vPortFree( power_consumption );
 
 	return SUCCESS;
 }
@@ -465,3 +492,14 @@ void copyString( volatile char* original, char* new, uint8_t length ) {
 		new[i] = original[i];
 	}
 }
+
+
+/*********************************************************************************************
+ * Define Globals
+ *********************************************************************************************/
+Mode mode_savs[NUMBER_SAV];
+uint8_t wifi_channel[NUMBER_SAV];
+uint8_t wifi_channel_active[NUMBER_SAV];
+
+uint16_t average_power[120];
+uint8_t average_power_index = 0;

@@ -82,8 +82,8 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 //	static uint8_t state = 0;
 
+	setMotor(reverse, 100);
 	pwmSet(0, servo);
-	setMotor(forward, 50);
 
 //	switch( state ) {
 //		case 0:
@@ -93,16 +93,12 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 //			break;
 //		case 1:
 //			pwmSet(65, servo);
-////			setMotor(reverse, 50);
 //			state = 2;
 //			break;
 //		case 2:
 //			pwmSet(35, servo);
-//			state = 3;
-//			break;
-//		case 3:
-////			setMotor(forward, 50);
 //			state = 0;
+//			break;
 //		default:
 //			break;
 //	}
