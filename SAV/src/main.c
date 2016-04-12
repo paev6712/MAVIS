@@ -31,12 +31,6 @@ int main(void) {
 	// Create initial task to connect to Base Station
 	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
 
-	// Ultrasonic task
-	xTaskCreate( prvUltrasonic, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
-
-	xTaskCreate( prvUltrasonic2, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
-
-	xTaskCreate( prvUltrasonic3, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
 	// Start the scheduler which begins to run the tasks
 	vTaskStartScheduler();
 
@@ -74,6 +68,13 @@ void prvSetupTask( void *pvParameters ) {
 
 	// Create initial task to connect to Base Station
 	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
+
+	// Ultrasonic task
+	xTaskCreate( prvUltrasonic, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
+
+	xTaskCreate( prvUltrasonic2, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
+
+	xTaskCreate( prvUltrasonic3, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
 
 	// Delete this task
 	vTaskDelete( xSetupHandle );
@@ -352,24 +353,6 @@ void prvSWTimerPingCallback( TimerHandle_t pxTimer ) {
 	vPortFree(header);
 }
 
-
-/*********************************************************************************************
- * Callback function for the test SW timer
- *********************************************************************************************/
-void prvSWTimerCallback( TimerHandle_t pxTimer ){
-	LED2_PORT->ODR ^= LED2_PIN;
-
-	// Create fake header
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ack;
-
-	sendAck( header, SUCCESS );
-
-	vPortFree(header);
-}
 
 /* The sequence for getting an ultrasonic value is as follows
  * 1. Set the pin to an output

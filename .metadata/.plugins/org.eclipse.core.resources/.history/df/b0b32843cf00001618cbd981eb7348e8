@@ -43,7 +43,7 @@ TaskHandle_t xConnectHandle = NULL;
  * Task Priorities
  *********************************************************************************************/
 #define	connectPriority						( tskIDLE_PRIORITY + 1 )
-#define	ultrasonicPriority					( tskIDLE_PRIORITY + 1 )
+#define	ultrasonicPriority					( tskIDLE_PRIORITY + 2 )
 
 /*********************************************************************************************
  * Task Frequencies
