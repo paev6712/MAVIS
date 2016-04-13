@@ -29,18 +29,14 @@ void ledInit() {
 	GPIO_InitStructure.GPIO_Pin = LED_ERROR_PIN;
 	GPIO_Init(LED_ERROR_PORT, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = LED2_PIN;
-	GPIO_Init(LED2_PORT, &GPIO_InitStructure);
-
 	// Make sure all LEDs are off
 	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
 	LED_WIFI_PORT->OFF = LED_WIFI_PINS;
 	LED_MODE_PORT->OFF = LED_MODE_PINS;
 	LED_ERROR_PORT->OFF = LED_ERROR_PIN;
-	LED2_PORT->OFF = LED2_PIN;
 
 	// Initialize Traffic Light timer
-	blinkTrafficLight = swTimerInit( 400, REPEAT, prvblinkTrafficLightCallback );
+	blinkTrafficLight = swTimerInit( 100, REPEAT, prvblinkTrafficLightCallback );
 }
 
 
@@ -77,7 +73,7 @@ void wifiConfig() {
 	NVIC_InitTypeDef NVIC_InitStruct;
 
 	// Enable clock
-	RCC_APB2PeriphClockCmd(WIFI_USART_CLK, ENABLE);
+	RCC_APB1PeriphClockCmd(WIFI_USART_CLK, ENABLE);
 
 	// Initialize USART
 	USART_InitStruct.USART_BaudRate = WIFI_USART_BAUD;
@@ -111,7 +107,8 @@ void pwmInit() {
 	RCC_AHB1PeriphClockCmd(PWM_MOTOR_CLK | PWM_SERVO_CLK, ENABLE);
 
 	// Set alternate function
-	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_1_PINSOURCE | PWM_MOTOR_2_PINSOURCE, PWM_MOTOR_AF);
+	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_1_PINSOURCE, PWM_MOTOR_AF);
+	GPIO_PinAFConfig(PWM_MOTOR_PORT, PWM_MOTOR_2_PINSOURCE, PWM_MOTOR_AF);
 	GPIO_PinAFConfig(PWM_SERVO_PORT, PWM_SERVO_PINSOURCE, PWM_SERVO_AF);
 
 	// Configure GPIO
@@ -127,6 +124,9 @@ void pwmInit() {
 	GPIO_Init(PWM_SERVO_PORT, &GPIO_InitStructure);
 
 	pwmTimerConfig();
+
+	// Initialize set motor timer
+	set_motor = swTimerInit( 100, REPEAT, prvSetMotorCallback );
 }
 
 
@@ -176,7 +176,7 @@ void photoResistorInit() {
 	adcConfig();
 
 	// Initialize read photo resistor timer
-	read_photo = swTimerInit( 1280, REPEAT, prvReadPhotoCallback );
+	read_photo = swTimerInit( 1000, REPEAT, prvReadPhotoCallback );
 }
 
 
@@ -225,7 +225,7 @@ void measuredPowerInit() {
 	// adcConfig();
 
 	// Initialize read measured power timer
-	read_power = swTimerInit( 12800, REPEAT, prvReadPowerCallback );
+	read_power = swTimerInit( 5000, REPEAT, prvReadPowerCallback );
 }
 
 
@@ -280,35 +280,59 @@ void extiConfig() {
 
 
 void ultrasonicTimerConfig() {
-	TIM_TimeBaseInitTypeDef timerInitStructure;
+	TIM_TimeBaseInitTypeDef timerInitStructure_1;
 
 	// Enable clock
-	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK, ENABLE);
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_1, ENABLE);
 
 	// Configure timer
-	timerInitStructure.TIM_Prescaler = ULTRA_TIM_PRESCALER;
-	timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	timerInitStructure.TIM_Period = ULTRA_TIM_PERIOD;
-	timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(ULTRA_TIM, &timerInitStructure);
+	timerInitStructure_1.TIM_Prescaler = ULTRA_TIM_PRESCALER_1;
+	timerInitStructure_1.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_1.TIM_Period = ULTRA_TIM_PERIOD_1;
+	timerInitStructure_1.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_1.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_1, &timerInitStructure_1);
 
 	// Enable timer
-	TIM_Cmd(ULTRA_TIM, ENABLE);
+	TIM_Cmd(ULTRA_TIM_1, ENABLE);
+
+	TIM_TimeBaseInitTypeDef timerInitStructure_2;
+
+	// Enable clock
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_2, ENABLE);
+
+	// Configure timer
+	timerInitStructure_2.TIM_Prescaler = ULTRA_TIM_PRESCALER_2;
+	timerInitStructure_2.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_2.TIM_Period = ULTRA_TIM_PERIOD_2;
+	timerInitStructure_2.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_2.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_2, &timerInitStructure_2);
+
+	// Enable timer
+	TIM_Cmd(ULTRA_TIM_2, ENABLE);
+
+	TIM_TimeBaseInitTypeDef timerInitStructure_3;
+
+	// Enable clock
+	RCC_APB1PeriphClockCmd(ULTRA_TIM_CLK_3, ENABLE);
+
+	// Configure timer
+	timerInitStructure_3.TIM_Prescaler = ULTRA_TIM_PRESCALER_3;
+	timerInitStructure_3.TIM_CounterMode = TIM_CounterMode_Up;
+	timerInitStructure_3.TIM_Period = ULTRA_TIM_PERIOD_3;
+	timerInitStructure_3.TIM_ClockDivision = TIM_CKD_DIV1;
+	timerInitStructure_3.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(ULTRA_TIM_3, &timerInitStructure_3);
+
+	// Enable timer
+	TIM_Cmd(ULTRA_TIM_3, ENABLE);
 }
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  * Define Pin Mappings
  * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/*********************************************************************************************
- * ADC map
- *********************************************************************************************/
-uint16_t adcPin[6] = {ADC_0_PIN, ADC_1_PIN, ADC_2_PIN, ADC_3_PIN, ADC_4_PIN, ADC_5_PIN};
-GPIO_TypeDef* adcPort[6] = {ADC_0_PORT, ADC_1_PORT, ADC_2_PORT, ADC_3_PORT, ADC_4_PORT, ADC_5_PORT};
-uint32_t adcClk[6] = {ADC_0_CLK, ADC_1_CLK, ADC_2_CLK, ADC_3_CLK, ADC_4_CLK, ADC_5_CLK};
-
 
 /*********************************************************************************************
  * LED pin map

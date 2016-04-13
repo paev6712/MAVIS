@@ -23,6 +23,15 @@ typedef enum {
 
 
 /*********************************************************************************************
+ * Define NS and EW
+ *********************************************************************************************/
+typedef enum {
+	ns		=		(uint8_t) 0x00,
+	ew		= 		(uint8_t) 0x01
+} Direction;
+
+
+/*********************************************************************************************
  * Timer callback to read photo resistors
  *********************************************************************************************/
 void prvReadPhotoCallback( TimerHandle_t pxTimer );
@@ -34,6 +43,14 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer );
 TimerHandle_t read_photo;
 LineColor photo_previous_line;
 uint8_t photo_counter;
+uint8_t photo_intersection;
+Direction photo_direction;
+
+
+/*********************************************************************************************
+ * Map direction transitions
+ *********************************************************************************************/
+Direction next_direction[2];
 
 
 #endif /* PHOTO_H_ */

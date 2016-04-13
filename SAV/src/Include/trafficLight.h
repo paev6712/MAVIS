@@ -34,6 +34,7 @@ void prvblinkTrafficLightCallback( TimerHandle_t pxTimer );
  *********************************************************************************************/
 TimerHandle_t blinkTrafficLight;
 lightState traffic_future_state;
+lightState traffic_current_state;
 uint16_t traffic_time;
 
 

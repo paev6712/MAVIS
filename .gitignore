@@ -2,6 +2,13 @@
 Thumbs.db
 ehthumbs.db
 
+# C Files
+*.o
+*.launch
+*.elf
+*.list
+*.map
+
 # Folder config file
 Desktop.ini
 
@@ -16,6 +23,14 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Ignore metafiles
+.metadata\*
+
+# ignore .o
+*.o
+*.elf
+*.map
 
 # =========================
 # Operating System Files
@@ -45,3 +60,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.pdom
+.metadata/.lock
+*.log
+*.index
+

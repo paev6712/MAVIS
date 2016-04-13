@@ -15,7 +15,7 @@
 void prvReadPowerCallback( TimerHandle_t pxTimer ) {
 
 	// Increment time based on the value the timer delays
-	power_time += 1;
+	power_time += 5;
 
 	// Read ADC pin
 	ADC_RegularChannelConfig( MEASURED_POWER_ADC, MEASURED_POWER_CHANNEL, 1, ADC_SampleTime_15Cycles );
@@ -26,8 +26,8 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
 	// Add to total power value
 	power_total += current_power;
 
-	// Send back packet every 10 readings
-	if( power_time%2 == 0 ) {
+	// Send back packet every 30 seconds
+	if( power_time % 6 == 0 ) {
 
 		// Create header
 		Header* header = pvPortMalloc( sizeof(Header) );
