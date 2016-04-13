@@ -54,8 +54,18 @@ void prvSetupTask( void *pvParameters ) {
 	// Test LEDs and indicate program is starting
 	prvBlinkLeds();
 
+	// ******************************************************************************************************** //
+	// Ultrasonic tasks
+//	xTaskCreate( prvUltrasonic1Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic1Handle );
+	xTaskCreate( prvUltrasonic2Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic2Handle );
+//	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
+
 	// Set motors
 	swTimerStart( set_motor, 0 );
+
+	// Read Photo Resistor
+	swTimerStart( read_photo, 0 );
+	// ******************************************************************************************************** //
 
 	// Setup WiFi connection
 	prvSetupWifi();
@@ -68,13 +78,6 @@ void prvSetupTask( void *pvParameters ) {
 
 	// Create initial task to connect to Base Station
 	xTaskCreate( prvConnectTask, "", 300 * sizeof(uint8_t), NULL, connectPriority, xConnectHandle );
-
-	// Ultrasonic task
-	xTaskCreate( prvUltrasonic, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
-
-	xTaskCreate( prvUltrasonic2, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
-
-	xTaskCreate( prvUltrasonic3, "Run Ultrasonic Array", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, NULL );
 
 	// Delete this task
 	vTaskDelete( xSetupHandle );
@@ -306,8 +309,7 @@ void prvTrafficLightTask( void *pvParameters ) {
 	// Read Measured Power
 	swTimerStart( read_power, 0 );
 
-	// Read Photo Resistor
-	swTimerStart( read_photo, 0 );
+
 
 	// Set motors
 //	swTimerStart( set_motor, 0 );
@@ -336,213 +338,7 @@ void prvTrafficLightTask( void *pvParameters ) {
 }
 
 
-/*********************************************************************************************
- * Send Ping packet
- *********************************************************************************************/
-void prvSWTimerPingCallback( TimerHandle_t pxTimer ) {
 
-	// Setup header to Base Station
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ping;
-
-	sendPing( header );
-
-	vPortFree(header);
-}
-
-
-/* The sequence for getting an ultrasonic value is as follows
- * 1. Set the pin to an output
- * 2. Send a 10us pulse on the pin
- * 3. Set the pin to an input
- * 4. Enable interrupts to look for rising edge of the length indicating pulse
- * 5. Wait till we're finished reading the pulse
- * 6. Disable interrupts
- * 7. Grab the timer value
- * 8. Set the pin back to an output(this makes sure the line is tied low)
- * This is performed sequencially for each of the three sensors*/
-void prvUltrasonic( void *pvParameters ) {
-	int i;
-	for(;;){
-	//use pin 8 when testing on the dev board
-	//use pin 5 when testing on the final board
-	//you must also change these in the interrupt handler below and in hardware.h
-//		for front sensor
-		setOutput(GPIO_Pin_5);
-		GPIOA->ON = GPIO_Pin_5;
-		for(i = 0; i < 150; i++){};//delays 10us
-		GPIOA->OFF = GPIO_Pin_5;
-		setInput(GPIO_Pin_5);
-		__enable_irq();
-		while(!done1){};
-		done1 = 0;
-		__disable_irq();
-		distCM_front = timerValue1;//convert from timer value to cm
-
-		if(distCM_front < 50)
-		{
-			LED_MODE_PORT->ON = LED_MODE_2_PIN;
-		}
-
-		else
-		{
-			LED_MODE_PORT->OFF = LED_MODE_2_PIN;
-		}
-
-
-		vTaskDelay(ultrasonicFreq);
-	}
-}
-
-void prvUltrasonic2( void *pvParameters ) {
-	int i;
-	for(;;){
-	//		for right sensor
-			setOutput(GPIO_Pin_6);
-			GPIOA->ON = GPIO_Pin_6;
-			for(i = 0; i < 150; i++){};//delays 10us
-			GPIOA->OFF = GPIO_Pin_6;
-			setInput(GPIO_Pin_6);
-			__enable_irq();
-			while(!done2){};
-			done2 = 0;
-			__disable_irq();
-			distCM_right = timerValue2;//convert from timer value to cm
-			if(distCM_right < 50)
-			{
-				LED_MODE_PORT->ON = LED_MODE_1_PIN;
-			}
-
-			else
-			{
-				LED_MODE_PORT->OFF = LED_MODE_1_PIN;
-			}
-			vTaskDelay(ultrasonicFreq);
-	}
-
-}
-
-void prvUltrasonic3( void *pvParameters ) {
-	int i;
-	for(;;){
-	//		for left sensor
-			setOutput(GPIO_Pin_7);
-			GPIOA->ON = GPIO_Pin_7;
-			for(i = 0; i < 150; i++){};//delays 10us
-			GPIOA->OFF = GPIO_Pin_7;
-			setInput(GPIO_Pin_7);
-			__enable_irq();
-			while(!done3){};
-			done3 = 0;
-			__disable_irq();
-			distCM_left = timerValue3;//convert from timer value to cm
-			if(distCM_left < 50)
-			{
-				LED_MODE_PORT->ON = LED_MODE_3_PIN;
-			}
-
-			else
-			{
-				LED_MODE_PORT->OFF = LED_MODE_3_PIN;
-			}
-			vTaskDelay(ultrasonicFreq);
-	}
-
-}
-
-//sets a pin on port A to input mode
-void setInput(uint16_t pin){
-	GPIO_InitTypeDef  GPIO_InitStructure;
-
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-		// Configure GPIO
-		GPIO_InitStructure.GPIO_Pin = pin;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-		GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-//sets a pin on port A to output mode
-void setOutput(uint16_t pin){
-	GPIO_InitTypeDef  GPIO_InitStructure;
-
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-
-		// Configure GPIO
-		GPIO_InitStructure.GPIO_Pin = pin;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-		GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-void EXTI9_5_IRQHandler(void) {
-	//for the right sensor
-    // Make sure that interrupt flag is set
-    if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
-    	//read the GPIO pin to see if we're on a rising edge or a falling edge
-    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == (uint8_t)Bit_SET)
-    	{
-    		TIM_SetCounter(TIM2, 0);
-    	}
-    	else
-    	{
-    		timerValue1 = TIM_GetCounter(TIM2);
-    		done1 = 1;
-    	}
-    	//clear the flag
-    	EXTI_ClearITPendingBit(EXTI_Line5);
-    }
-
-//    if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-//    	//read the GPIO pin to see if we're on a rising edge or a falling edge
-//    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_8) == (uint8_t)Bit_SET)
-//    	{
-//    		TIM_SetCounter(TIM2, 0);
-//    	}
-//    	else
-//    	{
-//    		timerValue = TIM_GetCounter(TIM2);
-//    		done = 1;
-//    	}
-//    	//clear the flag
-//    	EXTI_ClearITPendingBit(EXTI_Line8);
-//    }
-
-    	//for the front sensor
-    if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
-    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == (uint8_t)Bit_SET)
-    	{
-    		TIM_SetCounter(TIM4, 0);
-    	}
-    	else
-    	{
-    		timerValue2 = TIM_GetCounter(TIM4);
-    		done2 = 1;
-    	}
-    	EXTI_ClearITPendingBit(EXTI_Line6);
-    }
-
-    	//for the left sensor
-    if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
-    	if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == (uint8_t)Bit_SET)
-    	{
-    		TIM_SetCounter(TIM5, 0);
-    	}
-    	else
-    	{
-    		timerValue3 = TIM_GetCounter(TIM5);
-    		done3 = 1;
-    	}
-    	EXTI_ClearITPendingBit(EXTI_Line7);
-    }
-        /* Clear interrupt flag */
-}
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

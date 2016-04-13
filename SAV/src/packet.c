@@ -204,7 +204,7 @@ PacketResult handlePacket( char* packet ) {
 				}
 				break;
 			case trafficLightFuture:
-				if( my_mode == mode3 ) {
+				if( my_mode == mode3 || my_mode == mode2) {
 					packet_result.result = handleTrafficLightFuture( header, packet );
 				}
 				break;
@@ -325,25 +325,33 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
 	// Convert string back to TrafficLightCurrent struct
 	future = (TrafficLightFuture*) future_char;
 
-	// Check if a timer has already been started
-	if( !swIsTimerActive(blinkTrafficLight) ) {
-		// Blink corresponding LED
-		// TODO: need to know what direction SAV is headed (northSouth / eastWest)
-		LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
+	// Turn on LED corresponding to the current state
+	// TODO: need to know what direction SAV is headed (northSouth / eastWest)
+	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
+	if( photo_direction == ns ) {
 		LED_LIGHT_PORT->ON = led_light_pin[ future->northSouth ];
+	} else {
+		LED_LIGHT_PORT->ON = led_light_pin[ future->eastWest ];
+	}
 
+	// Blink corresponding LED
+	if( my_mode == mode3 ) {
 		// Set global variables
-		traffic_future_state = next_light_state[ future->northSouth ];
+		if( photo_direction == ns ) {
+			traffic_future_state = next_light_state[ future->northSouth ];
+		} else {
+			traffic_future_state = next_light_state[ future->eastWest ];
+		}
 
 		// Time is converted into ms
 		traffic_time = ((uint16_t)future->changeTimeNS *1000);
 
-		// Start timer
-		swTimerStart( blinkTrafficLight, 0 );
+		// Check if a timer has already been started
+		if( !swIsTimerActive(blinkTrafficLight) ) {
+			// Start timer
+			swTimerStart( blinkTrafficLight, 0 );
+		}
 	}
-
-	// If it has do nothing
-	// TODO: check if correct values
 
 	// Free variables
 	vPortFree( future );

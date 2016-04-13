@@ -190,7 +190,7 @@ uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightSta
 			sendPacket( "AT+CIPSEND=1,8", 14, FALSE );
 			break;
 	}
-	swDelay(100);
+	while(received_string[0] != 'O');
 	uint8_t result = sendPacket( traffic_light_current_packet, header->length, TRUE );
 
 	// Free variables
@@ -235,7 +235,7 @@ uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t c
 			sendPacket( "AT+CIPSEND=1,10", 15, FALSE );
 			break;
 	}
-	swDelay(100);
+	while(received_string[0] != 'O');
 	uint8_t result = sendPacket( traffic_light_future_packet, header->length, TRUE );
 
 	// Free variables

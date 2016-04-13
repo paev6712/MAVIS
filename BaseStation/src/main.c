@@ -289,9 +289,11 @@ void prvTrafficLightTask( void *pvParameters ) {
 //					sendTrafficLightCurrent( traffic_header, current_lights.northSouth, current_lights.eastWest );
 
 					// Send future state packet
-//					traffic_header->type = trafficLightFuture;
+					traffic_header->type = trafficLightFuture;
 //					sendTrafficLightFuture( traffic_header, next_light_state[current_lights.northSouth], timer_NS,
 //															next_light_state[current_lights.eastWest], timer_EW );
+					sendTrafficLightFuture( traffic_header, current_lights.northSouth, timer_NS,
+															current_lights.eastWest, timer_EW );
 				}
 			}
 

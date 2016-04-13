@@ -80,27 +80,39 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
  *********************************************************************************************/
 void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
-//	static uint8_t state = 0;
+	// Keep track of servo position
+	static uint8_t steer = 50;
 
-//	setMotor(reverse, 100);
-	pwmSet(0, servo);
-
-//	switch( state ) {
-//		case 0:
-//			pwmSet(50, servo);
-//			pwmSet(50, motor1);
-//			state = 1;
-//			break;
-//		case 1:
-//			pwmSet(65, servo);
-//			state = 2;
-//			break;
-//		case 2:
-//			pwmSet(35, servo);
-//			state = 0;
-//			break;
-//		default:
-//			break;
+//	// Adjust steering based on ultrasonic values
+//	if( distCM_right < 20 ) {
+//		// Make sure steer is valid
+//		if( steer < 68 ) {
+//			steer += 2;
+//		}
+//	} else if( distCM_left < 20 ) {
+//		// Make sure steer is valid
+//		if( steer > 35 ) {
+//			steer -= 2;
+//		}
+//	} else {
+//		// Reset back to nominal
+//		if( steer < 50 ) {
+//			steer += 2;
+//		} else if( steer > 50 ) {
+//			steer -= 2;
+//		}
 //	}
 
+	if( distCM_right < 20 ) {
+		if( steer < 70 ) {
+			steer += 1;
+		}
+	} else {
+		if( steer > 50 ) {
+			steer -= 1;
+		}
+	}
+
+	pwmSet(steer, servo);
+//	setMotor(forward, 90);
 }

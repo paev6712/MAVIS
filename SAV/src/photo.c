@@ -39,13 +39,18 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 	// Average values
 	photo_average = (photo1 + photo2 + photo3)/3;
 
-	// Check if over a black line
-	if( (photo_average > 1800) && (photo_previous_line == white) ) {
-		photo_previous_line = black;
-		photo_counter += 1;
-	} else if( (photo_average <= 1800) && (photo_previous_line == black) ) {
+	// Check if over a white line
+	if( (photo_average > 250) && (photo_previous_line == black) ) {
 		photo_previous_line = white;
 		photo_counter += 1;
+		LED_MODE_PORT->ON = LED_MODE_1_PIN;
+	}
+
+	// Check if over a black line
+	else if( (photo_average <= 250) && (photo_previous_line == white) ) {
+		photo_previous_line = black;
+		photo_counter += 1;
+		LED_MODE_PORT->OFF = LED_MODE_1_PIN;
 	}
 
 	if( photo_counter >= 5 ) {

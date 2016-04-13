@@ -12,6 +12,7 @@
 #include "stm32f4xx.h"
 #include "general.h"
 #include "hardware.h"
+#include "ultrasonic.h"
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

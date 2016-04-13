@@ -126,7 +126,7 @@ void pwmInit() {
 	pwmTimerConfig();
 
 	// Initialize set motor timer
-	set_motor = swTimerInit( 1000, REPEAT, prvSetMotorCallback );
+	set_motor = swTimerInit( 100, REPEAT, prvSetMotorCallback );
 }
 
 
