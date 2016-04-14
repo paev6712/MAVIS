@@ -67,7 +67,7 @@ void prvSetupTask( void *pvParameters ) {
 		// Set the SAVs default mode
 //		mode_savs[sav] = mode1;
 		// TODO: change back to default
-		mode_savs[sav] = mode3;
+		mode_savs[sav] = mode2;
 
 		// Mark the WiFi channels as uninitialized
 		wifi_channel[sav] = 0xFF;
@@ -290,6 +290,8 @@ void prvTrafficLightTask( void *pvParameters ) {
 
 					// Send future state packet
 					traffic_header->type = trafficLightFuture;
+//					sendTrafficLightFuture( traffic_header, next_light_state[current_lights.northSouth], timer_NS,
+//															next_light_state[current_lights.eastWest], timer_EW );
 					sendTrafficLightFuture( traffic_header, current_lights.northSouth, timer_NS,
 															current_lights.eastWest, timer_EW );
 				}

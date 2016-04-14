@@ -52,14 +52,8 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 		photo_counter += 1;
 		LED_MODE_PORT->ON = LED_MODE_1_PIN;
 		if( (photo_counter == 3) && (photo_intersection == FALSE) ) {
-//			steer = 50;
-
-			// Modify behavior based on mode
-//			if( my_mode == mode2 ) {
-//				if( traffic_current_state == red ) {
-//					photo_counter = stop;
-//				}
-//			}
+			steer = 50;
+			setMotor(forward, 90);
 		}
 	}
 
@@ -71,11 +65,11 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 
 			// Adjust steering
 			if( photo_direction == ns ) {
-//				steer = 68;
-//				setMotor(forward, 100);
+				steer = 68;
+				setMotor(forward, 100);
 			} else {
-//				steer = 30;
-//				setMotor(forward, 100);
+				steer = 30;
+				setMotor(forward, 100);
 			}
 		} else {
 			// Entering intersection
@@ -96,7 +90,7 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
  *********************************************************************************************/
 uint8_t photo_counter = 0;
 LineColor photo_previous_line = white;
-uint8_t photo_intersection = FALSE;
+uint8_t photo_intersection = TRUE;
 Direction photo_direction = ns;
 
 

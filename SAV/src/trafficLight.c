@@ -32,8 +32,3 @@ void prvblinkTrafficLightCallback( TimerHandle_t pxTimer ) {
  * Map current state to next state
  *********************************************************************************************/
 lightState next_light_state[3] = {green, red, yellow};
-
-
-lightState traffic_current_state = green;
-lightState traffic_future_state = yellow;
-uint16_t traffic_time = 30000;

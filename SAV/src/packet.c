@@ -325,28 +325,26 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
 	// Convert string back to TrafficLightCurrent struct
 	future = (TrafficLightFuture*) future_char;
 
-
-	// Set current state
-	if( photo_direction == ns ) {
-		traffic_current_state = future->northSouth;
-	} else {
-		traffic_current_state = future->eastWest;
-	}
-
 	// Turn on LED corresponding to the current state
+	// TODO: need to know what direction SAV is headed (northSouth / eastWest)
 	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-	LED_LIGHT_PORT->ON = led_light_pin[ traffic_current_state ];
+	if( photo_direction == ns ) {
+		LED_LIGHT_PORT->ON = led_light_pin[ future->northSouth ];
+	} else {
+		LED_LIGHT_PORT->ON = led_light_pin[ future->eastWest ];
+	}
 
 	// Blink corresponding LED
 	if( my_mode == mode3 ) {
 		// Set global variables
-		traffic_future_state = next_light_state[ traffic_current_state ];
+		if( photo_direction == ns ) {
+			traffic_future_state = next_light_state[ future->northSouth ];
+		} else {
+			traffic_future_state = next_light_state[ future->eastWest ];
+		}
 
 		// Time is converted into ms
-		if( photo_direction == ns )
-			traffic_time = ((uint16_t)future->changeTimeNS *1000);
-		else
-			traffic_time = ((uint16_t)future->changeTimeEW *1000);
+		traffic_time = ((uint16_t)future->changeTimeNS *1000);
 
 		// Check if a timer has already been started
 		if( !swIsTimerActive(blinkTrafficLight) ) {
