@@ -13,6 +13,7 @@
 #include "general.h"
 #include "hardware.h"
 #include "ultrasonic.h"
+#include "trafficLight.h"
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,6 +53,17 @@ typedef enum {
 
 
 /*********************************************************************************************
+ * Map pins to OCInit functions
+ *********************************************************************************************/
+typedef enum {
+	go						= 		(uint8_t) 0x00,
+	stop					= 		(uint8_t) 0x01,
+	slow					= 		(uint8_t) 0x02,
+	speed					= 		(uint8_t) 0x03
+} MotorAction;
+
+
+/*********************************************************************************************
  * Set PWM to given duty cycle
  *********************************************************************************************/
 void pwmSet(uint8_t dutyCycle, Motor motor);
@@ -70,5 +82,7 @@ TimerHandle_t set_motor;
 
 // Keep track of servo position
 uint8_t steer;
+MotorAction motor_action;
+uint8_t motor_speed;
 
 #endif /* MOTOR_H_ */

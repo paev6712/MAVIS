@@ -100,61 +100,104 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 //		}
 //	}
 
-//	if( distCM_front < 225 ) {
+
+//	if( distCM_left < 20 ) {
 //		// Limit extreme values
-//		if( (steer < 68) && (photo_direction == ns) ) {
-//			steer += 1;
-//		} else if( (steer > 35) && (photo_direction == ew) ) {
-//			steer -= 1;
-//		}
-//	} else {
-//		if( steer > 50 ) {
-//			steer -= 1;
-//		} else if( steer < 50 ) {
-//			steer += 1;
-//		}
-//	}
-//
-//	if( distCM_right < 10 ) {
-//		// Limit extreme values
-//		if( steer > 35 ) {
+//		if( (steer > 35) && (steer < 50) ) {
 //			steer -= 1;
 //		}
 //	}
 //
-//	if( distCM_right < 10 ) {
+//	if( distCM_right < 20 ) {
 //		// Limit extreme values
-//		if( steer > 68 ) {
+//		if( steer < 70 && (steer > 50) ) {
 //			steer += 1;
 //		}
 //	}
 
-	// Steer based on lines
-//	if( (photo_direction == ns) && (photo_intersection == FALSE) ) {
-//		steer = 65;
-//	} else if( (photo_direction == ew) && (photo_intersection == FALSE) ) {
-//		steer = 35;
-//	} else if( photo_intersection == TRUE ) {
-//		steer = 50;
-//	}
 
-	if( distCM_left < 20 ) {
-		// Limit extreme values
-		if( (steer > 35) && (steer < 50) ) {
-			steer -= 1;
+	// Consider current state
+	if( my_mode == mode2 ) {
+		switch( traffic_current_state ) {
+			case green:
+				motor_action = go;
+				break;
+			case yellow:
+				if( (photo_counter == 3) && (photo_intersection == FALSE) )
+					motor_action = stop;
+				else if( (photo_counter > 3) && (photo_intersection == FALSE) )
+					motor_action = speed;
+				else if( (photo_counter < 3) && (photo_counter > 0) && (photo_intersection == FALSE) )
+					motor_action = slow;
+				else
+					motor_action = go;
+				break;
+			case red:
+				if( (photo_counter >= 3) && (photo_intersection == FALSE) )
+					motor_action = stop;
+				break;
+			default:
+				break;
 		}
 	}
 
-	if( distCM_right < 20 ) {
-		// Limit extreme values
-		if( steer < 70 && (steer > 50) ) {
-			steer += 1;
+	// Consider future state
+	if( my_mode == 3 ) {
+		switch( traffic_current_state ) {
+			case green:
+				if( (traffic_time > 2000) && (traffic_time < 5000) && (photo_counter < 3) && (photo_intersection == FALSE) )
+					motor_action = speed;
+				else if( (traffic_time < 1000) && (photo_counter < 3) && (photo_intersection == FALSE) )
+					motor_action = slow;
+				else
+					motor_action = go;
+				break;
+			case yellow:
+				if( (photo_counter == 3) && (photo_intersection == FALSE) )
+					motor_action = stop;
+				else if( (photo_counter > 3) && (photo_intersection == FALSE) )
+					motor_action = speed;
+				else if( (photo_counter < 3) && (photo_counter > 0) && (photo_intersection == FALSE) )
+					motor_action = slow;
+				else
+					motor_action = go;
+				break;
+			case red:
+				if( (traffic_time > 1000) && (photo_counter >= 3) && (photo_intersection == FALSE) )
+					motor_action = stop;
+				else if( (traffic_time < 1000) && (photo_counter > 0) && (photo_intersection == FALSE))
+					motor_action = slow;
+				break;
+			default:
+				break;
 		}
 	}
 
-	pwmSet(steer, servo);
+	// If light is yellow, action depends on
+
+	switch( motor_action ) {
+		case go:
+			motor_speed = 90;
+			setMotor(forward, motor_speed);
+			break;
+		case stop:
+			setMotor(brake, 0);
+			break;
+		case slow:
+			if( motor_speed > 89 )
+				motor_speed -= 5;
+			setMotor(forward, motor_speed);
+			break;
+		case speed:
+			if( motor_speed < 96 )
+				motor_speed += 5;
+			setMotor(forward, motor_speed);
+	}
+
+//	pwmSet(steer, servo);
 
 }
 
 
 uint8_t steer = 50;
+uint8_t motor_stop = FALSE;
