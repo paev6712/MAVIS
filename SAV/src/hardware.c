@@ -176,7 +176,7 @@ void photoResistorInit() {
 	adcConfig();
 
 	// Initialize read photo resistor timer
-	read_photo = swTimerInit( 1000, REPEAT, prvReadPhotoCallback );
+	read_photo = swTimerInit( 20, REPEAT, prvReadPhotoCallback );
 }
 
 

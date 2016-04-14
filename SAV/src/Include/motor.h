@@ -68,5 +68,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer );
 
 TimerHandle_t set_motor;
 
+// Keep track of servo position
+uint8_t steer;
 
 #endif /* MOTOR_H_ */

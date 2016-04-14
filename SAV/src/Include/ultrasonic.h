@@ -43,7 +43,7 @@ TaskHandle_t xUltrasonic3Handle;
 
 #define	ultrasonicPriority					( tskIDLE_PRIORITY + 2 )
 
-#define ultrasonicFreq						( 500 / portTICK_PERIOD_MS)
+#define ultrasonicFreq						( 100 / portTICK_PERIOD_MS)
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

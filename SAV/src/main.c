@@ -58,9 +58,10 @@ void prvSetupTask( void *pvParameters ) {
 	// Ultrasonic tasks
 //	xTaskCreate( prvUltrasonic1Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic1Handle );
 	xTaskCreate( prvUltrasonic2Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic2Handle );
-//	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
+	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
 
 	// Set motors
+	setMotor(forward, 90);
 	swTimerStart( set_motor, 0 );
 
 	// Read Photo Resistor

@@ -40,24 +40,37 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 	photo_average = (photo1 + photo2 + photo3)/3;
 
 	// Check if over a white line
-	if( (photo_average > 250) && (photo_previous_line == black) ) {
+	if( (photo_average > 3200) && (photo_previous_line == black) ) {
 		photo_previous_line = white;
-		photo_counter += 1;
-		LED_MODE_PORT->ON = LED_MODE_1_PIN;
-	}
-
-	// Check if over a black line
-	else if( (photo_average <= 250) && (photo_previous_line == white) ) {
-		photo_previous_line = black;
-		photo_counter += 1;
+//		photo_counter += 1;
 		LED_MODE_PORT->OFF = LED_MODE_1_PIN;
 	}
 
+	// Check if over a black line
+	else if( (photo_average <= 3200) && (photo_previous_line == white) ) {
+		photo_previous_line = black;
+		photo_counter += 1;
+		LED_MODE_PORT->ON = LED_MODE_1_PIN;
+		if( (photo_counter == 3) && (photo_intersection == FALSE) ) {
+			steer = 50;
+			setMotor(forward, 90);
+		}
+	}
+
 	if( photo_counter >= 5 ) {
-		// TODO: Change the direction (NS -> EW, EW -> NS) and indicate that it has entered / left the intersection
+
 		if( photo_intersection == TRUE ) {
 			// Leaving the intersection
 			photo_intersection = FALSE;
+
+			// Adjust steering
+			if( photo_direction == ns ) {
+				steer = 68;
+				setMotor(forward, 100);
+			} else {
+				steer = 30;
+				setMotor(forward, 100);
+			}
 		} else {
 			// Entering intersection
 			photo_intersection = TRUE;
@@ -77,7 +90,7 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
  *********************************************************************************************/
 uint8_t photo_counter = 0;
 LineColor photo_previous_line = white;
-uint8_t photo_intersection = FALSE;
+uint8_t photo_intersection = TRUE;
 Direction photo_direction = ns;
 
 

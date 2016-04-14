@@ -28,28 +28,28 @@ Common symbol       size              file
 
 set_motor           0x4               src\ultrasonic.o
 adcPin              0xc               src\ultrasonic.o
-distCM_left         0x4               src\hardware.o
+distCM_left         0x2               src\ultrasonic.o
 power_total         0x4               src\ultrasonic.o
 errno               0x4               c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-reent.o)
 process_packet      0x1               src\power.o
 traffic_future_state
                     0x1               src\ultrasonic.o
 blinkTrafficLight   0x4               src\ultrasonic.o
-timerValue1         0x4               src\hardware.o
+timerValue1         0x2               src\ultrasonic.o
 xPacketQueue        0x4               src\power.o
 read_photo          0x4               src\ultrasonic.o
 power_time          0x2               src\ultrasonic.o
-timerValue2         0x4               src\hardware.o
+timerValue2         0x2               src\ultrasonic.o
 delay_done          0x1               src\ultrasonic.o
 read_power          0x4               src\ultrasonic.o
-distCM_front        0x4               src\hardware.o
-distCM_right        0x4               src\hardware.o
+distCM_front        0x2               src\ultrasonic.o
+distCM_right        0x2               src\ultrasonic.o
 traffic_current_state
                     0x1               src\ultrasonic.o
 adcClk              0x18              src\ultrasonic.o
 adcPort             0x18              src\ultrasonic.o
 traffic_time        0x2               src\ultrasonic.o
-timerValue3         0x4               src\hardware.o
+timerValue3         0x2               src\ultrasonic.o
 my_mode             0x1               src\ultrasonic.o
 received_string     0x10              src\power.o
 
@@ -62,8 +62,6 @@ Discarded input sections
  .data          0x00000000        0x0 src\ultrasonic.o
  .bss           0x00000000        0x0 src\ultrasonic.o
  .bss.xUltrasonic1Handle
-                0x00000000        0x4 src\ultrasonic.o
- .bss.xUltrasonic3Handle
                 0x00000000        0x4 src\ultrasonic.o
  .data          0x00000000        0x0 src\trafficLight.o
  .bss           0x00000000        0x0 src\trafficLight.o
@@ -94,6 +92,7 @@ Discarded input sections
  .bss           0x00000000        0x0 src\power.o
  .data          0x00000000        0x0 src\photo.o
  .bss           0x00000000        0x0 src\photo.o
+ COMMON         0x00000000        0x0 src\photo.o
  .data          0x00000000        0x0 src\packet.o
  .bss           0x00000000        0x0 src\packet.o
  .data          0x00000000        0x0 src\motor.o
@@ -675,7 +674,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x08000000                g_pfnVectors
                 0x08000188                . = ALIGN (0x4)
 
-.text           0x08000188     0x8f94
+.text           0x08000188     0x9020
                 0x08000188                . = ALIGN (0x4)
  *(.text)
  .text          0x08000188       0x40 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
@@ -707,542 +706,542 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x080008bc                DebugMon_Handler
  .text          0x080008c8       0xbc src\power.o
                 0x080008c8                prvReadPowerCallback
- .text          0x08000984      0x174 src\photo.o
+ .text          0x08000984      0x1b4 src\photo.o
                 0x08000984                prvReadPhotoCallback
- .text          0x08000af8      0x738 src\packet.o
-                0x08000af8                sendPacket
-                0x08000b9c                sendAck
-                0x08000c1c                sendPing
-                0x08000c78                sendSetMode
-                0x08000cd4                sendPowerConsumption
-                0x08000d68                handlePacket
-                0x08000e7c                handleAck
-                0x08000eb8                handlePing
-                0x08000f14                handleTrafficLightCurrent
-                0x08000f74                handleTrafficLightFuture
-                0x08001058                handleChangeMode
-                0x080010b8                pack
-                0x080010fc                unpack
-                0x08001160                USART3_IRQHandler
-                0x080011f0                copyString
- .text          0x08001230      0x170 src\motor.o
-                0x08001230                setMotor
-                0x080012b4                pwmSet
-                0x0800134c                prvSetMotorCallback
- .text          0x080013a0      0x43c src\main.o
-                0x080013a0                main
-                0x080013d8                prvSetupTask
-                0x080015b0                prvConnectTask
-                0x0800168c                prvModeOfOperationTask
-                0x08001758                prvTrafficLightTask
-                0x080017b0                vApplicationMallocFailedHook
-                0x080017b8                vApplicationStackOverflowHook
-                0x080017c4                vApplicationIdleHook
- .text          0x080017dc      0x430 src\hardware.o
-                0x080017dc                ledInit
-                0x08001874                wifiInit
-                0x080018c4                wifiConfig
-                0x08001930                pwmInit
-                0x080019b4                pwmTimerConfig
-                0x080019f4                photoResistorInit
-                0x08001a40                adcConfig
-                0x08001a88                measuredPowerInit
-                0x08001ad0                ultrasonicInit
-                0x08001b10                extiConfig
-                0x08001b58                ultrasonicTimerConfig
- .text          0x08001c0c      0x958 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
-                0x08001c0c                USART_DeInit
-                0x08001d20                USART_Init
-                0x08001e94                USART_StructInit
-                0x08001ecc                USART_ClockInit
-                0x08001f20                USART_ClockStructInit
-                0x08001f4c                USART_Cmd
-                0x08001f8c                USART_SetPrescaler
-                0x08001fc4                USART_OverSampling8Cmd
-                0x08002008                USART_OneBitMethodCmd
-                0x08002048                USART_SendData
-                0x0800206c                USART_ReceiveData
-                0x0800208c                USART_SetAddress
-                0x080020c4                USART_ReceiverWakeUpCmd
-                0x08002104                USART_WakeUpConfig
-                0x0800213c                USART_LINBreakDetectLengthConfig
-                0x08002174                USART_LINCmd
-                0x080021b4                USART_SendBreak
-                0x080021d8                USART_HalfDuplexCmd
-                0x08002218                USART_SetGuardTime
-                0x08002254                USART_SmartCardCmd
-                0x08002294                USART_SmartCardNACKCmd
-                0x080022d4                USART_IrDAConfig
-                0x0800230c                USART_IrDACmd
-                0x0800234c                USART_DMACmd
-                0x08002394                USART_ITConfig
-                0x08002424                USART_GetFlagStatus
-                0x0800245c                USART_ClearFlag
-                0x0800247c                USART_GetITStatus
-                0x0800252c                USART_ClearITPendingBit
- .text          0x08002564     0x1b80 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
-                0x08002564                TIM_DeInit
-                0x08002720                TIM_TimeBaseInit
-                0x080027f4                TIM_TimeBaseStructInit
-                0x08002828                TIM_PrescalerConfig
-                0x08002850                TIM_CounterModeConfig
-                0x08002888                TIM_SetCounter
-                0x080028a4                TIM_SetAutoreload
-                0x080028c0                TIM_GetCounter
-                0x080028d8                TIM_GetPrescaler
-                0x080028f4                TIM_UpdateDisableConfig
-                0x08002934                TIM_UpdateRequestConfig
-                0x08002974                TIM_ARRPreloadConfig
-                0x080029b4                TIM_SelectOnePulseMode
-                0x080029ec                TIM_SetClockDivision
-                0x08002a24                TIM_Cmd
-                0x08002a64                TIM_OC1Init
-                0x08002b58                TIM_OC2Init
-                0x08002c68                TIM_OC3Init
-                0x08002d74                TIM_OC4Init
-                0x08002e40                TIM_OCStructInit
-                0x08002e84                TIM_SelectOCxM
-                0x08002f30                TIM_SetCompare1
-                0x08002f4c                TIM_SetCompare2
-                0x08002f68                TIM_SetCompare3
-                0x08002f84                TIM_SetCompare4
-                0x08002fa0                TIM_ForcedOC1Config
-                0x08002fd8                TIM_ForcedOC2Config
-                0x08003014                TIM_ForcedOC3Config
-                0x0800304c                TIM_ForcedOC4Config
-                0x08003088                TIM_OC1PreloadConfig
-                0x080030c0                TIM_OC2PreloadConfig
-                0x080030fc                TIM_OC3PreloadConfig
-                0x08003134                TIM_OC4PreloadConfig
-                0x08003170                TIM_OC1FastConfig
-                0x080031a8                TIM_OC2FastConfig
-                0x080031e4                TIM_OC3FastConfig
-                0x0800321c                TIM_OC4FastConfig
-                0x08003258                TIM_ClearOC1Ref
-                0x08003290                TIM_ClearOC2Ref
-                0x080032cc                TIM_ClearOC3Ref
-                0x08003304                TIM_ClearOC4Ref
-                0x08003340                TIM_OC1PolarityConfig
-                0x08003378                TIM_OC1NPolarityConfig
-                0x080033b0                TIM_OC2PolarityConfig
-                0x080033ec                TIM_OC2NPolarityConfig
-                0x08003428                TIM_OC3PolarityConfig
-                0x08003464                TIM_OC3NPolarityConfig
-                0x080034a0                TIM_OC4PolarityConfig
-                0x080034dc                TIM_CCxCmd
-                0x08003530                TIM_CCxNCmd
-                0x08003584                TIM_ICInit
-                0x0800362c                TIM_ICStructInit
-                0x0800365c                TIM_PWMIConfig
-                0x08003714                TIM_GetCapture1
-                0x0800372c                TIM_GetCapture2
-                0x08003744                TIM_GetCapture3
-                0x0800375c                TIM_GetCapture4
-                0x08003774                TIM_SetIC1Prescaler
-                0x080037ac                TIM_SetIC2Prescaler
-                0x080037e8                TIM_SetIC3Prescaler
-                0x08003820                TIM_SetIC4Prescaler
-                0x0800385c                TIM_BDTRConfig
-                0x080038ac                TIM_BDTRStructInit
-                0x080038e8                TIM_CtrlPWMOutputs
-                0x08003934                TIM_SelectCOM
-                0x08003974                TIM_CCPreloadControl
-                0x080039b4                TIM_ITConfig
-                0x080039fc                TIM_GenerateEvent
-                0x08003a18                TIM_GetFlagStatus
-                0x08003a50                TIM_ClearFlag
-                0x08003a70                TIM_GetITStatus
-                0x08003ac4                TIM_ClearITPendingBit
-                0x08003ae4                TIM_DMAConfig
-                0x08003b0c                TIM_DMACmd
-                0x08003b54                TIM_SelectCCDMA
-                0x08003b94                TIM_InternalClockConfig
-                0x08003bb8                TIM_ITRxExternalClockConfig
-                0x08003be4                TIM_TIxExternalClockConfig
-                0x08003c38                TIM_ETRClockMode1Config
-                0x08003c88                TIM_ETRClockMode2Config
-                0x08003cb8                TIM_SelectInputTrigger
-                0x08003cf0                TIM_SelectOutputTrigger
-                0x08003d28                TIM_SelectSlaveMode
-                0x08003d60                TIM_SelectMasterSlaveMode
-                0x08003d98                TIM_ETRConfig
-                0x08003de0                TIM_EncoderInterfaceConfig
-                0x08003e6c                TIM_SelectHallSensor
-                0x08003eac                TIM_RemapConfig
- .text          0x080040e4      0x128 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
-                0x080040e4                SYSCFG_DeInit
-                0x08004100                SYSCFG_MemoryRemapConfig
-                0x08004120                SYSCFG_EXTILineConfig
-                0x0800419c                SYSCFG_ETH_MediaInterfaceConfig
-                0x080041b8                SYSCFG_CompensationCellCmd
-                0x080041d8                SYSCFG_GetCompensationCellStatus
- .text          0x0800420c      0xaa4 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
-                0x0800420c                RCC_DeInit
-                0x08004268                RCC_HSEConfig
-                0x0800428c                RCC_WaitForHSEStartUp
-                0x080042dc                RCC_AdjustHSICalibrationValue
-                0x08004318                RCC_HSICmd
-                0x08004338                RCC_LSEConfig
-                0x08004378                RCC_LSICmd
-                0x08004398                RCC_PLLConfig
-                0x080043d4                RCC_PLLCmd
-                0x080043f4                RCC_PLLI2SConfig
-                0x0800441c                RCC_PLLI2SCmd
-                0x0800443c                RCC_ClockSecuritySystemCmd
-                0x0800445c                RCC_MCO1Config
-                0x08004498                RCC_MCO2Config
-                0x080044d4                RCC_SYSCLKConfig
-                0x0800450c                RCC_GetSYSCLKSource
-                0x0800452c                RCC_HCLKConfig
-                0x08004564                RCC_PCLK1Config
-                0x0800459c                RCC_PCLK2Config
-                0x080045d4                RCC_GetClocksFreq
-                0x08004728                RCC_RTCCLKConfig
-                0x08004784                RCC_RTCCLKCmd
-                0x080047a4                RCC_BackupResetCmd
-                0x080047c4                RCC_I2SCLKConfig
-                0x080047e0                RCC_TIMCLKPresConfig
-                0x080047fc                RCC_AHB1PeriphClockCmd
-                0x08004838                RCC_AHB2PeriphClockCmd
-                0x08004874                RCC_AHB3PeriphClockCmd
-                0x080048b0                RCC_APB1PeriphClockCmd
-                0x080048ec                RCC_APB2PeriphClockCmd
-                0x08004928                RCC_AHB1PeriphResetCmd
-                0x08004964                RCC_AHB2PeriphResetCmd
-                0x080049a0                RCC_AHB3PeriphResetCmd
-                0x080049dc                RCC_APB1PeriphResetCmd
-                0x08004a18                RCC_APB2PeriphResetCmd
-                0x08004a54                RCC_AHB1PeriphClockLPModeCmd
-                0x08004a90                RCC_AHB2PeriphClockLPModeCmd
-                0x08004acc                RCC_AHB3PeriphClockLPModeCmd
-                0x08004b08                RCC_APB1PeriphClockLPModeCmd
-                0x08004b44                RCC_APB2PeriphClockLPModeCmd
-                0x08004b80                RCC_ITConfig
-                0x08004bc8                RCC_GetFlagStatus
-                0x08004c3c                RCC_ClearFlag
-                0x08004c58                RCC_GetITStatus
-                0x08004c90                RCC_ClearITPendingBit
- .text          0x08004cb0      0x488 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
-                0x08004cb0                GPIO_DeInit
-                0x08004dd0                GPIO_Init
-                0x08004eec                GPIO_StructInit
-                0x08004f20                GPIO_PinLockConfig
-                0x08004f64                GPIO_ReadInputDataBit
-                0x08004f98                GPIO_ReadInputData
-                0x08004fb4                GPIO_ReadOutputDataBit
-                0x08004fe8                GPIO_ReadOutputData
-                0x08005004                GPIO_SetBits
-                0x08005020                GPIO_ResetBits
-                0x0800503c                GPIO_WriteBit
-                0x0800506c                GPIO_Write
-                0x08005088                GPIO_ToggleBits
-                0x080050ac                GPIO_PinAFConfig
- .text          0x08005138      0x214 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
-                0x08005138                EXTI_DeInit
-                0x0800516c                EXTI_Init
-                0x08005248                EXTI_StructInit
-                0x08005274                EXTI_GenerateSWInterrupt
-                0x08005298                EXTI_GetFlagStatus
-                0x080052cc                EXTI_ClearFlag
-                0x080052e8                EXTI_GetITStatus
-                0x08005330                EXTI_ClearITPendingBit
- .text          0x0800534c      0xa68 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
-                0x0800534c                ADC_DeInit
-                0x08005368                ADC_Init
-                0x08005410                ADC_StructInit
-                0x0800544c                ADC_CommonInit
-                0x0800549c                ADC_CommonStructInit
-                0x080054c8                ADC_Cmd
-                0x08005500                ADC_AnalogWatchdogCmd
-                0x08005538                ADC_AnalogWatchdogThresholdsConfig
-                0x08005560                ADC_AnalogWatchdogSingleChannelConfig
-                0x08005598                ADC_TempSensorVrefintCmd
-                0x080055d0                ADC_VBATCmd
-                0x08005608                ADC_RegularChannelConfig
-                0x08005790                ADC_SoftwareStartConv
-                0x080057b0                ADC_GetSoftwareStartConvStatus
-                0x080057e0                ADC_EOCOnEachRegularChannelCmd
-                0x08005818                ADC_ContinuousModeCmd
-                0x08005850                ADC_DiscModeChannelCountConfig
-                0x08005894                ADC_DiscModeCmd
-                0x080058cc                ADC_GetConversionValue
-                0x080058e8                ADC_GetMultiModeConversionValue
-                0x08005900                ADC_DMACmd
-                0x08005938                ADC_DMARequestAfterLastTransferCmd
-                0x08005970                ADC_MultiModeDMARequestAfterLastTransferCmd
-                0x080059a8                ADC_InjectedChannelConfig
-                0x08005abc                ADC_InjectedSequencerLengthConfig
-                0x08005b00                ADC_SetInjectedOffset
-                0x08005b30                ADC_ExternalTrigInjectedConvConfig
-                0x08005b64                ADC_ExternalTrigInjectedConvEdgeConfig
-                0x08005b98                ADC_SoftwareStartInjectedConv
-                0x08005bb8                ADC_GetSoftwareStartInjectedConvCmdStatus
-                0x08005be8                ADC_AutoInjectedConvCmd
-                0x08005c20                ADC_InjectedDiscModeCmd
-                0x08005c58                ADC_GetInjectedConversionValue
-                0x08005c88                ADC_ITConfig
-                0x08005cd8                ADC_GetFlagStatus
-                0x08005d0c                ADC_ClearFlag
-                0x08005d2c                ADC_GetITStatus
-                0x08005d88                ADC_ClearITPendingBit
- .text          0x08005db4      0x184 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
-                0x08005db4                NVIC_PriorityGroupConfig
-                0x08005dd8                NVIC_Init
-                0x08005e94                NVIC_SetVectorTable
-                0x08005ec0                NVIC_SystemLPConfig
-                0x08005f00                SysTick_CLKSourceConfig
- .text          0x08005f38      0x59c Libraries\FreeRTOS\timers.o
-                0x08005f38                xTimerCreateTimerTask
-                0x08005f84                xTimerCreate
-                0x08005fe4                xTimerGenericCommand
-                0x08006070                pcTimerGetTimerName
-                0x08006488                xTimerIsTimerActive
-                0x080064b8                pvTimerGetTimerID
- .text          0x080064d4     0x1a24 Libraries\FreeRTOS\tasks.o
-                0x080064d4                xTaskGenericCreate
-                0x08006618                vTaskDelete
-                0x080066fc                vTaskDelayUntil
-                0x080067c4                vTaskDelay
-                0x08006848                uxTaskPriorityGet
-                0x0800687c                uxTaskPriorityGetFromISR
-                0x080068d4                vTaskPrioritySet
-                0x08006a14                vTaskSuspend
-                0x08006b60                vTaskResume
-                0x08006bfc                xTaskResumeFromISR
-                0x08006cbc                vTaskStartScheduler
-                0x08006d2c                vTaskEndScheduler
-                0x08006d58                vTaskSuspendAll
-                0x08006d74                xTaskResumeAll
-                0x08006e80                xTaskGetTickCount
-                0x08006ea0                xTaskGetTickCountFromISR
-                0x08006ec4                uxTaskGetNumberOfTasks
-                0x08006edc                xTaskIncrementTick
-                0x08007038                vTaskSwitchContext
-                0x0800710c                vTaskPlaceOnEventList
-                0x0800718c                vTaskPlaceOnUnorderedEventList
-                0x0800721c                vTaskPlaceOnEventListRestricted
-                0x08007280                xTaskRemoveFromEventList
-                0x08007328                xTaskRemoveFromUnorderedEventList
-                0x080073b8                vTaskSetTimeOutState
-                0x080073e4                xTaskCheckForTimeOut
-                0x0800746c                vTaskMissedYield
-                0x08007790                xTaskGetCurrentTaskHandle
-                0x080077b0                xTaskGetSchedulerState
-                0x080077ec                vTaskPriorityInherit
-                0x080078d8                xTaskPriorityDisinherit
-                0x080079a0                uxTaskResetEventItemValue
-                0x080079d0                pvTaskIncrementMutexHeldCount
-                0x080079f8                ulTaskNotifyTake
-                0x08007ae0                xTaskNotifyWait
-                0x08007bec                xTaskNotify
-                0x08007ce8                xTaskNotifyFromISR
-                0x08007e20                vTaskNotifyGiveFromISR
- .text          0x08007ef8      0xa18 Libraries\FreeRTOS\queue.o
-                0x08007ef8                xQueueGenericReset
-                0x08007fac                xQueueGenericCreate
-                0x08008028                xQueueCreateMutex
-                0x080080a4                xQueueGenericSend
-                0x080081f0                xQueueGenericSendFromISR
-                0x08008294                xQueueGiveFromISR
-                0x0800832c                xQueueGenericReceive
-                0x080084c4                xQueueReceiveFromISR
-                0x08008564                xQueuePeekFromISR
-                0x080085c8                uxQueueMessagesWaiting
-                0x080085e8                uxQueueSpacesAvailable
-                0x08008614                uxQueueMessagesWaitingFromISR
-                0x08008630                vQueueDelete
-                0x08008834                xQueueIsQueueEmptyFromISR
-                0x0800888c                xQueueIsQueueFullFromISR
-                0x080088b8                vQueueWaitForMessageRestricted
- .text          0x08008910      0x164 Libraries\FreeRTOS\list.o
-                0x08008910                vListInitialise
-                0x08008950                vListInitialiseItem
-                0x08008968                vListInsertEnd
-                0x080089b0                vListInsert
-                0x08008a20                uxListRemove
- .text          0x08008a74      0x258 Libraries\FreeRTOS\Portable\port.o
-                0x08008a74                pxPortInitialiseStack
-                0x08008af4                SVC_Handler
-                0x08008b30                xPortStartScheduler
-                0x08008b80                vPortEndScheduler
-                0x08008b8c                vPortEnterCritical
-                0x08008bbc                vPortExitCritical
-                0x08008bec                PendSV_Handler
-                0x08008c4c                SysTick_Handler
-                0x08008c90                vPortSetupTimerInterrupt
- .text          0x08008ccc      0x350 Libraries\FreeRTOS\Portable\heap_4.o
-                0x08008ccc                pvPortMalloc
-                0x08008dfc                vPortFree
-                0x08008e6c                xPortGetFreeHeapSize
-                0x08008e84                xPortGetMinimumEverFreeHeapSize
-                0x08008e9c                vPortInitialiseBlocks
+ .text          0x08000b38      0x738 src\packet.o
+                0x08000b38                sendPacket
+                0x08000bdc                sendAck
+                0x08000c5c                sendPing
+                0x08000cb8                sendSetMode
+                0x08000d14                sendPowerConsumption
+                0x08000da8                handlePacket
+                0x08000ebc                handleAck
+                0x08000ef8                handlePing
+                0x08000f54                handleTrafficLightCurrent
+                0x08000fb4                handleTrafficLightFuture
+                0x08001098                handleChangeMode
+                0x080010f8                pack
+                0x0800113c                unpack
+                0x080011a0                USART3_IRQHandler
+                0x08001230                copyString
+ .text          0x08001270      0x18c src\motor.o
+                0x08001270                setMotor
+                0x080012f4                pwmSet
+                0x0800138c                prvSetMotorCallback
+ .text          0x080013fc      0x46c src\main.o
+                0x080013fc                main
+                0x08001434                prvSetupTask
+                0x0800163c                prvConnectTask
+                0x08001718                prvModeOfOperationTask
+                0x080017e4                prvTrafficLightTask
+                0x0800183c                vApplicationMallocFailedHook
+                0x08001844                vApplicationStackOverflowHook
+                0x08001850                vApplicationIdleHook
+ .text          0x08001868      0x430 src\hardware.o
+                0x08001868                ledInit
+                0x08001900                wifiInit
+                0x08001950                wifiConfig
+                0x080019bc                pwmInit
+                0x08001a40                pwmTimerConfig
+                0x08001a80                photoResistorInit
+                0x08001acc                adcConfig
+                0x08001b14                measuredPowerInit
+                0x08001b5c                ultrasonicInit
+                0x08001b9c                extiConfig
+                0x08001be4                ultrasonicTimerConfig
+ .text          0x08001c98      0x958 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
+                0x08001c98                USART_DeInit
+                0x08001dac                USART_Init
+                0x08001f20                USART_StructInit
+                0x08001f58                USART_ClockInit
+                0x08001fac                USART_ClockStructInit
+                0x08001fd8                USART_Cmd
+                0x08002018                USART_SetPrescaler
+                0x08002050                USART_OverSampling8Cmd
+                0x08002094                USART_OneBitMethodCmd
+                0x080020d4                USART_SendData
+                0x080020f8                USART_ReceiveData
+                0x08002118                USART_SetAddress
+                0x08002150                USART_ReceiverWakeUpCmd
+                0x08002190                USART_WakeUpConfig
+                0x080021c8                USART_LINBreakDetectLengthConfig
+                0x08002200                USART_LINCmd
+                0x08002240                USART_SendBreak
+                0x08002264                USART_HalfDuplexCmd
+                0x080022a4                USART_SetGuardTime
+                0x080022e0                USART_SmartCardCmd
+                0x08002320                USART_SmartCardNACKCmd
+                0x08002360                USART_IrDAConfig
+                0x08002398                USART_IrDACmd
+                0x080023d8                USART_DMACmd
+                0x08002420                USART_ITConfig
+                0x080024b0                USART_GetFlagStatus
+                0x080024e8                USART_ClearFlag
+                0x08002508                USART_GetITStatus
+                0x080025b8                USART_ClearITPendingBit
+ .text          0x080025f0     0x1b80 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
+                0x080025f0                TIM_DeInit
+                0x080027ac                TIM_TimeBaseInit
+                0x08002880                TIM_TimeBaseStructInit
+                0x080028b4                TIM_PrescalerConfig
+                0x080028dc                TIM_CounterModeConfig
+                0x08002914                TIM_SetCounter
+                0x08002930                TIM_SetAutoreload
+                0x0800294c                TIM_GetCounter
+                0x08002964                TIM_GetPrescaler
+                0x08002980                TIM_UpdateDisableConfig
+                0x080029c0                TIM_UpdateRequestConfig
+                0x08002a00                TIM_ARRPreloadConfig
+                0x08002a40                TIM_SelectOnePulseMode
+                0x08002a78                TIM_SetClockDivision
+                0x08002ab0                TIM_Cmd
+                0x08002af0                TIM_OC1Init
+                0x08002be4                TIM_OC2Init
+                0x08002cf4                TIM_OC3Init
+                0x08002e00                TIM_OC4Init
+                0x08002ecc                TIM_OCStructInit
+                0x08002f10                TIM_SelectOCxM
+                0x08002fbc                TIM_SetCompare1
+                0x08002fd8                TIM_SetCompare2
+                0x08002ff4                TIM_SetCompare3
+                0x08003010                TIM_SetCompare4
+                0x0800302c                TIM_ForcedOC1Config
+                0x08003064                TIM_ForcedOC2Config
+                0x080030a0                TIM_ForcedOC3Config
+                0x080030d8                TIM_ForcedOC4Config
+                0x08003114                TIM_OC1PreloadConfig
+                0x0800314c                TIM_OC2PreloadConfig
+                0x08003188                TIM_OC3PreloadConfig
+                0x080031c0                TIM_OC4PreloadConfig
+                0x080031fc                TIM_OC1FastConfig
+                0x08003234                TIM_OC2FastConfig
+                0x08003270                TIM_OC3FastConfig
+                0x080032a8                TIM_OC4FastConfig
+                0x080032e4                TIM_ClearOC1Ref
+                0x0800331c                TIM_ClearOC2Ref
+                0x08003358                TIM_ClearOC3Ref
+                0x08003390                TIM_ClearOC4Ref
+                0x080033cc                TIM_OC1PolarityConfig
+                0x08003404                TIM_OC1NPolarityConfig
+                0x0800343c                TIM_OC2PolarityConfig
+                0x08003478                TIM_OC2NPolarityConfig
+                0x080034b4                TIM_OC3PolarityConfig
+                0x080034f0                TIM_OC3NPolarityConfig
+                0x0800352c                TIM_OC4PolarityConfig
+                0x08003568                TIM_CCxCmd
+                0x080035bc                TIM_CCxNCmd
+                0x08003610                TIM_ICInit
+                0x080036b8                TIM_ICStructInit
+                0x080036e8                TIM_PWMIConfig
+                0x080037a0                TIM_GetCapture1
+                0x080037b8                TIM_GetCapture2
+                0x080037d0                TIM_GetCapture3
+                0x080037e8                TIM_GetCapture4
+                0x08003800                TIM_SetIC1Prescaler
+                0x08003838                TIM_SetIC2Prescaler
+                0x08003874                TIM_SetIC3Prescaler
+                0x080038ac                TIM_SetIC4Prescaler
+                0x080038e8                TIM_BDTRConfig
+                0x08003938                TIM_BDTRStructInit
+                0x08003974                TIM_CtrlPWMOutputs
+                0x080039c0                TIM_SelectCOM
+                0x08003a00                TIM_CCPreloadControl
+                0x08003a40                TIM_ITConfig
+                0x08003a88                TIM_GenerateEvent
+                0x08003aa4                TIM_GetFlagStatus
+                0x08003adc                TIM_ClearFlag
+                0x08003afc                TIM_GetITStatus
+                0x08003b50                TIM_ClearITPendingBit
+                0x08003b70                TIM_DMAConfig
+                0x08003b98                TIM_DMACmd
+                0x08003be0                TIM_SelectCCDMA
+                0x08003c20                TIM_InternalClockConfig
+                0x08003c44                TIM_ITRxExternalClockConfig
+                0x08003c70                TIM_TIxExternalClockConfig
+                0x08003cc4                TIM_ETRClockMode1Config
+                0x08003d14                TIM_ETRClockMode2Config
+                0x08003d44                TIM_SelectInputTrigger
+                0x08003d7c                TIM_SelectOutputTrigger
+                0x08003db4                TIM_SelectSlaveMode
+                0x08003dec                TIM_SelectMasterSlaveMode
+                0x08003e24                TIM_ETRConfig
+                0x08003e6c                TIM_EncoderInterfaceConfig
+                0x08003ef8                TIM_SelectHallSensor
+                0x08003f38                TIM_RemapConfig
+ .text          0x08004170      0x128 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
+                0x08004170                SYSCFG_DeInit
+                0x0800418c                SYSCFG_MemoryRemapConfig
+                0x080041ac                SYSCFG_EXTILineConfig
+                0x08004228                SYSCFG_ETH_MediaInterfaceConfig
+                0x08004244                SYSCFG_CompensationCellCmd
+                0x08004264                SYSCFG_GetCompensationCellStatus
+ .text          0x08004298      0xaa4 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
+                0x08004298                RCC_DeInit
+                0x080042f4                RCC_HSEConfig
+                0x08004318                RCC_WaitForHSEStartUp
+                0x08004368                RCC_AdjustHSICalibrationValue
+                0x080043a4                RCC_HSICmd
+                0x080043c4                RCC_LSEConfig
+                0x08004404                RCC_LSICmd
+                0x08004424                RCC_PLLConfig
+                0x08004460                RCC_PLLCmd
+                0x08004480                RCC_PLLI2SConfig
+                0x080044a8                RCC_PLLI2SCmd
+                0x080044c8                RCC_ClockSecuritySystemCmd
+                0x080044e8                RCC_MCO1Config
+                0x08004524                RCC_MCO2Config
+                0x08004560                RCC_SYSCLKConfig
+                0x08004598                RCC_GetSYSCLKSource
+                0x080045b8                RCC_HCLKConfig
+                0x080045f0                RCC_PCLK1Config
+                0x08004628                RCC_PCLK2Config
+                0x08004660                RCC_GetClocksFreq
+                0x080047b4                RCC_RTCCLKConfig
+                0x08004810                RCC_RTCCLKCmd
+                0x08004830                RCC_BackupResetCmd
+                0x08004850                RCC_I2SCLKConfig
+                0x0800486c                RCC_TIMCLKPresConfig
+                0x08004888                RCC_AHB1PeriphClockCmd
+                0x080048c4                RCC_AHB2PeriphClockCmd
+                0x08004900                RCC_AHB3PeriphClockCmd
+                0x0800493c                RCC_APB1PeriphClockCmd
+                0x08004978                RCC_APB2PeriphClockCmd
+                0x080049b4                RCC_AHB1PeriphResetCmd
+                0x080049f0                RCC_AHB2PeriphResetCmd
+                0x08004a2c                RCC_AHB3PeriphResetCmd
+                0x08004a68                RCC_APB1PeriphResetCmd
+                0x08004aa4                RCC_APB2PeriphResetCmd
+                0x08004ae0                RCC_AHB1PeriphClockLPModeCmd
+                0x08004b1c                RCC_AHB2PeriphClockLPModeCmd
+                0x08004b58                RCC_AHB3PeriphClockLPModeCmd
+                0x08004b94                RCC_APB1PeriphClockLPModeCmd
+                0x08004bd0                RCC_APB2PeriphClockLPModeCmd
+                0x08004c0c                RCC_ITConfig
+                0x08004c54                RCC_GetFlagStatus
+                0x08004cc8                RCC_ClearFlag
+                0x08004ce4                RCC_GetITStatus
+                0x08004d1c                RCC_ClearITPendingBit
+ .text          0x08004d3c      0x488 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
+                0x08004d3c                GPIO_DeInit
+                0x08004e5c                GPIO_Init
+                0x08004f78                GPIO_StructInit
+                0x08004fac                GPIO_PinLockConfig
+                0x08004ff0                GPIO_ReadInputDataBit
+                0x08005024                GPIO_ReadInputData
+                0x08005040                GPIO_ReadOutputDataBit
+                0x08005074                GPIO_ReadOutputData
+                0x08005090                GPIO_SetBits
+                0x080050ac                GPIO_ResetBits
+                0x080050c8                GPIO_WriteBit
+                0x080050f8                GPIO_Write
+                0x08005114                GPIO_ToggleBits
+                0x08005138                GPIO_PinAFConfig
+ .text          0x080051c4      0x214 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
+                0x080051c4                EXTI_DeInit
+                0x080051f8                EXTI_Init
+                0x080052d4                EXTI_StructInit
+                0x08005300                EXTI_GenerateSWInterrupt
+                0x08005324                EXTI_GetFlagStatus
+                0x08005358                EXTI_ClearFlag
+                0x08005374                EXTI_GetITStatus
+                0x080053bc                EXTI_ClearITPendingBit
+ .text          0x080053d8      0xa68 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
+                0x080053d8                ADC_DeInit
+                0x080053f4                ADC_Init
+                0x0800549c                ADC_StructInit
+                0x080054d8                ADC_CommonInit
+                0x08005528                ADC_CommonStructInit
+                0x08005554                ADC_Cmd
+                0x0800558c                ADC_AnalogWatchdogCmd
+                0x080055c4                ADC_AnalogWatchdogThresholdsConfig
+                0x080055ec                ADC_AnalogWatchdogSingleChannelConfig
+                0x08005624                ADC_TempSensorVrefintCmd
+                0x0800565c                ADC_VBATCmd
+                0x08005694                ADC_RegularChannelConfig
+                0x0800581c                ADC_SoftwareStartConv
+                0x0800583c                ADC_GetSoftwareStartConvStatus
+                0x0800586c                ADC_EOCOnEachRegularChannelCmd
+                0x080058a4                ADC_ContinuousModeCmd
+                0x080058dc                ADC_DiscModeChannelCountConfig
+                0x08005920                ADC_DiscModeCmd
+                0x08005958                ADC_GetConversionValue
+                0x08005974                ADC_GetMultiModeConversionValue
+                0x0800598c                ADC_DMACmd
+                0x080059c4                ADC_DMARequestAfterLastTransferCmd
+                0x080059fc                ADC_MultiModeDMARequestAfterLastTransferCmd
+                0x08005a34                ADC_InjectedChannelConfig
+                0x08005b48                ADC_InjectedSequencerLengthConfig
+                0x08005b8c                ADC_SetInjectedOffset
+                0x08005bbc                ADC_ExternalTrigInjectedConvConfig
+                0x08005bf0                ADC_ExternalTrigInjectedConvEdgeConfig
+                0x08005c24                ADC_SoftwareStartInjectedConv
+                0x08005c44                ADC_GetSoftwareStartInjectedConvCmdStatus
+                0x08005c74                ADC_AutoInjectedConvCmd
+                0x08005cac                ADC_InjectedDiscModeCmd
+                0x08005ce4                ADC_GetInjectedConversionValue
+                0x08005d14                ADC_ITConfig
+                0x08005d64                ADC_GetFlagStatus
+                0x08005d98                ADC_ClearFlag
+                0x08005db8                ADC_GetITStatus
+                0x08005e14                ADC_ClearITPendingBit
+ .text          0x08005e40      0x184 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
+                0x08005e40                NVIC_PriorityGroupConfig
+                0x08005e64                NVIC_Init
+                0x08005f20                NVIC_SetVectorTable
+                0x08005f4c                NVIC_SystemLPConfig
+                0x08005f8c                SysTick_CLKSourceConfig
+ .text          0x08005fc4      0x59c Libraries\FreeRTOS\timers.o
+                0x08005fc4                xTimerCreateTimerTask
+                0x08006010                xTimerCreate
+                0x08006070                xTimerGenericCommand
+                0x080060fc                pcTimerGetTimerName
+                0x08006514                xTimerIsTimerActive
+                0x08006544                pvTimerGetTimerID
+ .text          0x08006560     0x1a24 Libraries\FreeRTOS\tasks.o
+                0x08006560                xTaskGenericCreate
+                0x080066a4                vTaskDelete
+                0x08006788                vTaskDelayUntil
+                0x08006850                vTaskDelay
+                0x080068d4                uxTaskPriorityGet
+                0x08006908                uxTaskPriorityGetFromISR
+                0x08006960                vTaskPrioritySet
+                0x08006aa0                vTaskSuspend
+                0x08006bec                vTaskResume
+                0x08006c88                xTaskResumeFromISR
+                0x08006d48                vTaskStartScheduler
+                0x08006db8                vTaskEndScheduler
+                0x08006de4                vTaskSuspendAll
+                0x08006e00                xTaskResumeAll
+                0x08006f0c                xTaskGetTickCount
+                0x08006f2c                xTaskGetTickCountFromISR
+                0x08006f50                uxTaskGetNumberOfTasks
+                0x08006f68                xTaskIncrementTick
+                0x080070c4                vTaskSwitchContext
+                0x08007198                vTaskPlaceOnEventList
+                0x08007218                vTaskPlaceOnUnorderedEventList
+                0x080072a8                vTaskPlaceOnEventListRestricted
+                0x0800730c                xTaskRemoveFromEventList
+                0x080073b4                xTaskRemoveFromUnorderedEventList
+                0x08007444                vTaskSetTimeOutState
+                0x08007470                xTaskCheckForTimeOut
+                0x080074f8                vTaskMissedYield
+                0x0800781c                xTaskGetCurrentTaskHandle
+                0x0800783c                xTaskGetSchedulerState
+                0x08007878                vTaskPriorityInherit
+                0x08007964                xTaskPriorityDisinherit
+                0x08007a2c                uxTaskResetEventItemValue
+                0x08007a5c                pvTaskIncrementMutexHeldCount
+                0x08007a84                ulTaskNotifyTake
+                0x08007b6c                xTaskNotifyWait
+                0x08007c78                xTaskNotify
+                0x08007d74                xTaskNotifyFromISR
+                0x08007eac                vTaskNotifyGiveFromISR
+ .text          0x08007f84      0xa18 Libraries\FreeRTOS\queue.o
+                0x08007f84                xQueueGenericReset
+                0x08008038                xQueueGenericCreate
+                0x080080b4                xQueueCreateMutex
+                0x08008130                xQueueGenericSend
+                0x0800827c                xQueueGenericSendFromISR
+                0x08008320                xQueueGiveFromISR
+                0x080083b8                xQueueGenericReceive
+                0x08008550                xQueueReceiveFromISR
+                0x080085f0                xQueuePeekFromISR
+                0x08008654                uxQueueMessagesWaiting
+                0x08008674                uxQueueSpacesAvailable
+                0x080086a0                uxQueueMessagesWaitingFromISR
+                0x080086bc                vQueueDelete
+                0x080088c0                xQueueIsQueueEmptyFromISR
+                0x08008918                xQueueIsQueueFullFromISR
+                0x08008944                vQueueWaitForMessageRestricted
+ .text          0x0800899c      0x164 Libraries\FreeRTOS\list.o
+                0x0800899c                vListInitialise
+                0x080089dc                vListInitialiseItem
+                0x080089f4                vListInsertEnd
+                0x08008a3c                vListInsert
+                0x08008aac                uxListRemove
+ .text          0x08008b00      0x258 Libraries\FreeRTOS\Portable\port.o
+                0x08008b00                pxPortInitialiseStack
+                0x08008b80                SVC_Handler
+                0x08008bbc                xPortStartScheduler
+                0x08008c0c                vPortEndScheduler
+                0x08008c18                vPortEnterCritical
+                0x08008c48                vPortExitCritical
+                0x08008c78                PendSV_Handler
+                0x08008cd8                SysTick_Handler
+                0x08008d1c                vPortSetupTimerInterrupt
+ .text          0x08008d58      0x350 Libraries\FreeRTOS\Portable\heap_4.o
+                0x08008d58                pvPortMalloc
+                0x08008e88                vPortFree
+                0x08008ef8                xPortGetFreeHeapSize
+                0x08008f10                xPortGetMinimumEverFreeHeapSize
+                0x08008f28                vPortInitialiseBlocks
  *(.text*)
  .text.Reset_Handler
-                0x0800901c       0x58 src\startup_stm32f40xx.o
-                0x0800901c                Reset_Handler
+                0x080090a8       0x58 src\startup_stm32f40xx.o
+                0x080090a8                Reset_Handler
  .text.Default_Handler
-                0x08009074        0x4 src\startup_stm32f40xx.o
-                0x08009074                RTC_Alarm_IRQHandler
-                0x08009074                HASH_RNG_IRQHandler
-                0x08009074                EXTI2_IRQHandler
-                0x08009074                TIM8_CC_IRQHandler
-                0x08009074                TIM1_CC_IRQHandler
-                0x08009074                DMA2_Stream5_IRQHandler
-                0x08009074                DMA1_Stream5_IRQHandler
-                0x08009074                PVD_IRQHandler
-                0x08009074                SDIO_IRQHandler
-                0x08009074                TAMP_STAMP_IRQHandler
-                0x08009074                CAN2_RX1_IRQHandler
-                0x08009074                EXTI3_IRQHandler
-                0x08009074                TIM8_TRG_COM_TIM14_IRQHandler
-                0x08009074                TIM1_UP_TIM10_IRQHandler
-                0x08009074                TIM8_UP_TIM13_IRQHandler
-                0x08009074                I2C3_ER_IRQHandler
-                0x08009074                EXTI0_IRQHandler
-                0x08009074                I2C2_EV_IRQHandler
-                0x08009074                DMA1_Stream2_IRQHandler
-                0x08009074                CAN1_RX0_IRQHandler
-                0x08009074                FPU_IRQHandler
-                0x08009074                OTG_HS_WKUP_IRQHandler
-                0x08009074                CAN2_SCE_IRQHandler
-                0x08009074                DMA2_Stream2_IRQHandler
-                0x08009074                SPI1_IRQHandler
-                0x08009074                TIM6_DAC_IRQHandler
-                0x08009074                TIM1_BRK_TIM9_IRQHandler
-                0x08009074                DCMI_IRQHandler
-                0x08009074                CAN2_RX0_IRQHandler
-                0x08009074                DMA2_Stream3_IRQHandler
-                0x08009074                USART6_IRQHandler
-                0x08009074                CRYP_IRQHandler
-                0x08009074                CAN1_RX1_IRQHandler
-                0x08009074                UART5_IRQHandler
-                0x08009074                DMA2_Stream0_IRQHandler
-                0x08009074                TIM4_IRQHandler
-                0x08009074                I2C1_EV_IRQHandler
-                0x08009074                DMA1_Stream6_IRQHandler
-                0x08009074                DMA1_Stream1_IRQHandler
-                0x08009074                UART4_IRQHandler
-                0x08009074                TIM3_IRQHandler
-                0x08009074                RCC_IRQHandler
-                0x08009074                TIM8_BRK_TIM12_IRQHandler
-                0x08009074                Default_Handler
-                0x08009074                EXTI15_10_IRQHandler
-                0x08009074                ADC_IRQHandler
-                0x08009074                DMA1_Stream7_IRQHandler
-                0x08009074                TIM7_IRQHandler
-                0x08009074                CAN2_TX_IRQHandler
-                0x08009074                TIM5_IRQHandler
-                0x08009074                DMA2_Stream7_IRQHandler
-                0x08009074                I2C3_EV_IRQHandler
-                0x08009074                RTC_WKUP_IRQHandler
-                0x08009074                ETH_WKUP_IRQHandler
-                0x08009074                SPI2_IRQHandler
-                0x08009074                OTG_HS_EP1_IN_IRQHandler
-                0x08009074                DMA1_Stream0_IRQHandler
-                0x08009074                CAN1_TX_IRQHandler
-                0x08009074                EXTI4_IRQHandler
-                0x08009074                FSMC_IRQHandler
-                0x08009074                ETH_IRQHandler
-                0x08009074                OTG_HS_EP1_OUT_IRQHandler
-                0x08009074                WWDG_IRQHandler
-                0x08009074                TIM2_IRQHandler
-                0x08009074                OTG_FS_WKUP_IRQHandler
-                0x08009074                TIM1_TRG_COM_TIM11_IRQHandler
-                0x08009074                OTG_HS_IRQHandler
-                0x08009074                EXTI1_IRQHandler
-                0x08009074                USART2_IRQHandler
-                0x08009074                I2C2_ER_IRQHandler
-                0x08009074                DMA2_Stream1_IRQHandler
-                0x08009074                CAN1_SCE_IRQHandler
-                0x08009074                FLASH_IRQHandler
-                0x08009074                DMA2_Stream4_IRQHandler
-                0x08009074                USART1_IRQHandler
-                0x08009074                OTG_FS_IRQHandler
-                0x08009074                SPI3_IRQHandler
-                0x08009074                DMA1_Stream4_IRQHandler
-                0x08009074                I2C1_ER_IRQHandler
-                0x08009074                DMA2_Stream6_IRQHandler
-                0x08009074                DMA1_Stream3_IRQHandler
+                0x08009100        0x4 src\startup_stm32f40xx.o
+                0x08009100                RTC_Alarm_IRQHandler
+                0x08009100                HASH_RNG_IRQHandler
+                0x08009100                EXTI2_IRQHandler
+                0x08009100                TIM8_CC_IRQHandler
+                0x08009100                TIM1_CC_IRQHandler
+                0x08009100                DMA2_Stream5_IRQHandler
+                0x08009100                DMA1_Stream5_IRQHandler
+                0x08009100                PVD_IRQHandler
+                0x08009100                SDIO_IRQHandler
+                0x08009100                TAMP_STAMP_IRQHandler
+                0x08009100                CAN2_RX1_IRQHandler
+                0x08009100                EXTI3_IRQHandler
+                0x08009100                TIM8_TRG_COM_TIM14_IRQHandler
+                0x08009100                TIM1_UP_TIM10_IRQHandler
+                0x08009100                TIM8_UP_TIM13_IRQHandler
+                0x08009100                I2C3_ER_IRQHandler
+                0x08009100                EXTI0_IRQHandler
+                0x08009100                I2C2_EV_IRQHandler
+                0x08009100                DMA1_Stream2_IRQHandler
+                0x08009100                CAN1_RX0_IRQHandler
+                0x08009100                FPU_IRQHandler
+                0x08009100                OTG_HS_WKUP_IRQHandler
+                0x08009100                CAN2_SCE_IRQHandler
+                0x08009100                DMA2_Stream2_IRQHandler
+                0x08009100                SPI1_IRQHandler
+                0x08009100                TIM6_DAC_IRQHandler
+                0x08009100                TIM1_BRK_TIM9_IRQHandler
+                0x08009100                DCMI_IRQHandler
+                0x08009100                CAN2_RX0_IRQHandler
+                0x08009100                DMA2_Stream3_IRQHandler
+                0x08009100                USART6_IRQHandler
+                0x08009100                CRYP_IRQHandler
+                0x08009100                CAN1_RX1_IRQHandler
+                0x08009100                UART5_IRQHandler
+                0x08009100                DMA2_Stream0_IRQHandler
+                0x08009100                TIM4_IRQHandler
+                0x08009100                I2C1_EV_IRQHandler
+                0x08009100                DMA1_Stream6_IRQHandler
+                0x08009100                DMA1_Stream1_IRQHandler
+                0x08009100                UART4_IRQHandler
+                0x08009100                TIM3_IRQHandler
+                0x08009100                RCC_IRQHandler
+                0x08009100                TIM8_BRK_TIM12_IRQHandler
+                0x08009100                Default_Handler
+                0x08009100                EXTI15_10_IRQHandler
+                0x08009100                ADC_IRQHandler
+                0x08009100                DMA1_Stream7_IRQHandler
+                0x08009100                TIM7_IRQHandler
+                0x08009100                CAN2_TX_IRQHandler
+                0x08009100                TIM5_IRQHandler
+                0x08009100                DMA2_Stream7_IRQHandler
+                0x08009100                I2C3_EV_IRQHandler
+                0x08009100                RTC_WKUP_IRQHandler
+                0x08009100                ETH_WKUP_IRQHandler
+                0x08009100                SPI2_IRQHandler
+                0x08009100                OTG_HS_EP1_IN_IRQHandler
+                0x08009100                DMA1_Stream0_IRQHandler
+                0x08009100                CAN1_TX_IRQHandler
+                0x08009100                EXTI4_IRQHandler
+                0x08009100                FSMC_IRQHandler
+                0x08009100                ETH_IRQHandler
+                0x08009100                OTG_HS_EP1_OUT_IRQHandler
+                0x08009100                WWDG_IRQHandler
+                0x08009100                TIM2_IRQHandler
+                0x08009100                OTG_FS_WKUP_IRQHandler
+                0x08009100                TIM1_TRG_COM_TIM11_IRQHandler
+                0x08009100                OTG_HS_IRQHandler
+                0x08009100                EXTI1_IRQHandler
+                0x08009100                USART2_IRQHandler
+                0x08009100                I2C2_ER_IRQHandler
+                0x08009100                DMA2_Stream1_IRQHandler
+                0x08009100                CAN1_SCE_IRQHandler
+                0x08009100                FLASH_IRQHandler
+                0x08009100                DMA2_Stream4_IRQHandler
+                0x08009100                USART1_IRQHandler
+                0x08009100                OTG_FS_IRQHandler
+                0x08009100                SPI3_IRQHandler
+                0x08009100                DMA1_Stream4_IRQHandler
+                0x08009100                I2C1_ER_IRQHandler
+                0x08009100                DMA2_Stream6_IRQHandler
+                0x08009100                DMA1_Stream3_IRQHandler
  .text.__libc_init_array
-                0x08009078       0x4c c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-init.o)
-                0x08009078                __libc_init_array
- .text.memcmp   0x080090c4       0x1e c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memcmp.o)
-                0x080090c4                memcmp
- .text.memcpy   0x080090e2       0x12 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memcpy-stub.o)
-                0x080090e2                memcpy
- .text.memset   0x080090f4       0x10 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memset.o)
-                0x080090f4                memset
+                0x08009104       0x4c c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-init.o)
+                0x08009104                __libc_init_array
+ .text.memcmp   0x08009150       0x1e c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memcmp.o)
+                0x08009150                memcmp
+ .text.memcpy   0x0800916e       0x12 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memcpy-stub.o)
+                0x0800916e                memcpy
+ .text.memset   0x08009180       0x10 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-memset.o)
+                0x08009180                memset
  *(.glue_7)
  .glue_7        0x00000000        0x0 linker stubs
  *(.glue_7t)
  .glue_7t       0x00000000        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x08009104        0x0 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
+ .eh_frame      0x08009190        0x0 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
  *(.init)
- .init          0x08009104        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crti.o
-                0x08009104                _init
- .init          0x08009108        0x8 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
+ .init          0x08009190        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crti.o
+                0x08009190                _init
+ .init          0x08009194        0x8 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
  *(.fini)
- .fini          0x08009110        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crti.o
-                0x08009110                _fini
- .fini          0x08009114        0x8 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
-                0x0800911c                . = ALIGN (0x4)
-                0x0800911c                _etext = .
+ .fini          0x0800919c        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crti.o
+                0x0800919c                _fini
+ .fini          0x080091a0        0x8 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
+                0x080091a8                . = ALIGN (0x4)
+                0x080091a8                _etext = .
 
-.vfp11_veneer   0x0800911c        0x0
+.vfp11_veneer   0x080091a8        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0800911c        0x0
+.v4_bx          0x080091a8        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0800911c        0x0
+.iplt           0x080091a8        0x0
  .iplt          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
 
-.rodata         0x0800911c       0x8c
-                0x0800911c                . = ALIGN (0x4)
+.rodata         0x080091a8       0x8c
+                0x080091a8                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0800911c        0x4 src\swTimer.o
- .rodata        0x08009120       0x30 src\packet.o
- .rodata        0x08009150       0x34 src\main.o
- .rodata        0x08009184        0x8 Libraries\FreeRTOS\timers.o
- .rodata        0x0800918c        0x8 Libraries\FreeRTOS\tasks.o
+ .rodata        0x080091a8        0x4 src\swTimer.o
+ .rodata        0x080091ac       0x30 src\packet.o
+ .rodata        0x080091dc       0x34 src\main.o
+ .rodata        0x08009210        0x8 Libraries\FreeRTOS\timers.o
+ .rodata        0x08009218        0x8 Libraries\FreeRTOS\tasks.o
  *(.rodata*)
  .rodata.ucExpectedStackBytes.5329
-                0x08009194       0x14 Libraries\FreeRTOS\tasks.o
-                0x080091a8                . = ALIGN (0x4)
+                0x08009220       0x14 Libraries\FreeRTOS\tasks.o
+                0x08009234                . = ALIGN (0x4)
 
-.rel.dyn        0x080091a8        0x0
+.rel.dyn        0x08009234        0x0
  .rel.iplt      0x00000000        0x0 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x080091a8        0x0
-                0x080091a8                __exidx_start = .
+.ARM            0x08009234        0x0
+                0x08009234                __exidx_start = .
  *(.ARM.exidx*)
-                0x080091a8                __exidx_end = .
+                0x08009234                __exidx_end = .
 
-.preinit_array  0x080091a8        0x0
-                0x080091a8                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x08009234        0x0
+                0x08009234                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x080091a8                PROVIDE (__preinit_array_end, .)
+                0x08009234                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x080091a8        0x4
-                0x080091a8                PROVIDE (__init_array_start, .)
+.init_array     0x08009234        0x4
+                0x08009234                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
- .init_array    0x080091a8        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
-                0x080091ac                PROVIDE (__init_array_end, .)
+ .init_array    0x08009234        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
+                0x08009238                PROVIDE (__init_array_end, .)
 
-.fini_array     0x080091ac        0x4
-                0x080091ac                PROVIDE (__fini_array_start, .)
+.fini_array     0x08009238        0x4
+                0x08009238                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x080091ac        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
-                0x080091b0                PROVIDE (__fini_array_end, .)
-                0x080091b0                _sidata = LOADADDR (.data)
+ .fini_array    0x08009238        0x4 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
+                0x0800923c                PROVIDE (__fini_array_end, .)
+                0x0800923c                _sidata = LOADADDR (.data)
 
-.data           0x20000000       0x4c load address 0x080091b0
+.data           0x20000000       0x4c load address 0x0800923c
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -1259,12 +1258,15 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
  .data.photo_previous_line
                 0x20000018        0x1 src\photo.o
                 0x20000018                photo_previous_line
- *fill*         0x20000019        0x3 
+ .data.photo_intersection
+                0x20000019        0x1 src\photo.o
+                0x20000019                photo_intersection
+ *fill*         0x2000001a        0x2 
  .data.next_direction
                 0x2000001c        0x4 src\photo.o
                 0x2000001c                next_direction
- .data.steer.7907
-                0x20000020        0x1 src\motor.o
+ .data.steer    0x20000020        0x1 src\motor.o
+                0x20000020                steer
  *fill*         0x20000021        0x3 
  .data.led_light_pin
                 0x20000024        0x8 src\hardware.o
@@ -1280,12 +1282,12 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x20000048        0x4 Libraries\FreeRTOS\Portable\port.o
                 0x2000004c                . = ALIGN (0x4)
                 0x2000004c                _edata = .
-                0x080091fc                _siccmram = LOADADDR (.ccmram)
+                0x08009288                _siccmram = LOADADDR (.ccmram)
 
-.igot.plt       0x2000004c        0x0 load address 0x080091fc
+.igot.plt       0x2000004c        0x0 load address 0x08009288
  .igot.plt      0x00000000        0x0 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtbegin.o
 
-.ccmram         0x10000000        0x0 load address 0x080091fc
+.ccmram         0x10000000        0x0 load address 0x08009288
                 0x10000000                . = ALIGN (0x4)
                 0x10000000                _sccmram = .
  *(.ccmram)
@@ -1303,132 +1305,132 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
  .bss.xUltrasonic2Handle
                 0x20000068        0x4 src\ultrasonic.o
                 0x20000068                xUltrasonic2Handle
- .bss.done1     0x2000006c        0x1 src\ultrasonic.o
-                0x2000006c                done1
- .bss.done2     0x2000006d        0x1 src\ultrasonic.o
-                0x2000006d                done2
- .bss.done3     0x2000006e        0x1 src\ultrasonic.o
-                0x2000006e                done3
+ .bss.xUltrasonic3Handle
+                0x2000006c        0x4 src\ultrasonic.o
+                0x2000006c                xUltrasonic3Handle
+ .bss.done1     0x20000070        0x1 src\ultrasonic.o
+                0x20000070                done1
+ .bss.done2     0x20000071        0x1 src\ultrasonic.o
+                0x20000071                done2
+ .bss.done3     0x20000072        0x1 src\ultrasonic.o
+                0x20000072                done3
  .bss.photo_counter
-                0x2000006f        0x1 src\photo.o
-                0x2000006f                photo_counter
- .bss.photo_intersection
-                0x20000070        0x1 src\photo.o
-                0x20000070                photo_intersection
+                0x20000073        0x1 src\photo.o
+                0x20000073                photo_counter
  .bss.photo_direction
-                0x20000071        0x1 src\photo.o
-                0x20000071                photo_direction
- .bss.photo1.7887
-                0x20000072        0x2 src\photo.o
- .bss.photo2.7888
-                0x20000074        0x2 src\photo.o
- .bss.photo3.7889
+                0x20000074        0x1 src\photo.o
+                0x20000074                photo_direction
+ *fill*         0x20000075        0x1 
+ .bss.photo1.7888
                 0x20000076        0x2 src\photo.o
- .bss.photo_average.7890
+ .bss.photo2.7889
                 0x20000078        0x2 src\photo.o
+ .bss.photo3.7890
+                0x2000007a        0x2 src\photo.o
+ .bss.photo_average.7891
+                0x2000007c        0x2 src\photo.o
  .bss.counter.8216
-                0x2000007a        0x1 src\packet.o
- *fill*         0x2000007b        0x1 
+                0x2000007e        0x1 src\packet.o
+ *fill*         0x2000007f        0x1 
  .bss.xSetupHandle
-                0x2000007c        0x4 src\main.o
-                0x2000007c                xSetupHandle
- .bss.xConnectHandle
                 0x20000080        0x4 src\main.o
-                0x20000080                xConnectHandle
- .bss.xModeOfOperationHandle
+                0x20000080                xSetupHandle
+ .bss.xConnectHandle
                 0x20000084        0x4 src\main.o
-                0x20000084                xModeOfOperationHandle
- .bss.xTrafficLightHandle
+                0x20000084                xConnectHandle
+ .bss.xModeOfOperationHandle
                 0x20000088        0x4 src\main.o
-                0x20000088                xTrafficLightHandle
+                0x20000088                xModeOfOperationHandle
+ .bss.xTrafficLightHandle
+                0x2000008c        0x4 src\main.o
+                0x2000008c                xTrafficLightHandle
  .bss.xActiveTimerList1
-                0x2000008c       0x14 Libraries\FreeRTOS\timers.o
+                0x20000090       0x14 Libraries\FreeRTOS\timers.o
  .bss.xActiveTimerList2
-                0x200000a0       0x14 Libraries\FreeRTOS\timers.o
+                0x200000a4       0x14 Libraries\FreeRTOS\timers.o
  .bss.pxCurrentTimerList
-                0x200000b4        0x4 Libraries\FreeRTOS\timers.o
- .bss.pxOverflowTimerList
                 0x200000b8        0x4 Libraries\FreeRTOS\timers.o
- .bss.xTimerQueue
+ .bss.pxOverflowTimerList
                 0x200000bc        0x4 Libraries\FreeRTOS\timers.o
- .bss.xLastTime.5184
+ .bss.xTimerQueue
                 0x200000c0        0x4 Libraries\FreeRTOS\timers.o
+ .bss.xLastTime.5184
+                0x200000c4        0x4 Libraries\FreeRTOS\timers.o
  .bss.pxCurrentTCB
-                0x200000c4        0x4 Libraries\FreeRTOS\tasks.o
-                0x200000c4                pxCurrentTCB
+                0x200000c8        0x4 Libraries\FreeRTOS\tasks.o
+                0x200000c8                pxCurrentTCB
  .bss.pxReadyTasksLists
-                0x200000c8       0x64 Libraries\FreeRTOS\tasks.o
+                0x200000cc       0x64 Libraries\FreeRTOS\tasks.o
  .bss.xDelayedTaskList1
-                0x2000012c       0x14 Libraries\FreeRTOS\tasks.o
+                0x20000130       0x14 Libraries\FreeRTOS\tasks.o
  .bss.xDelayedTaskList2
-                0x20000140       0x14 Libraries\FreeRTOS\tasks.o
+                0x20000144       0x14 Libraries\FreeRTOS\tasks.o
  .bss.pxDelayedTaskList
-                0x20000154        0x4 Libraries\FreeRTOS\tasks.o
- .bss.pxOverflowDelayedTaskList
                 0x20000158        0x4 Libraries\FreeRTOS\tasks.o
+ .bss.pxOverflowDelayedTaskList
+                0x2000015c        0x4 Libraries\FreeRTOS\tasks.o
  .bss.xPendingReadyList
-                0x2000015c       0x14 Libraries\FreeRTOS\tasks.o
+                0x20000160       0x14 Libraries\FreeRTOS\tasks.o
  .bss.xTasksWaitingTermination
-                0x20000170       0x14 Libraries\FreeRTOS\tasks.o
+                0x20000174       0x14 Libraries\FreeRTOS\tasks.o
  .bss.uxTasksDeleted
-                0x20000184        0x4 Libraries\FreeRTOS\tasks.o
+                0x20000188        0x4 Libraries\FreeRTOS\tasks.o
  .bss.xSuspendedTaskList
-                0x20000188       0x14 Libraries\FreeRTOS\tasks.o
+                0x2000018c       0x14 Libraries\FreeRTOS\tasks.o
  .bss.uxCurrentNumberOfTasks
-                0x2000019c        0x4 Libraries\FreeRTOS\tasks.o
- .bss.xTickCount
                 0x200001a0        0x4 Libraries\FreeRTOS\tasks.o
- .bss.uxTopReadyPriority
+ .bss.xTickCount
                 0x200001a4        0x4 Libraries\FreeRTOS\tasks.o
- .bss.xSchedulerRunning
+ .bss.uxTopReadyPriority
                 0x200001a8        0x4 Libraries\FreeRTOS\tasks.o
- .bss.uxPendedTicks
+ .bss.xSchedulerRunning
                 0x200001ac        0x4 Libraries\FreeRTOS\tasks.o
- .bss.xYieldPending
+ .bss.uxPendedTicks
                 0x200001b0        0x4 Libraries\FreeRTOS\tasks.o
- .bss.xNumOfOverflows
+ .bss.xYieldPending
                 0x200001b4        0x4 Libraries\FreeRTOS\tasks.o
- .bss.uxTaskNumber
+ .bss.xNumOfOverflows
                 0x200001b8        0x4 Libraries\FreeRTOS\tasks.o
- .bss.uxSchedulerSuspended
+ .bss.uxTaskNumber
                 0x200001bc        0x4 Libraries\FreeRTOS\tasks.o
- .bss.ucHeap    0x200001c0    0x1c000 Libraries\FreeRTOS\Portable\heap_4.o
- .bss.xStart    0x2001c1c0        0x8 Libraries\FreeRTOS\Portable\heap_4.o
- .bss.pxEnd     0x2001c1c8        0x4 Libraries\FreeRTOS\Portable\heap_4.o
+ .bss.uxSchedulerSuspended
+                0x200001c0        0x4 Libraries\FreeRTOS\tasks.o
+ .bss.ucHeap    0x200001c4    0x1c000 Libraries\FreeRTOS\Portable\heap_4.o
+ .bss.xStart    0x2001c1c4        0x8 Libraries\FreeRTOS\Portable\heap_4.o
+ .bss.pxEnd     0x2001c1cc        0x4 Libraries\FreeRTOS\Portable\heap_4.o
  .bss.xFreeBytesRemaining
-                0x2001c1cc        0x4 Libraries\FreeRTOS\Portable\heap_4.o
- .bss.xMinimumEverFreeBytesRemaining
                 0x2001c1d0        0x4 Libraries\FreeRTOS\Portable\heap_4.o
- .bss.xBlockAllocatedBit
+ .bss.xMinimumEverFreeBytesRemaining
                 0x2001c1d4        0x4 Libraries\FreeRTOS\Portable\heap_4.o
+ .bss.xBlockAllocatedBit
+                0x2001c1d8        0x4 Libraries\FreeRTOS\Portable\heap_4.o
  *(COMMON)
- COMMON         0x2001c1d8       0x5f src\ultrasonic.o
-                0x2001c1d8                set_motor
-                0x2001c1dc                adcPin
-                0x2001c1e8                power_total
-                0x2001c1ec                traffic_future_state
-                0x2001c1f0                blinkTrafficLight
-                0x2001c1f4                read_photo
-                0x2001c1f8                power_time
-                0x2001c1fa                delay_done
-                0x2001c1fc                read_power
-                0x2001c200                traffic_current_state
-                0x2001c204                adcClk
-                0x2001c21c                adcPort
-                0x2001c234                traffic_time
-                0x2001c236                my_mode
- *fill*         0x2001c237        0x1 
- COMMON         0x2001c238       0x18 src\power.o
-                0x2001c238                process_packet
-                0x2001c23c                xPacketQueue
-                0x2001c240                received_string
- COMMON         0x2001c250       0x18 src\hardware.o
-                0x2001c250                distCM_left
-                0x2001c254                timerValue1
-                0x2001c258                timerValue2
-                0x2001c25c                distCM_front
-                0x2001c260                distCM_right
-                0x2001c264                timerValue3
+ COMMON         0x2001c1dc       0x71 src\ultrasonic.o
+                0x2001c1dc                set_motor
+                0x2001c1e0                adcPin
+                0x2001c1ec                distCM_left
+                0x2001c1f0                power_total
+                0x2001c1f4                traffic_future_state
+                0x2001c1f8                blinkTrafficLight
+                0x2001c1fc                timerValue1
+                0x2001c200                read_photo
+                0x2001c204                power_time
+                0x2001c206                timerValue2
+                0x2001c208                delay_done
+                0x2001c20c                read_power
+                0x2001c210                distCM_front
+                0x2001c212                distCM_right
+                0x2001c214                traffic_current_state
+                0x2001c218                adcClk
+                0x2001c230                adcPort
+                0x2001c248                traffic_time
+                0x2001c24a                timerValue3
+                0x2001c24c                my_mode
+ *fill*         0x2001c24d        0x3 
+ COMMON         0x2001c250       0x18 src\power.o
+                0x2001c250                process_packet
+                0x2001c254                xPacketQueue
+                0x2001c258                received_string
                 0x2001c268                . = ALIGN (0x4)
                 0x2001c268                _ebss = .
                 0x2001c268                __bss_end__ = _ebss
@@ -1525,33 +1527,33 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x000006d8       0x22 c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/armv7e-m/fpu/crtn.o
 OUTPUT(SAV.elf elf32-littlearm)
 
-.debug_info     0x00000000     0xd3a1
+.debug_info     0x00000000     0xd5ce
  .debug_info    0x00000000      0x998 src\ultrasonic.o
- .debug_info    0x00000998      0x44d src\trafficLight.o
- .debug_info    0x00000de5      0x5a3 src\system_stm32f4xx.o
- .debug_info    0x00001388      0x265 src\swTimer.o
- .debug_info    0x000015ed      0x100 src\stm32f4xx_it.o
- .debug_info    0x000016ed       0x71 src\startup_stm32f40xx.o
- .debug_info    0x0000175e      0x6c4 src\power.o
- .debug_info    0x00001e22      0x69b src\photo.o
- .debug_info    0x000024bd      0xd94 src\packet.o
- .debug_info    0x00003251      0x86c src\motor.o
- .debug_info    0x00003abd      0x89f src\main.o
- .debug_info    0x0000435c      0xfd4 src\hardware.o
- .debug_info    0x00005330      0x9c6 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
- .debug_info    0x00005cf6     0x1c65 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
- .debug_info    0x0000795b      0x270 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
- .debug_info    0x00007bcb      0xc77 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
- .debug_info    0x00008842      0x609 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
- .debug_info    0x00008e4b      0x34b Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
- .debug_info    0x00009196      0xc3c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
- .debug_info    0x00009dd2      0x541 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
- .debug_info    0x0000a313      0x7e5 Libraries\FreeRTOS\timers.o
- .debug_info    0x0000aaf8     0x14b4 Libraries\FreeRTOS\tasks.o
- .debug_info    0x0000bfac      0xb3a Libraries\FreeRTOS\queue.o
- .debug_info    0x0000cae6      0x29d Libraries\FreeRTOS\list.o
- .debug_info    0x0000cd83      0x310 Libraries\FreeRTOS\Portable\port.o
- .debug_info    0x0000d093      0x30e Libraries\FreeRTOS\Portable\heap_4.o
+ .debug_info    0x00000998      0x529 src\trafficLight.o
+ .debug_info    0x00000ec1      0x5a3 src\system_stm32f4xx.o
+ .debug_info    0x00001464      0x265 src\swTimer.o
+ .debug_info    0x000016c9      0x100 src\stm32f4xx_it.o
+ .debug_info    0x000017c9       0x71 src\startup_stm32f40xx.o
+ .debug_info    0x0000183a      0x7a0 src\power.o
+ .debug_info    0x00001fda      0x6cd src\photo.o
+ .debug_info    0x000026a7      0xd94 src\packet.o
+ .debug_info    0x0000343b      0x86c src\motor.o
+ .debug_info    0x00003ca7      0x8d1 src\main.o
+ .debug_info    0x00004578      0xfe5 src\hardware.o
+ .debug_info    0x0000555d      0x9c6 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
+ .debug_info    0x00005f23     0x1c65 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
+ .debug_info    0x00007b88      0x270 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
+ .debug_info    0x00007df8      0xc77 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
+ .debug_info    0x00008a6f      0x609 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
+ .debug_info    0x00009078      0x34b Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
+ .debug_info    0x000093c3      0xc3c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
+ .debug_info    0x00009fff      0x541 Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
+ .debug_info    0x0000a540      0x7e5 Libraries\FreeRTOS\timers.o
+ .debug_info    0x0000ad25     0x14b4 Libraries\FreeRTOS\tasks.o
+ .debug_info    0x0000c1d9      0xb3a Libraries\FreeRTOS\queue.o
+ .debug_info    0x0000cd13      0x29d Libraries\FreeRTOS\list.o
+ .debug_info    0x0000cfb0      0x310 Libraries\FreeRTOS\Portable\port.o
+ .debug_info    0x0000d2c0      0x30e Libraries\FreeRTOS\Portable\heap_4.o
 
 .debug_abbrev   0x00000000     0x2406
  .debug_abbrev  0x00000000      0x18e src\ultrasonic.o
@@ -1635,39 +1637,39 @@ OUTPUT(SAV.elf elf32-littlearm)
  .debug_aranges
                 0x00000328       0x20 Libraries\FreeRTOS\Portable\heap_4.o
 
-.debug_line     0x00000000     0x48f7
+.debug_line     0x00000000     0x494a
  .debug_line    0x00000000      0x36b src\ultrasonic.o
- .debug_line    0x0000036b      0x219 src\trafficLight.o
- .debug_line    0x00000584      0x1da src\system_stm32f4xx.o
- .debug_line    0x0000075e      0x1ba src\swTimer.o
- .debug_line    0x00000918      0x16d src\stm32f4xx_it.o
- .debug_line    0x00000a85       0x7a src\startup_stm32f40xx.o
- .debug_line    0x00000aff      0x231 src\power.o
- .debug_line    0x00000d30      0x25e src\photo.o
- .debug_line    0x00000f8e      0x3a6 src\packet.o
- .debug_line    0x00001334      0x28d src\motor.o
- .debug_line    0x000015c1      0x37a src\main.o
- .debug_line    0x0000193b      0x37f src\hardware.o
- .debug_line    0x00001cba      0x329 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
- .debug_line    0x00001fe3      0x5aa Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
- .debug_line    0x0000258d      0x1cc Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
- .debug_line    0x00002759      0x35c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
- .debug_line    0x00002ab5      0x280 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
- .debug_line    0x00002d35      0x234 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
- .debug_line    0x00002f69      0x354 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
- .debug_line    0x000032bd      0x1fb Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
- .debug_line    0x000034b8      0x282 Libraries\FreeRTOS\timers.o
- .debug_line    0x0000373a      0x76f Libraries\FreeRTOS\tasks.o
- .debug_line    0x00003ea9      0x46d Libraries\FreeRTOS\queue.o
- .debug_line    0x00004316      0x1b9 Libraries\FreeRTOS\list.o
- .debug_line    0x000044cf      0x1ed Libraries\FreeRTOS\Portable\port.o
- .debug_line    0x000046bc      0x23b Libraries\FreeRTOS\Portable\heap_4.o
+ .debug_line    0x0000036b      0x233 src\trafficLight.o
+ .debug_line    0x0000059e      0x1da src\system_stm32f4xx.o
+ .debug_line    0x00000778      0x1ba src\swTimer.o
+ .debug_line    0x00000932      0x16d src\stm32f4xx_it.o
+ .debug_line    0x00000a9f       0x7a src\startup_stm32f40xx.o
+ .debug_line    0x00000b19      0x24b src\power.o
+ .debug_line    0x00000d64      0x26c src\photo.o
+ .debug_line    0x00000fd0      0x3a6 src\packet.o
+ .debug_line    0x00001376      0x29c src\motor.o
+ .debug_line    0x00001612      0x37c src\main.o
+ .debug_line    0x0000198e      0x37f src\hardware.o
+ .debug_line    0x00001d0d      0x329 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
+ .debug_line    0x00002036      0x5aa Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
+ .debug_line    0x000025e0      0x1cc Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.o
+ .debug_line    0x000027ac      0x35c Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.o
+ .debug_line    0x00002b08      0x280 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.o
+ .debug_line    0x00002d88      0x234 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.o
+ .debug_line    0x00002fbc      0x354 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.o
+ .debug_line    0x00003310      0x1fb Libraries\STM32F4xx_StdPeriph_Driver\src\misc.o
+ .debug_line    0x0000350b      0x282 Libraries\FreeRTOS\timers.o
+ .debug_line    0x0000378d      0x76f Libraries\FreeRTOS\tasks.o
+ .debug_line    0x00003efc      0x46d Libraries\FreeRTOS\queue.o
+ .debug_line    0x00004369      0x1b9 Libraries\FreeRTOS\list.o
+ .debug_line    0x00004522      0x1ed Libraries\FreeRTOS\Portable\port.o
+ .debug_line    0x0000470f      0x23b Libraries\FreeRTOS\Portable\heap_4.o
 
 .debug_str      0x00000000     0x4c05
  .debug_str     0x00000000      0x6d3 src\ultrasonic.o
                                 0x739 (size before relaxing)
  .debug_str     0x000006d3       0x3b src\trafficLight.o
-                                0x3c6 (size before relaxing)
+                                0x468 (size before relaxing)
  .debug_str     0x0000070e      0x1bf src\system_stm32f4xx.o
                                 0x3e0 (size before relaxing)
  .debug_str     0x000008cd       0xdf src\swTimer.o
@@ -1675,17 +1677,17 @@ OUTPUT(SAV.elf elf32-littlearm)
  .debug_str     0x000009ac       0x7b src\stm32f4xx_it.o
                                 0x1fe (size before relaxing)
  .debug_str     0x00000a27      0x166 src\power.o
-                                0x50e (size before relaxing)
- .debug_str     0x00000b8d       0x47 src\photo.o
-                                0x4da (size before relaxing)
- .debug_str     0x00000bd4      0x23c src\packet.o
+                                0x5b0 (size before relaxing)
+ .debug_str     0x00000b8d       0x69 src\photo.o
+                                0x4fc (size before relaxing)
+ .debug_str     0x00000bf6      0x23c src\packet.o
                                 0x80d (size before relaxing)
- .debug_str     0x00000e10      0x134 src\motor.o
+ .debug_str     0x00000e32      0x112 src\motor.o
                                 0x655 (size before relaxing)
  .debug_str     0x00000f44      0x14f src\main.o
-                                0x6a6 (size before relaxing)
+                                0x6c8 (size before relaxing)
  .debug_str     0x00001093      0x905 src\hardware.o
-                                0xffb (size before relaxing)
+                               0x1001 (size before relaxing)
  .debug_str     0x00001998      0x3ff Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.o
                                 0x6dd (size before relaxing)
  .debug_str     0x00001d97      0x9f1 Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.o
@@ -2689,18 +2691,24 @@ distCM_front                                      src\hardware.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 distCM_left                                       src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 distCM_right                                      src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 done1                                             src\ultrasonic.o
                                                   src\hardware.o
@@ -2708,18 +2716,24 @@ done1                                             src\ultrasonic.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
 done2                                             src\ultrasonic.o
                                                   src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
 done3                                             src\ultrasonic.o
                                                   src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
 end                                               c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-syscalls.o)
 environ                                           c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-syscalls.o)
 errno                                             c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-sbrkr.o)
@@ -2863,6 +2877,7 @@ prvUltrasonic1Task                                src\ultrasonic.o
 prvUltrasonic2Task                                src\ultrasonic.o
                                                   src\main.o
 prvUltrasonic3Task                                src\ultrasonic.o
+                                                  src\main.o
 prvblinkTrafficLightCallback                      src\trafficLight.o
                                                   src\hardware.o
 puts                                              src\tiny_printf.o
@@ -2917,6 +2932,8 @@ sendSetMode                                       src\packet.o
                                                   src\main.o
 setInput                                          src\ultrasonic.o
 setMotor                                          src\motor.o
+                                                  src\main.o
+                                                  src\photo.o
 setOutput                                         src\ultrasonic.o
 set_motor                                         src\hardware.o
                                                   src\main.o
@@ -2928,6 +2945,10 @@ set_motor                                         src\hardware.o
                                                   src\ultrasonic.o
 siprintf                                          src\tiny_printf.o
 sprintf                                           src\tiny_printf.o
+steer                                             src\motor.o
+                                                  src\hardware.o
+                                                  src\main.o
+                                                  src\photo.o
 strlen                                            c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib/gcc/arm-atollic-eabi/4.8.3/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_s.a(lib_a-strlen.o)
                                                   src\tiny_printf.o
 swDelay                                           src\swTimer.o
@@ -2946,18 +2967,24 @@ timerValue1                                       src\hardware.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 timerValue2                                       src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 timerValue3                                       src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
                                                   src\ultrasonic.o
 traffic_current_state                             src\hardware.o
                                                   src\main.o
@@ -3171,15 +3198,21 @@ xUltrasonic1Handle                                src\ultrasonic.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
 xUltrasonic2Handle                                src\ultrasonic.o
                                                   src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
 xUltrasonic3Handle                                src\ultrasonic.o
                                                   src\hardware.o
                                                   src\main.o
                                                   src\motor.o
                                                   src\packet.o
                                                   src\photo.o
+                                                  src\power.o
+                                                  src\trafficLight.o
