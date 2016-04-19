@@ -79,41 +79,9 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
  * Timer callback to read photo resistors
  *********************************************************************************************/
 void prvSetMotorCallback( TimerHandle_t pxTimer ) {
-
-//	// Adjust steering based on ultrasonic values
-//	if( distCM_right < 20 ) {
-//		// Make sure steer is valid
-//		if( steer < 68 ) {
-//			steer += 2;
-//		}
-//	} else if( distCM_left < 20 ) {
-//		// Make sure steer is valid
-//		if( steer > 35 ) {
-//			steer -= 2;
-//		}
-//	} else {
-//		// Reset back to nominal
-//		if( steer < 50 ) {
-//			steer += 2;
-//		} else if( steer > 50 ) {
-//			steer -= 2;
-//		}
-//	}
-
-
-//	if( distCM_left < 20 ) {
-//		// Limit extreme values
-//		if( (steer > 35) && (steer < 50) ) {
-//			steer -= 1;
-//		}
-//	}
-//
-//	if( distCM_right < 20 ) {
-//		// Limit extreme values
-//		if( steer < 70 && (steer > 50) ) {
-//			steer += 1;
-//		}
-//	}
+	// Prevent changes from ultrasonic happening too quickly
+	static uint8_t ultra_left_counter = 5;
+	static uint8_t ultra_right_counter = 5;
 
 
 	// Consider current state
@@ -173,11 +141,16 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 		}
 	}
 
-	// If light is yellow, action depends on
 
+	// Set motor speed based on selected action
 	switch( motor_action ) {
 		case go:
-			motor_speed = 90;
+			// If going around curve, go full speed
+			if( (steer > 55) || (steer < 45) ) {
+				motor_speed = 100;
+			} else {
+				motor_speed = 90;
+			}
 			setMotor(forward, motor_speed);
 			break;
 		case stop:
@@ -194,7 +167,37 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 			setMotor(forward, motor_speed);
 	}
 
-//	pwmSet(steer, servo);
+
+	// Modulate steering based on ultrasonic
+	if( distCM_left < 20 ) {
+		// Increment counter
+		ultra_left_counter++;
+
+		// Limit extreme values
+//		if( (steer > 36) && (steer < 50) && (ultra_counter > 5) ) {
+		if( (steer > 36) && (ultra_left_counter > 5) ) {
+			steer -= 1;
+			ultra_left_counter = 0;
+		}
+	} else {
+		ultra_left_counter = 5;
+	}
+
+	if( distCM_right < 20 ) {
+		// Increment counter
+		ultra_right_counter++;
+
+		// Limit extreme values
+		if( (steer < 66) && (ultra_right_counter > 5) ) {
+			steer += 1;
+			ultra_right_counter = 0;
+		}
+	} else {
+		ultra_right_counter = 5;
+	}
+
+	// Set steering
+	pwmSet(steer, servo);
 
 }
 
