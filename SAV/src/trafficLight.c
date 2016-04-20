@@ -13,17 +13,17 @@
 void prvblinkTrafficLightCallback( TimerHandle_t pxTimer ) {
 
 	if( traffic_time > 0 ) {
-		// If there is at least 0.1 seconds until the change, toggle the LED
-		LED_LIGHT_PORT->ODR ^= led_light_pin[traffic_future_state];
+		// If there is at least 0.4 seconds until the change, toggle the LED
+		if( (traffic_time % 400 == 0) && (traffic_time < 10000) ) {
+			LED_LIGHT_PORT->ODR ^= led_light_pin[traffic_future_state];
+		}
 
 		// Decrease elapsed time
-		traffic_time = traffic_time - 4;
+		traffic_time = traffic_time - 100;
 	} else {
 		// Turn on the new state
 		LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
 		LED_LIGHT_PORT->ON = led_light_pin[traffic_future_state];
-
-		swTimerStop( pxTimer );
 	}
 }
 
@@ -32,3 +32,8 @@ void prvblinkTrafficLightCallback( TimerHandle_t pxTimer ) {
  * Map current state to next state
  *********************************************************************************************/
 lightState next_light_state[3] = {green, red, yellow};
+
+
+lightState traffic_current_state = green;
+lightState traffic_future_state = yellow;
+uint16_t traffic_time = 30000;

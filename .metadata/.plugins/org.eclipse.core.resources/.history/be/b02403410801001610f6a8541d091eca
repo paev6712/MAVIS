@@ -1,0 +1,17 @@
+/*
+ * ultrasonic.c
+ *
+ *  Created on: Apr 12, 2016
+ *      Author: Parker
+ */
+
+#include "ultrasonic.h"
+
+
+TaskHandle_t xUltrasonic1Handle = NULL;
+TaskHandle_t xUltrasonic2Handle = NULL;
+TaskHandle_t xUltrasonic3Handle = NULL;
+
+volatile int done1 = 0;
+volatile int done2 = 0;
+volatile int done3 = 0;

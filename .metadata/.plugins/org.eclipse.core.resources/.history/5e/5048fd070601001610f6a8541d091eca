@@ -1,0 +1,122 @@
+/*
+ * main.h
+ *
+ *  Created on: Feb 21, 2016
+ *      Author: Parker
+ */
+
+#ifndef MAIN_H_
+#define MAIN_H_
+
+#include "freeRTOS.h"
+#include "stm32f4xx.h"
+#include "task.h"
+#include "queue.h"
+#include "general.h"
+#include "hardware.h"
+#include "swTimer.h"
+#include "packet.h"
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define FreeRTOS Tasks and associated handles, if appropriate
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Setup hardware/software
+ *********************************************************************************************/
+void prvSetupTask( void *pvParameters );
+
+TaskHandle_t xSetupHandle = NULL;
+#define	setupPriority						( tskIDLE_PRIORITY + 1 )
+
+
+/*********************************************************************************************
+ * Initial bootup task to connect to Base Station
+ *********************************************************************************************/
+void prvConnectTask( void *pvParameters );
+
+TaskHandle_t xConnectHandle = NULL;
+#define	connectPriority						( tskIDLE_PRIORITY + 1 )
+
+/*********************************************************************************************
+ * Task Priorities
+ *********************************************************************************************/
+#define	ultrasonicPriority					( tskIDLE_PRIORITY + 1 )
+
+/*********************************************************************************************
+ * Task Frequencies
+ *********************************************************************************************/
+#define ultrasonicFreq						( 500 / portTICK_PERIOD_MS)
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+volatile int distCM_front;
+volatile int distCM_left;
+volatile int distCM_right;
+volatile int timerValue1; //timer value for ultrasonic counters
+volatile int timerValue2;
+volatile int timerValue3;
+volatile int done1 = 0; //boolean for indicating when a timer value is ready to be read
+volatile int done2 = 0;
+volatile int done3 = 0;
+/*********************************************************************************************
+ * Initial bootup task to setup default mode of operation
+ *********************************************************************************************/
+void prvModeOfOperationTask( void *pvParameters );
+
+TaskHandle_t xModeOfOperationHandle = NULL;
+#define	modeOfOperationPriority				( tskIDLE_PRIORITY + 1 )
+
+
+/*********************************************************************************************
+ * Task to handle TrafficLight packets
+ *********************************************************************************************/
+void prvTrafficLightTask( void *pvParameters );
+
+TaskHandle_t xTrafficLightHandle = NULL;
+#define	trafficLightPriority				( tskIDLE_PRIORITY + 1 )
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define Functions
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Setup relevant hardware
+ *********************************************************************************************/
+static void prvSetupHardware( void );
+
+
+/*********************************************************************************************
+ * Blink LEDs on board
+ *********************************************************************************************/
+static void prvBlinkLeds( void );
+
+
+/*********************************************************************************************
+ * Setup Wifi connection
+ *********************************************************************************************/
+static void prvSetupWifi( void );
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Ultrasonic
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Ultrasonic data collection and processing task
+ *********************************************************************************************/
+void prvUltrasonic( void *pvParameters );
+void prvUltrasonic2( void *pvParameters );
+void prvUltrasonic3( void *pvParameters );
+/*********************************************************************************************
+ * Ultrasonic helper functions to change pin modes (input/output)
+ *********************************************************************************************/
+void setInput(uint16_t pin);
+void setOutput(uint16_t pin);
+
+
+#endif /* MAIN_H_ */

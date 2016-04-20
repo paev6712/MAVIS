@@ -24,6 +24,14 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Ignore metafiles
+.metadata\*
+
+# ignore .o
+*.o
+*.elf
+*.map
+
 # =========================
 # Operating System Files
 # =========================
@@ -52,3 +60,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.pdom
+.metadata/.lock
+*.log
+*.index
+

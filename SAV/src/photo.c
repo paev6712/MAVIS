@@ -39,22 +39,49 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 	// Average values
 	photo_average = (photo1 + photo2 + photo3)/3;
 
+	// Check if over a white line
+	if( (photo_average > 3200) && (photo_previous_line == black) ) {
+		photo_previous_line = white;
+//		photo_counter += 1;
+		LED_MODE_PORT->OFF = LED_MODE_1_PIN;
+	}
+
 	// Check if over a black line
-	if( (photo_average > 1800) && (photo_previous_line == white) ) {
+	else if( (photo_average <= 3200) && (photo_previous_line == white) ) {
 		photo_previous_line = black;
 		photo_counter += 1;
-		// Toggle LED
-		LED_MODE_PORT->ODR ^= LED_MODE_1_PIN;
-	} else if( (photo_average <= 1800) && (photo_previous_line == black) ) {
-		photo_previous_line = white;
-		photo_counter += 1;
-		// Toggle LED
-		LED_MODE_PORT->ODR ^= LED_MODE_1_PIN;
+		LED_MODE_PORT->ON = LED_MODE_1_PIN;
+		if( (photo_counter == 3) && (photo_intersection == FALSE) ) {
+			// Adjust steering
+			if( photo_direction == ns ) {
+				steer = 48;
+			} else {
+				steer = 54;
+			}
+		}
 	}
 
 	if( photo_counter >= 5 ) {
-		// Turn on second LED
-		LED_MODE_PORT->ODR ^= LED_MODE_2_PIN;
+
+		if( photo_intersection == TRUE ) {
+			// Leaving the intersection
+			photo_intersection = FALSE;
+
+			// Adjust steering
+			if( photo_direction == ns ) {
+				steer = 63;
+			} else {
+				steer = 39;
+			}
+		} else {
+			// Entering intersection
+			photo_intersection = TRUE;
+
+			// Update direction SAV is traveling
+			photo_direction = next_direction[photo_direction];
+		}
+
+		// Reset the counter
 		photo_counter = 0;
 	}
 }
@@ -65,3 +92,11 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
  *********************************************************************************************/
 uint8_t photo_counter = 0;
 LineColor photo_previous_line = white;
+uint8_t photo_intersection = TRUE;
+Direction photo_direction = ns;
+
+
+/*********************************************************************************************
+ * Map direction transitions
+ *********************************************************************************************/
+Direction next_direction[2] = {ew, ns};

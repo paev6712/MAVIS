@@ -1,0 +1,31 @@
+/*
+ * ultrasonic.h
+ *
+ *  Created on: Apr 12, 2016
+ *      Author: Parker
+ */
+
+#ifndef ULTRASONIC_H_
+#define ULTRASONIC_H_
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+volatile int distCM_front;
+volatile int distCM_left;
+volatile int distCM_right;
+
+// Timer value for ultrasonic counters
+volatile int timerValue1;
+volatile int timerValue2;
+volatile int timerValue3;
+
+// Boolean indicating when a timer value is ready to be read
+volatile int done1 = 0;
+volatile int done2 = 0;
+volatile int done3 = 0;
+
+
+#endif /* ULTRASONIC_H_ */

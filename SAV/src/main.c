@@ -28,11 +28,8 @@
 
 int main(void) {
 
-	// Setup hardware
-	prvSetupHardware();
-
 	// Create initial task to connect to Base Station
-	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
+ 	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
 
 	// Start the scheduler which begins to run the tasks
 	vTaskStartScheduler();
@@ -51,19 +48,34 @@ int main(void) {
  *********************************************************************************************/
 void prvSetupTask( void *pvParameters ) {
 
+	// Setup hardware
+	prvSetupHardware();
+
+	// Test LEDs and indicate program is starting
+	prvBlinkLeds();
+
+	// ******************************************************************************************************** //
+	// Ultrasonic tasks
+//	xTaskCreate( prvUltrasonic1Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic1Handle );
+	xTaskCreate( prvUltrasonic2Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic2Handle );
+	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
+
+	traffic_current_state = green;
+
+	// Set motors
+	swTimerStart( set_motor, 0 );
+
+	// Read Photo Resistor
+	swTimerStart( read_photo, 0 );
+
+
+	// ******************************************************************************************************** //
+
 	// Setup WiFi connection
 	prvSetupWifi();
 
-	swDelay(2000);
-
 	// Set initial mode to allModes
 	my_mode = allModes;
-
-	// Read Measured Power
-//	swTimerStart( read_power, 0 );
-
-	// Read Photo Resistor
-//	swTimerStart( read_photo, 0 );
 
 	// Create queue for packets
 	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
@@ -104,30 +116,74 @@ static void prvSetupHardware( void ) {
 
 
 /*********************************************************************************************
+ * Blink LEDs on board
+ *********************************************************************************************/
+static void prvBlinkLeds( void ) {
+	// Turn on and off each LED in order
+
+	// Error
+	LED_ERROR_PORT->ON = LED_ERROR_PIN;
+	swDelay(100);
+	LED_ERROR_PORT->OFF = LED_ERROR_PIN;
+
+	// Wifi
+	LED_WIFI_PORT->ON = LED_WIFI_RX_PIN;
+	swDelay(100);
+	LED_WIFI_PORT->OFF = LED_WIFI_RX_PIN;
+
+	LED_WIFI_PORT->ON = LED_WIFI_TX_PIN;
+	swDelay(100);
+	LED_WIFI_PORT->OFF = LED_WIFI_TX_PIN;
+
+	// Lights
+	LED_LIGHT_PORT->ON = LED_LIGHT_GREEN_PIN;
+	swDelay(100);
+	LED_LIGHT_PORT->OFF = LED_LIGHT_GREEN_PIN;
+
+	LED_LIGHT_PORT->ON = LED_LIGHT_YELLOW_PIN;
+	swDelay(100);
+	LED_LIGHT_PORT->OFF = LED_LIGHT_YELLOW_PIN;
+
+	LED_LIGHT_PORT->ON = LED_LIGHT_RED_PIN;
+	swDelay(100);
+	LED_LIGHT_PORT->OFF = LED_LIGHT_RED_PIN;
+
+	// Mode
+	LED_MODE_PORT->ON = LED_MODE_1_PIN;
+	swDelay(100);
+	LED_MODE_PORT->OFF = LED_MODE_1_PIN;
+
+	LED_MODE_PORT->ON = LED_MODE_2_PIN;
+	swDelay(100);
+	LED_MODE_PORT->OFF = LED_MODE_2_PIN;
+
+	LED_MODE_PORT->ON = LED_MODE_3_PIN;
+	swDelay(100);
+	LED_MODE_PORT->OFF = LED_MODE_3_PIN;
+}
+
+
+/*********************************************************************************************
  * Setup Wifi connection
  *********************************************************************************************/
 static void prvSetupWifi( void ) {
 	// Turn on Echo commands (for Arduino)
 //	sendPacket( "ATE1", 4);
 
-	sendPacket( "AT", 2);
+	// Delay to give Wifi chip time to boot up
+	swDelay(5000);
 
-//	while( !swDelay(500) );
-
-	uint32_t t = 10000000;
-	while( t-- );
+	// Send AT
+	sendPacket( "AT", 2, FALSE);
+	swDelay(500);
 
 	// Connect to Wifi
-//	sendPacket( "AT+CWJAP=\"OhmWreckers\",\"123\"", 28);
-//
-//	t = 50000000;
-//	while( t-- );
+//	sendPacket( "AT+CWJAP=\"OhmWreckers\",\"123\"", 28, FALSE);
+//	swDelay(5000);
 
 	// Connect to IP and set up TCP connection
-	sendPacket( "AT+CIPSTART=\"TCP\",\"192.168.101.101\",1001", 40);
-
-	t = 10000000;
-	while( t-- );
+	sendPacket( "AT+CIPSTART=\"TCP\",\"192.168.101.101\",1001", 40, FALSE);
+	swDelay(2000);
 }
 
 
@@ -178,7 +234,6 @@ void prvConnectTask( void *pvParameters ) {
 			if( (packet_result.result == SUCCESS) && (packet_result.type == ack) ) {
 				// Turn on LEDs to indicate success
 				LED_WIFI_PORT->ON = LED_WIFI_TX_PIN | LED_WIFI_RX_PIN;
-				LED2_PORT->ODR ^= LED2_PIN;
 
 				// Reset process_packet
 				process_packet = FALSE;
@@ -205,7 +260,7 @@ void prvConnectTask( void *pvParameters ) {
  *********************************************************************************************/
 void prvModeOfOperationTask( void *pvParameters ) {
 
-	// Send Ack
+	// Send SetMode packet
 	Header* header = pvPortMalloc( sizeof(Header) );
 	header->dest = baseStation;
 	header->addr = MY_ADDR;
@@ -254,6 +309,16 @@ void prvModeOfOperationTask( void *pvParameters ) {
  * 		*
  *********************************************************************************************/
 void prvTrafficLightTask( void *pvParameters ) {
+
+	// Read Measured Power
+	swTimerStart( read_power, 0 );
+
+	// Set motors
+	swTimerStart( set_motor, 0 );
+
+	// Read Photo Resistor
+	swTimerStart( read_photo, 0 );
+
 	// Let task run infinitely
 	for(;;) {
 
@@ -279,46 +344,12 @@ void prvTrafficLightTask( void *pvParameters ) {
 
 
 
-/*********************************************************************************************
- * Send Ping packet
- *********************************************************************************************/
-void prvSWTimerPingCallback( TimerHandle_t pxTimer ) {
-
-	// Setup header to Base Station
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ping;
-
-	sendPing( header );
-
-	vPortFree(header);
-}
-
-
-/*********************************************************************************************
- * Callback function for the test SW timer
- *********************************************************************************************/
-void prvSWTimerCallback( TimerHandle_t pxTimer ){
-	LED2_PORT->ODR ^= LED2_PIN;
-
-	// Create fake header
-	Header* header = pvPortMalloc( sizeof(Header) );
-	header->dest = baseStation;
-	header->addr = MY_ADDR;
-	header->mode = allModes;
-	header->type = ack;
-
-	sendAck( header, SUCCESS );
-
-	vPortFree(header);
-}
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  * Functions to handle errors if they occur
  *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
 void vApplicationMallocFailedHook( void )
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient

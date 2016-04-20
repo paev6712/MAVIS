@@ -1,0 +1,35 @@
+/*
+ * trafficLight.c
+ *
+ *  Created on: Mar 2, 2016
+ *      Author: Parker
+ */
+
+#include "trafficLight.h"
+
+/*********************************************************************************************
+ * Timer callback to blink Traffic Light LED
+ *********************************************************************************************/
+void prvSendTrafficLightCallback( TimerHandle_t pxTimer ) {
+
+	switch(light_system_state) {
+		case state_1:
+			// Send current state packet
+
+			break;
+		case state_2:
+			break;
+		case state_3:
+			break;
+		case state_4:
+			break;
+		default:
+			break;
+	}
+}
+
+
+/*********************************************************************************************
+ * Map current state to next state
+ *********************************************************************************************/
+lightState next_light_state[3] = {green, red, yellow};

@@ -15,7 +15,7 @@
 /*********************************************************************************************
  * Base function to send all packets (or strings to setup WiFi module)
  *********************************************************************************************/
-uint8_t sendPacket( char* packet, uint8_t length ) {
+uint8_t sendPacket( char* packet, uint8_t length, uint8_t tilde ) {
 	int i;
 	for( i=0; i < length; i++ ) {
 		// Wait for data register to be empty before adding the next char
@@ -24,6 +24,12 @@ uint8_t sendPacket( char* packet, uint8_t length ) {
 		// Put into TX register
 		USART_SendData( WIFI_USART, *packet );
 		packet++;
+	}
+
+	// Check if it is a custom packet
+	if( tilde == TRUE ) {
+		while( !(WIFI_USART->SR & 0x00000040) );
+		USART_SendData( WIFI_USART, '~' );
 	}
 
 	// WiFi module expects \r\n at the end of every string
@@ -59,9 +65,9 @@ uint8_t sendAck( Header* header, uint8_t success ) {
 	pack( ack_packet, ack_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=6", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ack_packet, header->length );
+	sendPacket( "AT+CIPSEND=7", 12, FALSE );
+	swDelay(100);
+	uint8_t result = sendPacket( ack_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ack);
@@ -87,9 +93,9 @@ uint8_t sendPing( Header* header ) {
 	pack( ping_packet, header_char, 0 );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=5", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( ping_packet, header->length );
+	sendPacket( "AT+CIPSEND=6", 12, FALSE );
+	swDelay(100);
+	uint8_t result = sendPacket( ping_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(ping_packet);
@@ -114,9 +120,9 @@ uint8_t sendSetMode( Header* header ) {
 	pack( set_mode_packet, header_char, 0 );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=5", 12 );
-	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( set_mode_packet, header->length );
+	sendPacket( "AT+CIPSEND=6", 12, FALSE );
+	swDelay(100);
+	uint8_t result = sendPacket( set_mode_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(set_mode_packet);
@@ -148,9 +154,9 @@ uint8_t sendPowerConsumption( Header* header, uint16_t average_power, uint16_t t
 	pack( power_consumption_packet, power_consumption_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=9", 12 );
+	sendPacket( "AT+CIPSEND=10", 13, FALSE );
 	while(received_string[0] != 'O');
-	uint8_t result = sendPacket( power_consumption_packet, header->length );
+	uint8_t result = sendPacket( power_consumption_packet, header->length, TRUE );
 
 	// Free variables
 	vPortFree(power_consumption);
@@ -181,8 +187,8 @@ PacketResult handlePacket( char* packet ) {
 	PacketResult packet_result;
 	packet_result.type = header->type;
 
-	// Sort by mode of operation
-	if( (header->mode == allModes) || (header->mode == my_mode ) ) {
+	// Sort by mode of operation and SAV
+	if( ((header->mode == allModes) || (header->mode == my_mode )) && (header->dest == MY_ADDR) ) {
 
 		// Based on packet type, call the correct handle function
 		switch( header->type ) {
@@ -193,13 +199,13 @@ PacketResult handlePacket( char* packet ) {
 				packet_result.result = handlePing( header, packet );
 				break;
 			case trafficLightCurrent:
-				if( my_mode != mode1 ) {
+				if( my_mode == mode2 ) {
 					packet_result.result = handleTrafficLightCurrent( header, packet );
 				}
 				break;
 			case trafficLightFuture:
-				if( my_mode != mode1 ) {
-				packet_result.result = handleTrafficLightFuture( header, packet );
+				if( my_mode == mode3 || my_mode == mode2) {
+					packet_result.result = handleTrafficLightFuture( header, packet );
 				}
 				break;
 			case changeMode:
@@ -296,6 +302,9 @@ uint8_t handleTrafficLightCurrent( Header* header, char* packet ) {
 	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
 	LED_LIGHT_PORT->ON = led_light_pin[ current->northSouth ];
 
+	// Set global so the SAV knows what the current state is
+	traffic_current_state = current->northSouth;
+
 	// Free variables
 	vPortFree( current );
 
@@ -316,25 +325,35 @@ uint8_t handleTrafficLightFuture( Header* header, char* packet ) {
 	// Convert string back to TrafficLightCurrent struct
 	future = (TrafficLightFuture*) future_char;
 
-	// Check if a timer has already been started
-	if( !swIsTimerActive(blinkTrafficLight) ) {
-		// Blink corresponding LED
-		// TODO: need to know what direction SAV is headed (northSouth / eastWest)
-		LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-		LED_LIGHT_PORT->ON = led_light_pin[ future->northSouth ];
 
-		// Set global variables
-		traffic_future_state = next_light_state[ future->northSouth ];
-
-		// Time is converted into ms
-		traffic_time = ((uint16_t)future->changeTime * 32);
-
-		// Start timer
-		swTimerStart( blinkTrafficLight, 0 );
+	// Set current state
+	if( photo_direction == ns ) {
+		traffic_current_state = future->northSouth;
+	} else {
+		traffic_current_state = future->eastWest;
 	}
 
-	// If it has do nothing
-	// TODO: check if correct values
+	// Turn on LED corresponding to the current state
+	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
+	LED_LIGHT_PORT->ON = led_light_pin[ traffic_current_state ];
+
+	// Blink corresponding LED
+	if( my_mode == mode3 ) {
+		// Set global variables
+		traffic_future_state = next_light_state[ traffic_current_state ];
+
+		// Time is converted into ms
+		if( photo_direction == ns )
+			traffic_time = ((uint16_t)future->changeTimeNS *1000);
+		else
+			traffic_time = ((uint16_t)future->changeTimeEW *1000);
+
+		// Check if a timer has already been started
+		if( !swIsTimerActive(blinkTrafficLight) ) {
+			// Start timer
+			swTimerStart( blinkTrafficLight, 0 );
+		}
+	}
 
 	// Free variables
 	vPortFree( future );
@@ -362,10 +381,6 @@ uint8_t handleChangeMode( Header* header, char* packet ) {
 	// Set corresponding LED
 	LED_MODE_PORT->OFF = led_mode_pin[ allModes ];
 	LED_MODE_PORT->ON = led_mode_pin[ my_mode ];
-
-	// Set initial TrafficLight state as green
-	LED_LIGHT_PORT->OFF = LED_LIGHT_PINS;
-	LED_LIGHT_PORT->ON = led_light_pin[green];
 
 	// Free variables
 	vPortFree( change_mode );
