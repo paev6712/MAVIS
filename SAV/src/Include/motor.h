@@ -84,5 +84,7 @@ TimerHandle_t set_motor;
 uint8_t steer;
 MotorAction motor_action;
 uint8_t motor_speed;
+uint8_t motor_initialize;
+uint8_t motor_ultrasonic_enable;
 
 #endif /* MOTOR_H_ */

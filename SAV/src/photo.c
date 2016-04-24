@@ -51,13 +51,21 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 		photo_previous_line = black;
 		photo_counter += 1;
 		LED_MODE_PORT->ON = LED_MODE_1_PIN;
-		if( (photo_counter == 3) && (photo_intersection == FALSE) ) {
+		if( (photo_counter == 1) && (photo_intersection == FALSE) ) {
 			// Adjust steering
-			if( photo_direction == ns ) {
-				steer = 48;
-			} else {
-				steer = 54;
-			}
+//			if( photo_direction == ns ) {
+//				steer = 48;
+//			} else {
+//				steer = 54;
+//			}
+			// Straighten steering
+			steer = 50;
+			motor_initialize = TRUE;
+
+			// Disable use of ultrasonics
+			motor_ultrasonic_enable = FALSE;
+		} else if( (photo_counter == 1) && (photo_intersection == FALSE) ) {
+			motor_ultrasonic_enable = FALSE;
 		}
 	}
 
@@ -67,11 +75,14 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 			// Leaving the intersection
 			photo_intersection = FALSE;
 
+			// Re-enable ultrasonics
+			motor_ultrasonic_enable = TRUE;
+
 			// Adjust steering
 			if( photo_direction == ns ) {
 				steer = 63;
 			} else {
-				steer = 39;
+				steer = 41;
 			}
 		} else {
 			// Entering intersection
