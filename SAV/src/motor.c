@@ -80,11 +80,11 @@ void pwmSet(uint8_t dutyCycle, Motor motor) {
  *********************************************************************************************/
 void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	// Prevent changes from ultrasonic happening too quickly
-	static uint8_t ultra_left_counter = 5;
-	static uint8_t ultra_right_counter = 5;
+	static uint8_t ultra_left_counter = 2;
+	static uint8_t ultra_right_counter = 2;
 
 	// Use software offset to straighten the servo
-	static int8_t offset = -1;
+	static int8_t offset = -2;
 
 
 	// Consider current state
@@ -172,22 +172,33 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 
 	// Only use ultrasonic if forward ultrasonic is within range
-   	if( (distCM_front < 300) && (motor_ultrasonic_enable) ) {
+   	if( (distCM_front >= 0) ) {
 		LED_ERROR_PORT->ON = LED_ERROR_PIN;
 
 		// Modulate steering based on ultrasonic:
 		// Both sensors see an object
 		if( (distCM_left < 22) && (distCM_right < 22) ) {
-			// Do nothing
+			LED_WIFI_PORT->ON = LED_WIFI_PINS;
+
+			// Set steering back to default
+			if( ultra_reset_counter >= 2 ) {
+				steer = default_steer;
+				motor_initialize = TRUE;
+
+				ultra_reset_counter = 0;
+			}
 		}
 
 		// Only the left sensor sees an object
 		else if( distCM_left < 22 ) {
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+			LED_WIFI_PORT->ON = LED_WIFI_RX_PIN;
+
 			// Increment counter
 			ultra_left_counter++;
 
 			// Limit extreme values
-			if( (steer > 35) && (ultra_left_counter >= 3) ) {
+			if( (steer > 36) && (ultra_left_counter >= 2) ) {
 				steer -= 9;
 				ultra_left_counter = 0;
 			} else if(ultra_left_counter == 1) {
@@ -195,8 +206,8 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 			}
 
 			// Limit extreme values
-			if( steer < 38 ) {
-				steer = 38;
+			if( steer < 39 ) {
+				steer = 39;
 			}
 
 			// Check if need to still adjust steering for net movement of 1
@@ -205,16 +216,20 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 			}
 
 			// Since right sensor didn't see anything, reset counter
-			ultra_right_counter = 5;
+			ultra_right_counter = 2;
+			ultra_reset_counter = 2;
 		}
 
 		// Only the right sensor sees an object
-		else if( distCM_right < 22 ) {
+		else if( distCM_right < 25 ) {
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+			LED_WIFI_PORT->ON = LED_WIFI_TX_PIN;
+
 			// Increment counter
 			ultra_right_counter++;
 
 			// Limit extreme values
-			if( (steer < 71) && (ultra_right_counter >= 3) ) {
+			if( (steer < 71) && (ultra_right_counter >= 2) ) {
 				steer += 9;
 				ultra_right_counter = 0;
 			} else if(ultra_right_counter == 1) {
@@ -232,14 +247,25 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 			}
 
 			// Since left sensor didn't see anything, reset counter
-			ultra_left_counter = 5;
+			ultra_left_counter = 2;
+			ultra_reset_counter = 2;
 		}
 
 		// Neither sensor sees an object
 		else {
-			// Reset both of the counters
-			ultra_right_counter = 5;
-			ultra_left_counter = 5;
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+
+			// Set steering back to default
+			if( ultra_reset_counter >= 2 ) {
+				steer = default_steer;
+				motor_initialize = TRUE;
+
+				ultra_reset_counter = 0;
+			}
+
+			// Reset the left and right counters
+			ultra_right_counter = 2;
+			ultra_left_counter = 2;
 		}
 	} else {
 		LED_ERROR_PORT->OFF = LED_ERROR_PIN;
@@ -252,7 +278,11 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 	// Initialize servo position off centered so that it can straighten out next iteration
 	if( motor_initialize ) {
-		pwmSet(60 + offset, servo);
+		if( default_steer > 50 ) {
+			pwmSet(default_steer + offset - 10, servo);
+		} else {
+			pwmSet(default_steer + offset + 10, servo);
+		}
 		motor_initialize = FALSE;
 	}
 
@@ -260,6 +290,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 
 uint8_t steer = 50;
+uint8_t default_steer = 50;
 uint8_t motor_stop = FALSE;
 uint8_t motor_initialize = TRUE;
-uint8_t motor_ultrasonic_enable = FALSE;
+uint8_t ultra_reset_counter = 2;

@@ -288,3 +288,13 @@ GUI is waiting for subprocess to be done...
 Execution done. EXIT CODE = 0
   Logging finished.  ## CURRENT TIME  : [4/18, 2016   18:57  9.108]
 ------------------------------------
+
+------------------------------------
+  Logging start.  ## CURRENT TIME  : [4/24, 2016   15:26  4.651]  ## COMMAND LINE  : 
+cmd /C "gen_csini.exe"
+------------------------------------
+[STD-IN] : C:\Users\Parker\Documents\GitHub\MAVIS\.metadata\.plugins\sst.csgp\bin\env_vars.txt
+GUI is waiting for subprocess to be done...
+Execution done. EXIT CODE = 0
+  Logging finished.  ## CURRENT TIME  : [4/24, 2016   15:26  8.202]
+------------------------------------

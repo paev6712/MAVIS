@@ -82,9 +82,10 @@ TimerHandle_t set_motor;
 
 // Keep track of servo position
 uint8_t steer;
+uint8_t default_steer;
 MotorAction motor_action;
 uint8_t motor_speed;
 uint8_t motor_initialize;
-uint8_t motor_ultrasonic_enable;
+uint8_t ultra_reset_counter;
 
 #endif /* MOTOR_H_ */
