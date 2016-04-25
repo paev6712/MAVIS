@@ -244,6 +244,8 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 	// Neither sensor sees an object
 	else {
+		LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+
 		// Set steering back to default
 		if( ultra_reset_counter >= 2 ) {
 			steer = default_steer;

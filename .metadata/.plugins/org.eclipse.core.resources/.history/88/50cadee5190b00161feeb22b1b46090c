@@ -76,7 +76,7 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 			if( photo_direction == ns ) {
 				default_steer = 66;
 			} else {
-				default_steer = 46;
+				default_steer = 45;
 			}
 
 			// Update steering based on new value

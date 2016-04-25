@@ -171,90 +171,104 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	}
 
 
-	/*********************************************************************************************
-	 * Modulate steering based on ultrasonic
-	 *********************************************************************************************/
+	// Only use ultrasonic if forward ultrasonic is within range
+   	if( (distCM_front >= 0) ) {
+		LED_ERROR_PORT->ON = LED_ERROR_PIN;
 
-	// Both sensors see an object
-	if( (distCM_left < 24) && (distCM_right < 24) ) {
-		// Set steering back to default
-		if( ultra_reset_counter >= 2 ) {
-			steer = default_steer;
-			motor_initialize = TRUE;
+		// Modulate steering based on ultrasonic:
+		// Both sensors see an object
+		if( (distCM_left < 24) && (distCM_right < 24) ) {
+			LED_WIFI_PORT->ON = LED_WIFI_PINS;
 
-			ultra_reset_counter = 0;
-		}
-	}
+			// Set steering back to default
+			if( ultra_reset_counter >= 2 ) {
+				steer = default_steer;
+				motor_initialize = TRUE;
 
-	// Only the left sensor sees an object
-	else if( distCM_left < 24 ) {
-		// Increment counter
-		ultra_left_counter++;
-
-		// Limit extreme values
-		if( (steer > 39) && (ultra_left_counter >= 2) ) {
-			steer -= 9;
-			ultra_left_counter = 0;
-		} else if(ultra_left_counter == 1) {
-			steer += 8;
+				ultra_reset_counter = 0;
+			}
 		}
 
-		// Limit extreme values
-		if( steer < 42 ) {
-			steer = 42;
+		// Only the left sensor sees an object
+		else if( distCM_left < 24 ) {
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+			LED_WIFI_PORT->ON = LED_WIFI_RX_PIN;
+
+			// Increment counter
+			ultra_left_counter++;
+
+			// Limit extreme values
+			if( (steer > 39) && (ultra_left_counter >= 2) ) {
+				steer -= 9;
+				ultra_left_counter = 0;
+			} else if(ultra_left_counter == 1) {
+				steer += 8;
+			}
+
+			// Limit extreme values
+			if( steer < 42 ) {
+				steer = 42;
+			}
+
+			// Check if need to still adjust steering for net movement of 1
+			if( ultra_right_counter == 1 ) {
+				steer -= 8;
+			}
+
+			// Since right sensor didn't see anything, reset counter
+			ultra_right_counter = 2;
+			ultra_reset_counter = 2;
 		}
 
-		// Check if need to still adjust steering for net movement of 1
-		if( ultra_right_counter == 1 ) {
-			steer -= 8;
+		// Only the right sensor sees an object
+		else if( distCM_right < 24 ) {
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
+			LED_WIFI_PORT->ON = LED_WIFI_TX_PIN;
+
+			// Increment counter
+			ultra_right_counter++;
+
+			// Limit extreme values
+			if( (steer < 73) && (ultra_right_counter >= 2) ) {
+				steer += 9;
+				ultra_right_counter = 0;
+			} else if(ultra_right_counter == 1) {
+				steer -= 8;
+			}
+
+			// Limit extreme values
+			if( steer > 70 ) {
+				steer = 70;
+			}
+
+			// Check if need to still adjust steering for net movement of 1
+			if( ultra_left_counter == 1 ) {
+				steer += 8;
+			}
+
+			// Since left sensor didn't see anything, reset counter
+			ultra_left_counter = 2;
+			ultra_reset_counter = 2;
 		}
 
-		// Since right sensor didn't see anything, reset counter
-		ultra_right_counter = 2;
-		ultra_reset_counter = 2;
-	}
+		// Neither sensor sees an object
+		else {
+			LED_WIFI_PORT->OFF = LED_WIFI_PINS;
 
-	// Only the right sensor sees an object
-	else if( distCM_right < 24 ) {
-		// Increment counter
-		ultra_right_counter++;
+			// Set steering back to default
+			if( ultra_reset_counter >= 2 ) {
+				steer = default_steer;
+				motor_initialize = TRUE;
 
-		// Limit extreme values
-		if( (steer < 73) && (ultra_right_counter >= 2) ) {
-			steer += 9;
-			ultra_right_counter = 0;
-		} else if(ultra_right_counter == 1) {
-			steer -= 8;
+				ultra_reset_counter = 0;
+			}
+
+			// Reset the left and right counters
+			ultra_right_counter = 2;
+			ultra_left_counter = 2;
 		}
-
-		// Limit extreme values
-		if( steer > 70 ) {
-			steer = 70;
-		}
-
-		// Check if need to still adjust steering for net movement of 1
-		if( ultra_left_counter == 1 ) {
-			steer += 8;
-		}
-
-		// Since left sensor didn't see anything, reset counter
-		ultra_left_counter = 2;
-		ultra_reset_counter = 2;
-	}
-
-	// Neither sensor sees an object
-	else {
-		// Set steering back to default
-		if( ultra_reset_counter >= 2 ) {
-			steer = default_steer;
-			motor_initialize = TRUE;
-
-			ultra_reset_counter = 0;
-		}
-
-		// Reset the left and right counters
-		ultra_right_counter = 2;
-		ultra_left_counter = 2;
+	} else {
+		LED_ERROR_PORT->OFF = LED_ERROR_PIN;
 	}
 
 
