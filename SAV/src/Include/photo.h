@@ -45,6 +45,7 @@ LineColor photo_previous_line;
 uint8_t photo_counter;
 uint8_t photo_intersection;
 Direction photo_direction;
+uint8_t photo_half_laps;
 
 
 /*********************************************************************************************

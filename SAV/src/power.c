@@ -40,6 +40,6 @@ void prvReadPowerCallback( TimerHandle_t pxTimer ) {
 		uint16_t average_power = (uint16_t) (power_total/power_time);
 
 		// Send packet
-		sendPowerConsumption( header, average_power, power_time );
+		sendPowerConsumption( header, average_power, power_time, photo_half_laps );
 	}
 }

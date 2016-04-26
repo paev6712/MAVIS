@@ -162,13 +162,15 @@ typedef struct {
  * Define PowerConsumption packet
  * 		* uint16_t avg_power:				Running average of instantaneous power
  * 		* uint16_t time:					Total amount of time elapsed
+ * 		* uint8_t half_laps:				Total number of half laps completed
  *********************************************************************************************/
 typedef struct {
 	uint16_t average_power;
 	uint16_t time;
+	uint8_t half_laps;
 } PowerConsumption;
 
-#define POWER_CONSUMPTION_LENGTH	4
+#define POWER_CONSUMPTION_LENGTH	5
 
 
 /*********************************************************************************************
@@ -261,6 +263,7 @@ uint8_t handlePowerConsumption( Header* header, char* packet );
 
 uint16_t average_power[120];
 uint8_t average_power_index;
+uint8_t num_half_laps;
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

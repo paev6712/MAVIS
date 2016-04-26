@@ -29,7 +29,7 @@
 int main(void) {
 
 	// Create initial task to connect to Base Station
-  	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
+   	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
 
 	// Start the scheduler which begins to run the tasks
 	vTaskStartScheduler();
@@ -55,18 +55,18 @@ void prvSetupTask( void *pvParameters ) {
 	prvBlinkLeds();
 
 	// ******************************************************************************************************** //
-	// Ultrasonic tasks
-	xTaskCreate( prvUltrasonic1Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic1Handle );
-	xTaskCreate( prvUltrasonic2Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic2Handle );
-	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
-
-	traffic_current_state = green;
-
-	// Set motors
-	swTimerStart( set_motor, 0 );
-
-	// Read Photo Resistor
-	swTimerStart( read_photo, 0 );
+//	// Ultrasonic tasks
+//	xTaskCreate( prvUltrasonic1Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic1Handle );
+//	xTaskCreate( prvUltrasonic2Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic2Handle );
+//	xTaskCreate( prvUltrasonic3Task, "", configMINIMAL_STACK_SIZE, NULL, ultrasonicPriority, xUltrasonic3Handle );
+//
+//	traffic_current_state = green;
+//
+//	// Set motors
+//	swTimerStart( set_motor, 0 );
+//
+//	// Read Photo Resistor
+//	swTimerStart( read_photo, 0 );
 
 
 	// ******************************************************************************************************** //

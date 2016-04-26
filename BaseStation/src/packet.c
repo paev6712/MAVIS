@@ -393,9 +393,11 @@ uint8_t handlePowerConsumption( Header* header, char* packet ) {
 	// Convert string back to Ack struct
 	power_consumption = (PowerConsumption*) power_consumption_char;
 
-	// Indicate success or failure from packet
+	// Extract information from packet
 	average_power[average_power_index] = power_consumption->average_power;
 	average_power_index++;
+
+	num_half_laps = power_consumption->half_laps;
 
 	// Free variables
 	vPortFree( power_consumption );
@@ -503,3 +505,4 @@ uint8_t wifi_channel_active[NUMBER_SAV];
 
 uint16_t average_power[120];
 uint8_t average_power_index = 0;
+uint8_t num_half_laps = 0;

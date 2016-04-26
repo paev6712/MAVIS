@@ -134,12 +134,13 @@ uint8_t sendSetMode( Header* header ) {
 /*********************************************************************************************
  * Send PowerConsumption
  *********************************************************************************************/
-uint8_t sendPowerConsumption( Header* header, uint16_t average_power, uint16_t time ) {
+uint8_t sendPowerConsumption( Header* header, uint16_t average_power, uint16_t time, uint8_t half_laps ) {
 
 	// Fill Ack struct
 	PowerConsumption* power_consumption = pvPortMalloc( sizeof(PowerConsumption) );
 	power_consumption->average_power = average_power;
 	power_consumption->time = time;
+	power_consumption->half_laps = half_laps;
 
 	// Update the length of the packet in the header
 	header->length = (HEADER_LENGTH + POWER_CONSUMPTION_LENGTH);
@@ -154,7 +155,7 @@ uint8_t sendPowerConsumption( Header* header, uint16_t average_power, uint16_t t
 	pack( power_consumption_packet, power_consumption_char, HEADER_LENGTH );
 
 	// Send packet
-	sendPacket( "AT+CIPSEND=10", 13, FALSE );
+	sendPacket( "AT+CIPSEND=11", 13, FALSE );
 	while(received_string[0] != 'O');
 	uint8_t result = sendPacket( power_consumption_packet, header->length, TRUE );
 

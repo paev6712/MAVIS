@@ -82,6 +82,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	// Prevent changes from ultrasonic happening too quickly
 	static uint8_t ultra_left_counter = 2;
 	static uint8_t ultra_right_counter = 2;
+	static uint8_t ultra_front_counter = 0;
 
 	// Use software offset to straighten the servo
 	static int8_t offset = -3;
@@ -172,7 +173,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 
 	/*********************************************************************************************
-	 * Modulate steering based on ultrasonic
+	 * Adjust steering based on ultrasonic
 	 *********************************************************************************************/
 
 	// Both sensors see an object
@@ -258,7 +259,9 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	}
 
 
-	// Set steering
+	/*********************************************************************************************
+	 * Set steering
+	 *********************************************************************************************/
 	pwmSet(steer + offset, servo);
 
 	// Initialize servo position off centered so that it can straighten out next iteration
@@ -269,6 +272,19 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 			pwmSet(default_steer + offset + 10, servo);
 		}
 		motor_initialize = FALSE;
+	}
+
+
+	/*********************************************************************************************
+	 * Handle any crash
+	 *********************************************************************************************/
+	if( (distCM_front < 50) && (ultra_front_counter <= 5) ) {
+		// If SAV is too close to an object to avoid it, stop to give a chance to adjust steering
+		setMotor(brake, 0);
+
+		ultra_front_counter ++;
+	} else {
+		ultra_front_counter = 0;
 	}
 
 }
