@@ -52,7 +52,7 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 //		LED_MODE_PORT->ON = LED_MODE_1_PIN;
 		if( (photo_counter == 1) && (photo_intersection == FALSE) ) {
 			// Straighten steering
-			default_steer = 50;
+			default_steer = 33;
 
 			// Update steering based on new value
 			ultra_reset_counter = 2;
@@ -67,7 +67,7 @@ void prvReadPhotoCallback( TimerHandle_t pxTimer ) {
 
 			// Adjust steering
 			if( photo_direction == ns ) {
-				default_steer = 66;
+				default_steer = 20;
 			} else {
 				default_steer = 46;
 			}

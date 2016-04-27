@@ -84,7 +84,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	static uint8_t ultra_right_counter = 2;
 
 	// Use software offset to straighten the servo
-	static int8_t offset = -1;
+	static int8_t offset = 0;
 
 
 	// Consider current state
@@ -176,7 +176,7 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	 *********************************************************************************************/
 
 	// Both sensors see an object
-	if( (distCM_left < 24) && (distCM_right < 24) ) {
+	if( (distCM_left < 25) && (distCM_right < 25) ) {
 		// Set steering back to default
 		if( ultra_reset_counter >= 2 ) {
 			steer = default_steer;
@@ -187,27 +187,27 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	}
 
 	// Only the left sensor sees an object
-	else if( distCM_left < 24 ) {
+	else if( distCM_right < 26 ) {
 		// Increment counter
 		ultra_left_counter++;
 
 		// Limit extreme values
-		if( (steer > 35) && (ultra_left_counter >= 2) ) {
+		if( (steer > 18) && (ultra_left_counter >= 1) ) {
 //			steer -= 9;
-			steer--;
+			steer -= 2;
 			ultra_left_counter = 0;
 		} else if(ultra_left_counter == 1) {
 //			steer += 8;
 		}
 
 		// Limit extreme values
-		if( steer < 38 ) {
-			steer = 38;
+		if( steer < 16 ) {
+			steer = 15;
 		}
 
 		// Check if need to still adjust steering for net movement of 1
 		if( ultra_right_counter == 1 ) {
-			steer -= 8;
+//			steer -= 8;
 		}
 
 		// Since right sensor didn't see anything, reset counter
@@ -216,27 +216,27 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	}
 
 	// Only the right sensor sees an object
-	else if( distCM_right < 24 ) {
+	else if( distCM_left < 26 ) {
 		// Increment counter
 		ultra_right_counter++;
 
 		// Limit extreme values
-		if( (steer < 77) && (ultra_right_counter >= 2) ) {
+		if( (steer < 48) && (ultra_right_counter >= 1) ) {
 //			steer += 9;
-			steer++;
+			steer += 2;
 			ultra_right_counter = 0;
 		} else if(ultra_right_counter == 1) {
 //			steer -= 8;
 		}
 
 		// Limit extreme values
-		if( steer > 74 ) {
-			steer = 74;
+		if( steer > 49 ) {
+			steer = 50;
 		}
 
 		// Check if need to still adjust steering for net movement of 1
 		if( ultra_left_counter == 1 ) {
-			steer += 8;
+//			steer += 8;
 		}
 
 		// Since left sensor didn't see anything, reset counter
@@ -248,7 +248,6 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 	else {
 		// Set steering back to default
 		if( ultra_reset_counter >= 2 ) {
-			steer = default_steer;
 			motor_initialize = TRUE;
 
 			ultra_reset_counter = 0;
@@ -267,18 +266,20 @@ void prvSetMotorCallback( TimerHandle_t pxTimer ) {
 
 	// Initialize servo position off centered so that it can straighten out next iteration
 	if( motor_initialize ) {
-		if( default_steer > 50 ) {
+		if( steer > 33 ) {
 			pwmSet(default_steer + offset - 10, servo);
+			steer = default_steer + offset - 3;
 		} else {
 			pwmSet(default_steer + offset + 10, servo);
+			steer = default_steer + offset + 3;
 		}
 		motor_initialize = FALSE;
 	}
 }
 
 
-uint8_t steer = 50;
-uint8_t default_steer = 50;
+uint8_t steer = 33;
+uint8_t default_steer = 33;
 uint8_t motor_stop = FALSE;
 uint8_t motor_initialize = TRUE;
 uint8_t ultra_reset_counter = 2;
