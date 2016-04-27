@@ -44,7 +44,7 @@ average_power       0xf0              src\trafficLight.o
 adcPort             0x18              src\trafficLight.o
 timer_EW            0x1               src\trafficLight.o
 my_mode             0x1               src\trafficLight.o
-received_string     0x10              src\trafficLight.o
+received_string     0x20              src\trafficLight.o
 
 Discarded input sections
 
@@ -1143,7 +1143,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x10000000                _eccmram = .
                 0x10000000                . = ALIGN (0x4)
 
-.bss            0x20000050    0x1c2d8
+.bss            0x20000050    0x1c2e8
                 0x20000050                _sbss = .
                 0x20000050                __bss_start__ = _sbss
  *(.bss)
@@ -1230,7 +1230,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
  .bss.xBlockAllocatedBit
                 0x2001c1c4        0x4 Libraries\FreeRTOS\Portable\heap_4.o
  *(COMMON)
- COMMON         0x2001c1c8      0x160 src\trafficLight.o
+ COMMON         0x2001c1c8      0x170 src\trafficLight.o
                 0x2001c1c8                light_system_state
                 0x2001c1cc                adcPin
                 0x2001c1d8                process_packet
@@ -1248,19 +1248,19 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 5.4.1/armtools/bin/../lib
                 0x2001c314                timer_EW
                 0x2001c315                my_mode
                 0x2001c318                received_string
-                0x2001c328                . = ALIGN (0x4)
-                0x2001c328                _ebss = .
-                0x2001c328                __bss_end__ = _ebss
+                0x2001c338                . = ALIGN (0x4)
+                0x2001c338                _ebss = .
+                0x2001c338                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x2001c328      0x400
-                0x2001c328                . = ALIGN (0x4)
-                0x2001c328                PROVIDE (end, .)
-                0x2001c328                PROVIDE (_end, .)
-                0x2001c328                . = (. + _Min_Heap_Size)
-                0x2001c728                . = (. + _Min_Stack_Size)
- *fill*         0x2001c328      0x400 
-                0x2001c728                . = ALIGN (0x4)
+                0x2001c338      0x400
+                0x2001c338                . = ALIGN (0x4)
+                0x2001c338                PROVIDE (end, .)
+                0x2001c338                PROVIDE (_end, .)
+                0x2001c338                . = (. + _Min_Heap_Size)
+                0x2001c738                . = (. + _Min_Stack_Size)
+ *fill*         0x2001c338      0x400 
+                0x2001c738                . = ALIGN (0x4)
 
 .memory_b1_text
  *(.mb1text)

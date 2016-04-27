@@ -1,0 +1,333 @@
+/*
+ * packet.h
+ *
+ *  Created on: Feb 18, 2016
+ *      Author: Parker
+ */
+
+#ifndef PACKET_H_
+#define PACKET_H_
+
+#include "FreeRTOS.h"
+#include "stm32f4xx.h"
+#include "queue.h"
+#include "general.h"
+#include "hardware.h"
+#include "trafficLight.h"
+#include "mode.h"
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define packet header
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Define standardized header for packets
+ * 		* uint8_t Destination (ID):			Intended recipient of packet
+ * 		* uint8_t Source (ID):				Source of the packet (who sent it)
+ * 		* uint8_t Mode of Operation:		Pertinent mode of operation
+ * 		* uint8_t Packet Type:				Defines fields in payload
+ * 		* uint8_t Packet Length:			Number of bytes in packet
+ *********************************************************************************************/
+
+
+/*********************************************************************************************
+ * ID (Destination/Source)
+ *********************************************************************************************/
+typedef enum {
+	sav1					=		(uint8_t) 0x00,
+	sav2					= 		(uint8_t) 0x01,
+	baseStation				=		(uint8_t) 0x02,
+	everyone				= 		(uint8_t) 0x03
+} ID;
+
+#define NUMBER_SAV					2
+
+
+/*********************************************************************************************
+ * Packet Type
+ *********************************************************************************************/
+typedef enum {
+	ack						= 		(uint8_t) 0x00,
+	ping					= 		(uint8_t) 0x01,
+	trafficLightCurrent 	=		(uint8_t) 0x02,
+	trafficLightFuture 		=		(uint8_t) 0x03,
+	changeMode				= 		(uint8_t) 0x04,
+	setMode					=		(uint8_t) 0x05,
+	powerConsumption		= 		(uint8_t) 0x06
+} PacketType;
+
+
+/*********************************************************************************************
+ * Define Header struct for convenience
+ *********************************************************************************************/
+typedef struct {
+	ID dest;
+	ID addr;
+	Mode mode;
+	PacketType type;
+	uint8_t length;
+} Header;
+
+#define HEADER_LENGTH				5
+
+
+/*********************************************************************************************
+ * Define the address of the device running this code
+ *********************************************************************************************/
+#define MY_ADDR						baseStation
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define packet payload
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Define Ack packet
+ * 		* uint8_t success:					Indicate if successful (true/false)
+ *********************************************************************************************/
+typedef struct {
+	uint8_t success;
+} Ack;
+
+#define ACK_LENGTH					1
+
+
+/*********************************************************************************************
+ * Define Ping packet
+ * 		* empty:							Ping packet indicates a request for an ack to verify
+ * 												two way communication. Used at bootup to test
+ * 												communication
+ *********************************************************************************************/
+typedef struct {
+} Ping;
+
+#define PING_LENGTH					0
+
+
+/*********************************************************************************************
+ * Define TrafficLight_Current packet
+ * 		* lightState northSouth:			Indicates current state of north/south light
+ * 		* lightState eastWest:				Indicates current state of east/west light
+ *********************************************************************************************/
+typedef struct {
+	lightState northSouth;
+	lightState eastWest;
+} TrafficLightCurrent;
+
+#define CURRENT_LENGTH				2
+
+
+/*********************************************************************************************
+ * Define TrafficLight_Future packet
+ * 		* lightState northSouth:			Indicates current state of north/south light
+ * 		* lightState eastWest:				Indicates current state of east/west light
+ * 		* uint8_t changeTime:				Time until the state changes to the next logical
+ * 												state (valid for both north/south and
+ * 												east/west)
+ *********************************************************************************************/
+typedef struct {
+	lightState northSouth;
+	uint8_t changeTimeNS;
+	lightState eastWest;
+	uint8_t changeTimeEW;
+} TrafficLightFuture;
+
+#define FUTURE_LENGTH				4
+
+
+/*********************************************************************************************
+ * Define ChangeMode packet
+ * 		* newMode:							Mode that the SAV will transition to
+ *********************************************************************************************/
+typedef struct {
+	Mode newMode;
+} ChangeMode;
+
+#define CHANGE_MODE_LENGTH			1
+
+
+/*********************************************************************************************
+ * Define SetMode packet
+ * 		* empty:							Indicate that SAV needs to set default mode of
+ * 												operation.
+ *********************************************************************************************/
+typedef struct {
+} SetMode;
+
+#define SET_MODE_LENGTH				0
+
+
+/*********************************************************************************************
+ * Define PowerConsumption packet
+ * 		* uint16_t avg_power:				Running average of instantaneous power
+ * 		* uint16_t time:					Total amount of time elapsed
+ * 		* uint8_t half_laps:				Total number of half laps completed
+ *********************************************************************************************/
+typedef struct {
+	uint16_t average_power;
+	uint16_t time;
+	uint8_t half_laps;
+} PowerConsumption;
+
+#define POWER_CONSUMPTION_LENGTH	5
+
+
+/*********************************************************************************************
+ * Maximum length of a packet
+ *********************************************************************************************/
+#define MAX_LENGTH					16
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define functions to send packets
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Base function to send all packets
+ *********************************************************************************************/
+uint8_t sendPacket( char* packet, uint8_t length, uint8_t tilde );
+
+
+/*********************************************************************************************
+ * Send Ack
+ *********************************************************************************************/
+uint8_t sendAck( Header* header, uint8_t success );
+
+
+/*********************************************************************************************
+ * Send Ping
+ *********************************************************************************************/
+uint8_t sendPing( Header* header );
+
+
+/*********************************************************************************************
+ * Send ChangeMode
+ *********************************************************************************************/
+uint8_t sendChangeMode( Header* header, Mode newMode );
+
+
+/*********************************************************************************************
+ * Send TrafficLightCurrent
+ *********************************************************************************************/
+uint8_t sendTrafficLightCurrent( Header* header, lightState northSouth, lightState eastWest );
+
+
+/*********************************************************************************************
+ * Send TrafficLightFuture
+ *********************************************************************************************/
+uint8_t sendTrafficLightFuture( Header* header, lightState northSouth, uint8_t changeTimeNS, lightState eastWest, uint8_t changeTimechangeTimeEW );
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Define functions to handle packets
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Struct to contain useful information about packet handling
+ *********************************************************************************************/
+typedef struct {
+	PacketType type;
+	uint8_t result;
+} PacketResult;
+
+
+/*********************************************************************************************
+ * Base function to handle all packets
+ *********************************************************************************************/
+PacketResult handlePacket( char* packet );
+
+
+/*********************************************************************************************
+ * Handle Ack
+ *********************************************************************************************/
+uint8_t handleAck( Header* header, char* packet );
+
+
+/*********************************************************************************************
+ * Handle Ping
+ *********************************************************************************************/
+uint8_t handlePing( Header* header, char* packet );
+
+
+/*********************************************************************************************
+ * Handle Set Mode
+ *********************************************************************************************/
+uint8_t handleSetMode( Header* header, char* packet );
+
+
+/*********************************************************************************************
+ * Handle Power Consumption
+ *********************************************************************************************/
+uint8_t handlePowerConsumption( Header* header, char* packet );
+
+uint16_t average_power[120];
+uint8_t average_power_index;
+uint8_t num_half_laps;
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Helper Functions
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Package string into container
+ *********************************************************************************************/
+void pack( char* container, char* field, uint8_t start );
+
+
+/*********************************************************************************************
+ * Unpack strings from the container
+ *********************************************************************************************/
+void unpack( char* container, char* field, uint8_t start );
+
+
+/*********************************************************************************************
+ * USART IRQ Handler for WiFi module
+ *********************************************************************************************/
+void USART1_IRQHandler( void );
+
+
+/*********************************************************************************************
+ * Copy original string to a new copy
+ *********************************************************************************************/
+void copyString( volatile char* original, char* new, uint8_t length );
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Global Variables
+ *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/*********************************************************************************************
+ * Define WiFi channels for each SAV
+ *********************************************************************************************/
+uint8_t wifi_channel[NUMBER_SAV];
+uint8_t wifi_next_channel;
+
+
+/*********************************************************************************************
+ * Define which SAV(s) are active
+ *********************************************************************************************/
+uint8_t wifi_channel_active[NUMBER_SAV];
+
+
+/*********************************************************************************************
+ * Char array to store received packet
+ *********************************************************************************************/
+volatile char received_string[MAX_LENGTH];
+
+
+/*********************************************************************************************
+ * Flag indicating a packet needs to be processed
+ *********************************************************************************************/
+uint8_t process_packet;
+
+
+/*********************************************************************************************
+ * Packet queue
+ *********************************************************************************************/
+#define maxPacketQueueLength					5
+QueueHandle_t xPacketQueue;
+
+
+#endif /* PACKET_H_ */

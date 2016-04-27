@@ -15,9 +15,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   5 .data         00000050  20000000  08006010  00010000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .bss          0001c2d8  20000050  20000050  00010050  2**2
+  6 .bss          0001c2e8  20000050  20000050  00010050  2**2
                   ALLOC
-  7 ._user_heap_stack 00000400  2001c328  2001c328  00010050  2**0
+  7 ._user_heap_stack 00000400  2001c338  2001c338  00010050  2**0
                   ALLOC
   8 .ARM.attributes 00000030  00000000  00000000  00010050  2**0
                   CONTENTS, READONLY
@@ -2282,7 +2282,7 @@ void USART3_IRQHandler( void ) {
  8000d6e:	d012      	beq.n	8000d96 <USART3_IRQHandler+0x4a>
  8000d70:	4b16      	ldr	r3, [pc, #88]	; (8000dcc <USART3_IRQHandler+0x80>)
  8000d72:	781b      	ldrb	r3, [r3, #0]
- 8000d74:	2b0f      	cmp	r3, #15
+ 8000d74:	2b1f      	cmp	r3, #31
  8000d76:	d80e      	bhi.n	8000d96 <USART3_IRQHandler+0x4a>
  8000d78:	79fb      	ldrb	r3, [r7, #7]
  8000d7a:	2b7e      	cmp	r3, #126	; 0x7e
@@ -2412,7 +2412,7 @@ int main(void) {
  8000e20:	af04      	add	r7, sp, #16
 
 	// Create initial task to connect to Base Station
-	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
+ 	xTaskCreate( prvSetupTask, "", 300 * sizeof(uint8_t), NULL, setupPriority, xSetupHandle );
  8000e22:	4b09      	ldr	r3, [pc, #36]	; (8000e48 <main+0x2c>)
  8000e24:	681b      	ldr	r3, [r3, #0]
  8000e26:	2201      	movs	r2, #1
@@ -2482,10 +2482,10 @@ void prvSetupTask( void *pvParameters ) {
 		// Set the SAVs default mode
 //		mode_savs[sav] = mode1;
 		// TODO: change back to default
-		mode_savs[sav] = mode2;
+		mode_savs[sav] = mode3;
  8000e74:	7bfb      	ldrb	r3, [r7, #15]
  8000e76:	4a1b      	ldr	r2, [pc, #108]	; (8000ee4 <prvSetupTask+0x90>)
- 8000e78:	2102      	movs	r1, #2
+ 8000e78:	2103      	movs	r1, #3
  8000e7a:	54d1      	strb	r1, [r2, r3]
 
 		// Mark the WiFi channels as uninitialized
@@ -2526,7 +2526,7 @@ void prvSetupTask( void *pvParameters ) {
 	// Create queue for packets
 	xPacketQueue = xQueueCreate( maxPacketQueueLength, MAX_LENGTH*sizeof(uint8_t) );
  8000e9e:	2005      	movs	r0, #5
- 8000ea0:	2110      	movs	r1, #16
+ 8000ea0:	2120      	movs	r1, #32
  8000ea2:	2200      	movs	r2, #0
  8000ea4:	f003 ff90 	bl	8004dc8 <xQueueGenericCreate>
  8000ea8:	4602      	mov	r2, r0
@@ -2810,7 +2810,7 @@ void prvConnectTask( void *pvParameters ) {
 
 			// Create local string to represent the packet
 			char* packet = pvPortMalloc( MAX_LENGTH*sizeof(uint8_t) );
- 8001048:	2010      	movs	r0, #16
+ 8001048:	2020      	movs	r0, #32
  800104a:	f004 fd4d 	bl	8005ae8 <pvPortMalloc>
  800104e:	60f8      	str	r0, [r7, #12]
 
@@ -2942,7 +2942,7 @@ void prvTrafficLightTask( void *pvParameters ) {
  8001106:	d014      	beq.n	8001132 <prvTrafficLightTask+0x6a>
 			// Create local string to represent the packet
 			char* packet = pvPortMalloc( MAX_LENGTH*sizeof(uint8_t) );
- 8001108:	2010      	movs	r0, #16
+ 8001108:	2020      	movs	r0, #32
  800110a:	f004 fced 	bl	8005ae8 <pvPortMalloc>
  800110e:	6138      	str	r0, [r7, #16]
 
@@ -18763,7 +18763,7 @@ FillZerobss:
     
 LoopFillZerobss:
   ldr  r3, = _ebss
- 8005e8c:	2001c328 	.word	0x2001c328
+ 8005e8c:	2001c338 	.word	0x2001c338
 
 08005e90 <ADC_IRQHandler>:
  * @retval None       
